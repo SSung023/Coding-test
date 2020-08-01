@@ -1,0 +1,38 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+#include <stdio.h>
+
+using namespace std;
+
+
+int main() {
+
+    int size = 0;
+    cin >> size;
+
+    for(int i=0; i < size; i++){
+        int num = 0, count = 0, sum = 0;
+        double avg = 0.0;
+        cin >> num;
+
+        int *arr = new int[num];
+
+        //합계를 구하는 과정
+        for(int k=0; k < num; k++){
+            cin >> arr[k];
+            sum += arr[k];
+        }
+        avg = (double)(sum / num); //평균이 몇인지 계산
+
+        for(int k=0; k < num; k++){
+            if(arr[k] > avg)
+                count++;
+        }
+
+        printf("%.3f%%\n", (double)count / num * 100);
+    }
+
+    return 0;
+}
