@@ -1,0 +1,31 @@
+#include <iostream>
+#include <string>
+#include <set>
+#include <algorithm>
+
+#include <stdio.h>
+
+using namespace std;
+
+int factorial(int num){
+    if(num <= 1) //탈출 조건
+        return num;
+    else{
+        return num * factorial(num-1);
+    }
+}
+
+int main() {
+
+    int n = 0;
+
+    cin >> n;
+
+    //0의 factorial의 결과는 1이다(예외)
+    if(n==0) cout << "1";
+    else
+        cout << factorial(n);
+
+
+    return 0;
+}
