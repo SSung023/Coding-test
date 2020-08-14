@@ -1,0 +1,55 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <stack>
+
+
+using namespace std;
+
+int main() {
+
+    stack<int> st;
+    string line;
+    int num;
+
+    cin >> num;
+
+    for(int i=0; i<num; i++){
+        cin >> line;
+
+        if(!line.compare("push")){
+            int temp;
+            cin >> temp;
+            st.push(temp);
+        }
+        else if(!line.compare("pop")){
+            if(st.empty())
+                cout << "-1" << endl;
+            else{
+                cout << st.top() << endl;
+                st.pop();
+            }
+
+        }
+
+        else if(!line.compare("size")){
+            cout << st.size() << endl;
+        }
+
+        else if(!line.compare("empty")){
+            if(st.empty()) cout << "1" << endl;
+            else cout << "0" << endl;
+        }
+
+        else if(!line.compare("top")){
+            if(st.empty())
+                cout << "-1" << endl;
+            else
+                cout << st.top() << endl;
+        }
+    }
+
+
+
+    return 0;
+}
