@@ -1,0 +1,51 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <stack>
+#include <list>
+
+
+using namespace std;
+
+int main() {
+
+    int num;
+    cin >> num;
+
+    while(num--){
+        list<char> lt; // list 생성
+        list<char>::iterator iter = lt.begin(); //iterator 생성
+
+        string str;
+        cin >> str;
+
+        for(int i=0; i < str.length(); i++){
+
+            // 커서 오른쪽으로 옮기기
+            if(str[i] == '>' && iter != lt.end()){
+                iter++;
+            }
+            //커서 왼쪽으로 옮기기
+            else if(str[i] == '<' && iter != lt.begin()){
+                iter--;
+            }
+            // 커서 왼쪽의 문자 삭제하기
+            else if(str[i] == '-' && iter != lt.begin()){
+                iter--; //커서를 왼쪽으로 옮긴 후
+                iter = lt.erase(iter); //문자를 삭제한다
+            }
+            else if(str[i] != '>' && str[i] != '<' && str[i] != '-'){
+                iter = lt.insert(iter, str[i]);
+                iter++;
+            }
+        }
+
+        for(iter = lt.begin(); iter != lt.end(); iter++){
+            cout << *iter;
+        }
+        cout << endl;
+    }
+
+
+    return 0;
+}
