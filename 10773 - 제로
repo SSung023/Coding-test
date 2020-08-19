@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <stack>
+#include <list>
+
+using namespace std;
+
+int main() {
+
+    stack<int> st;
+    int k = 0, sum = 0;
+
+    cin >> k;
+
+    // k개의 경우를 입력받는다
+    while(k--){
+        int temp;
+        cin >> temp;
+        //0을 입력받으면 가장 최근에 입력받은 수를 pop
+        if(temp == 0){
+            if(st.empty())
+                continue;
+
+            st.pop();
+        }
+        else{
+            st.push(temp);
+        }
+
+    }
+
+    while(!st.empty()){
+        sum += st.top();
+        st.pop();
+    }
+
+    cout << sum;
+
+
+    return 0;
+}
