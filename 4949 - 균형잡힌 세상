@@ -1,0 +1,64 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <stack>
+#include <list>
+
+using namespace std;
+
+int main() {
+
+    while(true){
+
+        stack<char> st;
+        string str;
+        bool isVPS = true;
+
+        getline(cin, str);
+
+        if(str == "."){
+            break;
+        }
+
+        for(int i=0; i<str.length(); i++){
+
+            // 열린 괄호일 때 stack에 push
+            if(str[i] == '(' || str[i] == '['){
+                st.push(str[i]);
+            }
+                // 닫힌 소괄호일 때, 비어있거나 짝이 안 맞다면 false, 짝이 맞다면 pop
+            else if(str[i] == ')'){
+                if(st.empty() || st.top() == '['){
+                    isVPS = false;
+                    break;
+                }
+                if(st.top() == '('){
+                    st.pop();
+                }
+
+            }
+                //닫힌 대괄호일 때, 비어있거나 짝이 안맞다면 false, 짝이 맞다면 pop
+            else if(str[i] == ']'){
+                if(st.empty() || st.top() == '('){
+                    isVPS = false;
+                    break;
+                }
+                if(st.top() == '['){
+                    st.pop();
+                }
+            }
+        }
+
+        if(isVPS && st.empty()) cout << "yes" << endl;
+        else cout << "no" << endl;
+
+        // 다음 검사를 위해서 stack 비우기
+        while(!st.empty()){
+            st.pop();
+        }
+    }
+
+
+
+    return 0;
+}
