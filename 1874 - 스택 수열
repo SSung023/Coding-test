@@ -1,0 +1,48 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <stack>
+#include <list>
+
+using namespace std;
+
+int main() {
+
+    stack<int> st;
+    int n, max = 0, cnt = 0;
+    char result[200050];
+
+    cin >> n;
+
+    // n개의 케이스를 입력 받음
+   while(n--){
+        int temp;
+        cin >> temp;
+
+        if(max < temp){ //만일 입력받은 수가 더 크면 그만큼 stack에 push
+            for(int i = max + 1; i <= temp; i++){
+                st.push(i);
+                result[cnt++] = '+';
+            }
+
+            max = temp;
+        }
+        else if(max > temp){ // 만일 입력받은 수가 더 작다면 st.top과 temp는 같아야함, 그렇지 않으면 실패
+            if(temp != st.top()) {
+                cout << "NO";
+                return 0;
+            }
+        }
+        // 둘 다 아닌 경우 -> max == temp
+        st.pop();
+        result[cnt++] = '-';
+    }
+
+
+   for(int i=0; i<cnt; i++){
+       cout << result[i] << "\n";
+   }
+
+
+    return 0;
+}
