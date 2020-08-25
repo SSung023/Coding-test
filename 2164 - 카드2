@@ -1,0 +1,35 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <deque>
+#include <list>
+
+using namespace std;
+
+int main() {
+
+    deque<int> dq;
+    int num;
+
+    cin >> num;
+
+    for(int i =1; i <= num; i++){
+        dq.push_back(i);
+    }
+
+    while(true){
+
+        if(dq.size() == 1){
+            break;
+        }
+
+        dq.pop_front();
+        dq.push_back(dq.front());
+        dq.pop_front();
+
+    }
+
+    cout << dq.front();
+
+    return 0;
+}
