@@ -1,0 +1,51 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <queue>
+#include <list>
+
+using namespace std;
+
+int main() {
+
+    int testCase;
+    cin >> testCase;
+
+    while(testCase--){
+        int N, M, cnt = 0;
+        queue<pair<int, int>> q; //문서의 index, 중요도
+        priority_queue<int> pq; // 중요도를 우선순위 큐에 넣어 less로 정렬
+
+        cin >> N >> M;
+        for(int i = 0; i < N; i++){
+            int tmp;
+            cin >> tmp;
+            q.push({i, tmp}); // idx와 중요도를 넣는다
+            pq.push(tmp); // 중요도를 내림차순으로 정렬
+        }
+
+        while(!q.empty()){
+            int nowIdx = q.front().first; // 문서의 index
+            int nowVal = q.front().second; // 문서의 중요도
+            q.pop();
+
+            if(nowVal == pq.top()){ // 중요도가 일치하는 경우
+                pq.pop();
+                cnt++;
+
+                if(nowIdx == M){ // index가 같은 경우 == 찾고자하는 문서를 찾은 경우
+                    cout << cnt << "\n";
+                    break;
+                }
+            }
+            else{ // 중요도가 일치하지 않는 경우
+                q.push({nowIdx, nowVal}); //다시 뒤로 민다
+            }
+        }
+
+    }
+
+
+
+    return 0;
+}
