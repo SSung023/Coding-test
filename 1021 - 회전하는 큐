@@ -1,0 +1,54 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <queue>
+#include <list>
+
+using namespace std;
+
+int main() {
+
+    int N, M, cnt = 0;
+    deque<int> dq;
+
+    cin >> N >> M;
+
+    for(int i = 1; i <= N; i++){
+        dq.push_back(i);
+    }
+    while(M--){
+        int num, index;
+        cin >> num;
+        // 찾고자하는 num의 index를 찾는다
+        for(int i = 0; i < dq.size(); i++){
+            if(num == dq[i]){
+                index = i;
+                break;
+            }
+        }
+
+        // 원하는 숫자를 뽑아낼 때까지
+        while(true){
+            if(dq.front() == num){ // 원하는 숫자를 찾았을 때
+                dq.pop_front();
+                break;
+            }
+            else if(index <= dq.size() / 2){ // 왼쪽으로 미는게 더 빠른 경우
+                cnt++;
+                dq.push_back(dq.front());
+                dq.pop_front();
+            }
+            else{ //오른쪽으로 미는 것이 더 빠른 경우
+               cnt++;
+                dq.push_front(dq.back());
+                dq.pop_back();
+            }
+        }
+
+    }
+
+    cout << cnt;
+
+
+    return 0;
+}
