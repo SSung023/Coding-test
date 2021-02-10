@@ -1,0 +1,67 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+
+    bool isTag = false;
+    string line;
+    string word; // 공백을 만나기 전까지 단어를 입력받아 저장하는 변수
+    string tag; // <를 만나면 >를 만날 때까지 단어를 입력받아 저장하는 변수
+
+
+    getline(cin, line);
+
+    for(int i = 0; i < line.length(); i++){
+
+        if(line[i] ==  '<'){
+            isTag = true;
+        }
+        else if(line[i] == ' ' && !isTag){ // 태그에서의 공백과 단어에서의 공백 구분
+            reverse(word.begin(), word.end());
+            cout << word << " ";
+            word.clear();
+        }
+        else if(line[i] == '>'){
+            reverse(word.begin(), word.end());
+            cout << word;
+            word.clear();
+        }
+
+        if(isTag){
+            if(line[i] == '>'){
+                isTag = false;
+                tag += '>';
+                cout << tag;
+                tag.clear();
+            }
+            else{
+                tag += line[i];
+            }
+        }
+        else if(!isTag && line[i] != ' '){
+            word += line[i];
+        }
+    }
+
+    // 제일 마지막에 남는 단어 리버스하여 처리
+    reverse(word.begin(), word.end());
+    cout << word << endl;
+
+
+    // 전체 알고리즘
+    // 전체적인 문자열을 받는다
+    // 문자열을 전체적으로 훑으면서,
+    // < 이 입력되면 >이 올 때까지 tag에 저장하고 출력 (<입력 시 isTag = true, > 입력 시 is Tag = false)
+
+    // 단어 확인 방법 : 공백을 만났을 때, <를 만났을 때
+    // 공백이 오면 temp를 reverse하고 출력, temp는 clear를 통해 빈 상태로 만들기
+    // 공백이 아니라면 temp에 계속 저장
+
+    return 0;
+
+}
