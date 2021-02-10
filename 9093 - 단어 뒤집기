@@ -1,0 +1,49 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+
+    int num;
+    string line;
+
+    cin >> num;
+    // cin의 경우 원하는 숫자를 입력하고 "엔터"를 누르면, 엔터 전까지만 받아가기 때문에 버퍼에 엔터가 남게 된다.
+    // 다음 입력을 받을 때 엔터를 받은 것으로 인식하고 넘어갈 수 있는데,
+    // 이 때, cin,ignore()를 써주면 해당 오류를 해결할 수 있다.
+    cin.ignore();
+
+    for(int i = 0; i < num; i++){
+        getline(cin, line);
+
+        string temp; // 공백을 만나기 전까지 단어를 입력받아 저장하는 변수
+
+        for(int i = 0; i < line.length(); i++){
+
+            if(line[i] == ' '){
+                reverse(temp.begin(), temp.end());
+                cout << temp << " ";
+                temp.clear();
+            }
+            else{
+                temp += line[i];
+            }
+
+        }
+        //
+        reverse(temp.begin(), temp.end());
+        cout << temp << endl;
+    }
+
+    // 전체 알고리즘
+    // 전체적인 문자열을 받는다
+    // 문자열을 전체적으로 훑으면서,
+    // 공백이 오면 temp를 reverse하고 출력, temp는 clear를 통해 빈 상태로 만들기
+    // 공백이 아니라면 temp에 계속 저장
+    return 0;
+
+}
