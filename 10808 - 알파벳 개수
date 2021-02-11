@@ -1,0 +1,26 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+
+    string line;
+    int arr[26] = { 0, };
+
+    cin >> line;
+
+    for(int i = 0; i < line.length(); i++){
+        arr[line[i] - 'a']++;
+    }
+
+    for(int i = 0; i < 26; i++){
+        cout << arr[i] << " ";
+    }
+
+    return 0;
+
+}
