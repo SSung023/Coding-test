@@ -1,0 +1,81 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+
+int getNumOfPrime(int num){
+    int count = 0;
+    int* arr;
+    arr = new int[num + 1];
+
+    // 0과 1인 경우에는 소수가 존재하지 않는다
+    if(num < 2)    return 0;
+
+    for(int i = 2; i <= num; i++){
+        arr[i] = i;
+    }
+
+    // n에 대하여 소수를 찾을 때에는, 루트n 까지 검사하면 됨
+    for(int i = 2; i <= num; i++){
+        if(arr[i] == 0){ // 만일 소수 아님으로 이미 표시가 되어 있다면 pass
+            continue;
+        }
+        for(int j = i + i; j <= num; j += i){
+            arr[j] = 0;
+        }
+    }
+
+    for(int i = 2; i <= num; i++){
+        if(arr[i] != 0){
+            count ++;
+            //cout << arr[i];
+        }
+    }
+
+    return count;
+
+}
+
+
+
+int main() {
+
+    int num, count = 0, result = 0;
+    int *arr;
+
+    cin >> num;
+    arr = new int[num];
+
+    for(int i = 0; i < num; i++){
+        cin >> arr[i];
+
+        // 1부터 자기 자신의 수까지 돌면서 약수가 몇 개인지 탐색
+        for(int j = 1; j <= arr[i]; j++){
+            if(arr[i] % j == 0){
+                count++;
+            }
+        }
+
+        // 1과 자기 자신만 약수라면 소수(Prime number)로 판정
+        if(count == 2){
+            result++;
+        }
+
+        // 다음 케이스에서 확인하기 위해 count를 0으로 초기화
+        count = 0;
+
+    }
+
+    cout << result;
+
+    // 소수(Prime)를 구하는 방법
+    //
+
+
+   return 0;
+
+}
