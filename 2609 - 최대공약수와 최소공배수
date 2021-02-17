@@ -1,0 +1,39 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+
+int GCD(int n1, int n2){
+    // 유클리드 호제법을 이용한 최대공약수 구하기
+    int r;
+
+    while(n2 != 0){
+        r = n1 % n2;
+        n1 = n2;
+        n2 = r;
+    }
+
+    return n1;
+}
+
+int LCM(int n1, int n2){
+    int result;
+    result = (n1*n2)/GCD(n1, n2);
+
+    return result;
+}
+
+int main() {
+
+    int num1, num2;
+    cin >> num1 >> num2;
+
+    cout << GCD(num1, num2) << endl << LCM(num1, num2);
+
+    return 0;
+
+}
