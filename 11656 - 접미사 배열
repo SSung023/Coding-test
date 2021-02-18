@@ -1,0 +1,34 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+
+
+int main() {
+
+    string input;
+    string* suffix;
+
+    cin >> input;
+    suffix = new string[input.length()];
+
+    // 접미사 배열 생성
+    for(int i = 0; i < input.length(); i++){
+        suffix[i] = input.substr(i, input.length() - i);
+        //cout << input.length() - i << " : " << suffix[i] << endl;
+    }
+
+    // sort()를 통해 문자열 정렬
+    sort(suffix, suffix + input.length());
+
+    for(int i = 0; i < input.length(); i++){
+        cout << suffix[i] << endl;
+    }
+
+    return 0;
+
+}
