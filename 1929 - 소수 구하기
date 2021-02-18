@@ -1,0 +1,51 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+
+void getPrime(int start, int end){
+
+    int *arr = new int[end + 1];
+
+    // 배열 초기 설정
+    for(int i = 2; i <= end; i++){
+        arr[i] = i;
+    }
+
+    //
+    for(int i = 2; i*i <= end; i++){
+        if(arr[i] == 0){
+            continue;
+        }
+        for(int j = i * i;  j <= end; j+= i){
+            arr[j] = 0;
+        }
+    }
+
+    // 시작점부터 끝점까지 돌면서 소수인 수들을 출력
+    for (int i = start; i <= end; i++)
+    {
+        if (arr[i] != 0)
+        {
+            cout << arr[i] << '\n';
+        }
+    }
+
+}
+
+int main() {
+
+    int start, end; // (1 <= start <= end <= 1,000,000)
+
+    cin >> start >> end;
+
+    getPrime(start, end);
+
+
+    return 0;
+
+}
