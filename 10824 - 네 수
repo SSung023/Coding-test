@@ -1,0 +1,28 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+
+
+int main() {
+
+    string a, b, c, d;
+    long long sum = 0;
+
+    cin >> a >> b >> c >> d;
+
+    // 문자열을 이어 붙일 때에는 .append()를 쓸 것
+    a.append(b);
+    c.append(d);
+
+    // stoll( ) : 문자열을 long long으로 바꿈
+    sum  = stoll(a) + stoll(c);
+    cout << sum;
+
+    return 0;
+
+}
