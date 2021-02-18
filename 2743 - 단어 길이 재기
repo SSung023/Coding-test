@@ -1,0 +1,22 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+
+
+int main() {
+
+    string line;
+
+    cin >> line;
+
+    cout << line.length();
+
+
+    return 0;
+
+}
