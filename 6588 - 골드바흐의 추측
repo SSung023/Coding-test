@@ -1,0 +1,52 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+
+int main() {
+
+    int input, i = 0;
+    bool prime[1000000 + 1];
+
+    for(int i = 1; i <= 1000000; i++){
+        prime[i] = true;
+    }
+
+    // 범위까지 소수를 추려놓는다
+    for(int i = 2; i <= sqrt(1000000); i++){ // n까지의 범위에 대해 소수를 구할 때엔, 루트n까지만 검사하면 된다
+        for(int j = i + i; j <= 1000000; j += i){ //
+            if(prime[j] == true)
+                prime[j] = false;
+
+        }
+    }
+
+    while(true){
+
+        scanf("%d", &input);
+        if(input == 0)  break;
+
+        i = 3;
+
+        while(true){
+            if(input - i < 0 ){
+                printf("Goldbach's conjecture is wrong.\n");
+                break;
+            }
+
+            if (prime[i] == true && prime[input-i] == true) {
+                printf("%d = %d + %d\n", input, i, input-i);
+                break;
+            }
+            i++;
+        }
+
+    }
+
+    return 0;
+
+}
