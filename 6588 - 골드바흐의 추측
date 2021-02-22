@@ -30,14 +30,15 @@ int main() {
         scanf("%d", &input);
         if(input == 0)  break;
 
-        i = 3;
+        i = 3; // 제일 작은 홀수 소수부터 검사 시작
 
         while(true){
-            if(input - i < 0 ){
+            if(input - i < 0 ){ //
                 printf("Goldbach's conjecture is wrong.\n");
                 break;
             }
 
+            // input을 이루는 두 수가 소수라면 출력
             if (prime[i] == true && prime[input-i] == true) {
                 printf("%d = %d + %d\n", input, i, input-i);
                 break;
