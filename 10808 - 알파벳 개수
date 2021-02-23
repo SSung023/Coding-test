@@ -13,6 +13,7 @@ int main() {
 
     cin >> line;
 
+    //
     for(int i = 0; i < line.length(); i++){
         arr[line[i] - 'a']++;
     }
