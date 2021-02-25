@@ -20,7 +20,7 @@ int main() {
         //만약 이미 한 번 count 했다면 넘어간다
         if(arr[s1[i] - 'a'] != -1)
             continue;
-        //해당하는 자리에 index를 넣는다
+        //해당하는 자리에 index를 넣는다.
         arr[s1[i]-'a'] = i;
     }
 
