@@ -1,0 +1,75 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int maxCount = 0;
+
+
+void checkHorizontal(char arr[51][51], int n) {
+    for (int i = 0; i < n; i++) {
+        int cnt = 1;
+        for (int j = 0; j < n; j++) {
+            if(arr[i][j] == arr[i][j+1])
+                cnt++;
+            else {
+                if (cnt > maxCount)
+                    maxCount = cnt;
+                cnt = 1;
+            }
+        }
+    }
+}
+
+void checkVertical(char arr[51][51], int n) {
+    for (int i = 0; i < n; i++) {
+        int cnt = 1;
+        for (int j = 0; j < n; j++) {
+            if(arr[j][i] == arr[j+1][i])
+                cnt++;
+            else {
+                if (cnt > maxCount)
+                    maxCount = cnt;
+                cnt = 1;
+            }
+        }
+    }
+}
+
+int main() {
+    int n = 0;
+    char arr[51][51];
+
+    cin >> n;
+
+
+    for (int  i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> arr[i][j];
+        }
+    }
+
+    for (int  i = 0; i < n; i++) {
+        for (int j = 0; j < n - 1; j++) {
+            // 가로부분 swap
+            swap(arr[i][j], arr[i][j + 1]);
+            checkVertical(arr, n);
+            checkHorizontal(arr, n);
+            swap(arr[i][j + 1], arr[i][j]);
+
+            // 세로부분 swap
+            swap(arr[j][i], arr[j + 1][i]);
+            checkVertical(arr, n);
+            checkHorizontal(arr, n);
+            swap(arr[j][i], arr[j + 1][i]);
+        }
+    }
+
+    cout << maxCount << endl;
+    // 알고리즘
+    // 해당하는 칸에 대해 오른쪽 칸과 swap 실행
+    // 해당 상황에 대해 모든 row와 column에서의 최대 사탕의 갯수를 구한다.
+    // 아랫칸과 swap 실행
+    // 마찬가지로 모든 row와 column에서의 최대 사탕 갯수를 구한다.
+
+    return 0;
+}
