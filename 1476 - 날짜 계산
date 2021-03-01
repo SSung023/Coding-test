@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+
+using namespace std;
+
+int E = 1, S = 1, M = 1;
+
+void checkRange(){
+    if(E > 15){
+        E = 1;
+    }
+    if(S > 28){
+        S = 1;
+    }
+    if(M > 19){
+        M = 1;
+    }
+}
+
+int main() {
+
+    // 1 ≤ E ≤ 15, 1 ≤ S ≤ 28, 1 ≤ M ≤ 19
+    int result_E, result_S, result_M, year = 1;
+
+    cin >> result_E >> result_S >> result_M;
+
+    while (true){
+        if(E == result_E && S == result_S && M == result_M){
+            break;
+        }
+        E++;
+        S++;
+        M++;
+        year++;
+        checkRange();
+    }
+
+    cout << year;
+
+    return 0;
+}
