@@ -1,0 +1,50 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+#include <algorithm>
+
+
+using namespace std;
+
+void init(){
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+}
+
+
+
+int main() {
+
+    init();
+
+    int result = 0, n, start = 1, end = 9, len;
+
+    cin >> n;
+    len = to_string(n).length();
+
+    if(len == 1){
+        result = n;
+    }
+    else{
+        // 해당 자릿수가 되기 전까지 자릿수를 더한다
+        for(int i = 0; i < len - 1; i++){
+            result = result + (end - start + 1) * (i + 1);
+            start *= 10;
+            end = end * 10 + 9;
+        }
+        // ex) n = 120일 때
+        // 100부터 120까지의 자릿수 세기
+        int tmp = (n - start + 1);
+        result = result + tmp * len;
+    }
+
+
+    cout << result;
+    // 1748 - 수 이어 쓰기1
+    // N의 숫자를 받아서 1부터 N까지 숫자를 이어만든다 - 새로운 수의 자릿수 출력
+    // N이 1의 자리인 경우 그대로 출력
+
+    return 0;
+}
+
