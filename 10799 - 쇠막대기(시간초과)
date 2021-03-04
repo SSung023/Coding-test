@@ -1,0 +1,63 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <stack>
+#include <string>
+#include <algorithm>
+
+
+using namespace std;
+
+
+
+int main() {
+    // cin,cout 속도향상
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
+
+    stack<string> stack;
+    string str;
+    int numOfRazer = 0, len = 0, result = 0;
+
+    cin >> str;
+    len = str.length();
+
+    for(int i = 0; i< len; i++){
+        // 열린 괄호(즉, 쇠막대기 처음)이 나온 경우
+        if(str[i] == '('){
+            stack.push("(");
+        }
+
+        // 닫힌 괄호(즉, 쇠막대기 끝)이 나온 경우
+        else if(str[i] == ')'){
+            // 레이저를 만난 경우
+            if(stack.top() == "("){
+                stack.pop();
+                stack.push("R");
+            }
+            else{
+                int tmp = 0;
+                // 쇠막대기 처음 부분이 나올 때 까지
+                while(stack.top() != "("){
+                    if(stack.top() == "R"){ // 레이저를 만났다면
+                        stack.pop();
+                        numOfRazer++;
+                        tmp++;
+                    }
+                }
+                stack.pop();
+                for(int k = 0; k < tmp; k++){
+                    stack.push("R");
+                }
+                result += (numOfRazer + 1);
+                numOfRazer = 0;
+            }
+        }
+    }
+
+    cout << result;
+
+
+    return 0;
+}
+
