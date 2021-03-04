@@ -1,0 +1,60 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+#include <algorithm>
+
+
+using namespace std;
+
+
+int GCD(int m, int n){
+    int r;
+
+    while(n != 0){
+        r = m % n;
+        m = n;
+        n = r;
+    }
+    return m;
+}
+
+int LCM(int n1, int n2){
+    int result = (n1*n2)/GCD(n1, n2);
+    return result;
+}
+
+int main() {
+    // cin,cout 속도향상
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
+
+    int testcase;
+    int m, n, x, y, year, tmp;
+
+    cin >> testcase;
+    for(int i=0; i < testcase; i++){
+        cin >> m >> n >> x >> y;
+
+        int last = LCM(m,n);
+        year = x;
+
+        // x를 원하는 것으로 고정하고 y를 움직인다
+        while(year <= last){
+            tmp = year % n;
+
+            // 만약 나누어 떨어지면 n값으로 리셋
+            if(tmp == 0)
+                tmp = n;
+            // 나머지가 y와 같으면 원하는 것이 나온 것
+            if(tmp == y)
+                break;
+            
+            year += m;
+        }
+
+        if(year > last) cout << -1 << endl;
+        else cout << year << endl;
+    }
+
+    return 0;
+}
