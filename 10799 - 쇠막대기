@@ -1,0 +1,51 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <stack>
+#include <string>
+#include <algorithm>
+
+
+using namespace std;
+
+
+
+int main() {
+    // cin,cout 속도향상
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
+
+    stack<char> stack;
+    string str;
+    int len = 0, result = 0;
+
+    cin >> str;
+    len = str.length();
+
+    for(int i = 0; i< len; i++){
+        // 열린 괄호(즉, 쇠막대기 처음)이 나온 경우
+        if(str[i] == '('){
+            stack.push(str[i]);
+        }
+
+        // 닫힌 괄호(즉, 쇠막대기 끝)이 나온 경우
+        else if(str[i] == ')'){
+            stack.pop();
+            // 레이저를 만난 경우
+            // 파이프의 갯수(stack에 쌓인 갯수)만큼 더해준다(갯수만큼 잘리기 때문)
+            if(str[i-1] == '('){
+                result += stack.size();
+            }
+            // 막대기의 끝인 경우
+            else{
+                result++;
+            }
+        }
+    }
+
+    cout << result;
+
+
+    return 0;
+}
+
