@@ -15,6 +15,7 @@ bool isVaild(int idx) {
 
     // 같은 열, 대각선이 다른 queen의 영향력인지 확인
     for (int i = 0; i < idx; i++) {
+        // 같은 열일 때 || 행 번호 차이 == 열 번호 차이
         if (arr[idx] == arr[i] || idx - i == abs(arr[idx] - arr[i])) {
             return false;
         }
