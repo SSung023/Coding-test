@@ -1,0 +1,104 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+int N, M, V; //정점 개수, 간선 개수, 시작 지점
+vector<int> adjList[1001]; // 정점마다 인접한 노드가 무엇인지 저장
+stack<int> stk; // dfs에 사용
+queue<int> que; // bfs에 사용
+bool isVisited[1001] = {false, }; // 해당 정점 방문 여부를 저장하는 변수
+
+
+void stackDFS(int idx){
+    stk.push(idx); // 첫 시작 노드 저장
+
+    while(!stk.empty()){
+        int cur = stk.top();
+        stk.pop();
+
+        if(isVisited[cur]){ // 만일 이미 방문했다면 pass
+            continue;
+        }
+        isVisited[cur] = true;
+        cout << cur << " ";
+        for(int i = adjList[cur].size() - 1; i >= 0; i--){ // stack이므로 거꾸로 들어가야 한다
+            int next = adjList[cur][i];
+            stk.push(next);
+        }
+    }
+}
+
+void RecursiveDFS(int idx){
+    if(isVisited[idx]){
+        return;
+    }
+    isVisited[idx] = true;
+    cout << idx << " ";
+
+    for(int i = 0; i < adjList[idx].size(); i++){
+        int next = adjList[idx][i];
+        RecursiveDFS(next);
+    }
+
+}
+
+// queue를 이용한 BFS
+void BFS(int idx){
+    que.push(idx);
+
+    while(!que.empty()){
+        int cur = que.front();
+        que.pop();
+
+        if(isVisited[cur]){ // 이미 방문했다면 pass
+            continue;
+        }
+        isVisited[cur] = true;
+        cout << cur << " ";
+
+        for(int i = 0; i < adjList[cur].size(); i++){
+            int next = adjList[cur][i];
+            que.push(next);
+        }
+
+    }
+}
+
+int main() {
+    // cin,cout 속도향상
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
+
+    cin >> N >> M >> V;
+
+    // 간선의 갯수만큼 정보를 받아서 입력
+    for(int i = 0; i < M; i++){
+        int s, e;
+        cin >> s >> e;
+        adjList[s].push_back(e);
+        adjList[e].push_back(s);
+    }
+
+    // sort
+    for(int i = 0; i < 1001; i++){
+        sort(adjList[i].begin(), adjList[i].end());
+    }
+
+    fill_n(isVisited, 1001, false);
+
+    stackDFS(V);
+    cout << endl;
+
+    fill_n(isVisited, 1001, false);
+    BFS(V);
+
+
+    return 0;
+}
+
