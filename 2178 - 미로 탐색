@@ -1,0 +1,79 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+int n, m;
+int dist[100][100]; // 거리를 저장하는 변수
+int direction[4][2] = {{-1,0}, {1,0}, {0,-1}, {0,1}}; // up, down, left, right
+bool map[100][100]; // 갈 수 있는 지역인지 저장하는 변수
+
+
+void input(){
+    cin >> n >> m;
+
+    for(int i=0; i<n; i++){
+        for(int j=0; j<m ;j++) {
+            int tmp;
+            scanf("%1d", &tmp); // 수가 붙어서 입력되므로 하나씩 잘라서 받아와야한다
+
+            if(tmp == 1){
+                map[i][j] = true;
+            }
+        }
+    }
+}
+
+void Out(int num){
+    printf("%d\n", num);
+}
+
+bool isInside(int next_y, int next_x){
+    return (next_y >= 0 && next_y < n) && (next_x >= 0 && next_x < m);
+}
+
+int BFS(){
+    int cur_y = 0, cur_x = 0;   //current y, x
+
+    queue<pair<int, int> > q; // bfs
+    q.push(pair<int, int>(cur_y,cur_x));
+    dist[cur_y][cur_x] = 1; // 시작지점 또한 포함
+
+    while(!q.empty()){
+
+        cur_y = q.front().first;
+        cur_x = q.front().second;
+        q.pop();
+
+        if((cur_y == n-1) && (cur_x == m-1)) break; //도착지점
+
+        for(int i=0; i<4; i++){
+            //up, down, left, right
+            int next_y = cur_y + direction[i][0];
+            int next_x = cur_x + direction[i][1];
+
+            // 만약 갈 수 있는 곳이라면
+            if(isInside(next_y, next_x) && dist[next_y][next_x] == 0 && map[next_y][next_x]){
+                dist[next_y][next_x] = dist[cur_y][cur_x] + 1;
+                q.push(pair<int, int>(next_y, next_x));
+            }
+        }
+    }
+
+    return dist[n - 1][m - 1];
+}
+
+
+int main() {
+
+    input();
+    Out(BFS());
+
+    return 0;
+}
+
