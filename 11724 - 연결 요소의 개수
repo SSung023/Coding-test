@@ -1,0 +1,97 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+bool isVisited[1001];
+vector<int> adjList[1001];
+int n, m;
+
+void stackDFS(int idx){
+    stack<int> stk;
+    stk.push(idx);
+
+    while(!stk.empty()){
+        int cur = stk.top();
+        stk.pop();
+
+        if(isVisited[cur])  continue;
+        isVisited[cur] = true;
+
+        for(int i = adjList[cur].size() - 1; i >= 0; i--){
+            int next = adjList[cur][i];
+            stk.push(next);
+        }
+    }
+}
+
+void recursiveDFS(int idx){
+    if(isVisited[idx]){
+        return;
+    }
+    isVisited[idx] = true;
+
+    for(int i = 0; i < adjList[idx].size(); i++){
+        int next = adjList[idx][i];
+        recursiveDFS(next);
+    }
+}
+
+void BFS(int idx){
+    queue<int> que;
+
+    que.push(idx);
+    while(!que.empty()){
+        int cur = que.front();
+        que.pop();
+
+        if(isVisited[cur])  continue;
+        isVisited[cur] = true;
+
+        for(int i = 0; i < adjList[cur].size(); i++){
+            int next = adjList[cur][i];
+            que.push(next);
+        }
+    }
+}
+
+void makeGraph(){
+    cin >> n >> m;
+
+    for(int i = 0; i < m; i++){
+        int start, end;
+        cin >> start >> end;
+        adjList[start].push_back(end);
+        adjList[end].push_back(start);
+    }
+
+    for(int i = 0; i < n; i++){
+        sort(adjList[i].begin(), adjList[i].end());
+    }
+}
+
+int main() {
+
+
+    int cnt = 0;
+    makeGraph();
+
+    // 모든 정점을 순회하면서 Cycle을 확인해본다
+    for(int i = 1; i <= n; i++){
+        // 만약 방문하지 않았다면(여태까지의 Cycle에 포함되지 않았다면)
+        if(!isVisited[i]){
+            cnt++;
+            BFS(i);
+        }
+    }
+
+    cout << cnt;
+
+    return 0;
+}
+
