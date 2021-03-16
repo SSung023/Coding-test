@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <memory.h>
+
+using namespace std;
+
+int testcase, n, cur_x, cur_y, next_x, next_y, goal_x, goal_y;;
+int arr[301][301];
+//(dy, dx)
+int dir[8][2] = {{-1,-2},{-2,-1},{-2,1},{-1, 2},{1,2},{2,1},{2,-1},{1,-2}}; //왼쪽 위부터 시계 방향
+bool isVisited[301][301];
+queue<pair<int,int>> que; // bfs
+
+void init(){
+    // 다음 test case를 위해 queue & 배열 초기화
+    while(!que.empty())
+        que.pop();
+
+    memset(isVisited, false, sizeof(isVisited));
+    memset(arr, 0, sizeof(arr));
+}
+
+void input(){
+
+    scanf("%d", &n); // 체스판의 길이
+    scanf("%d %d", &cur_x, &cur_y); // 현재 나이트의 위치
+    scanf("%d %d", &goal_x, &goal_y);// 나이트의 목적지
+
+    arr[cur_y][cur_x] = 1;
+}
+
+// 다음 검사 좌표가 범위 안에 있는지 확인
+bool isInside(int next_y, int next_x){
+    return (0 <= next_x && next_x < n)&&(0 <= next_y && next_y < n);
+}
+
+void BFS(int x, int y){
+
+    que.push(pair<int, int>(y, x));
+
+    while(!que.empty()){
+        cur_y = que.front().first;
+        cur_x = que.front().second;
+        que.pop();
+
+        if(cur_x == goal_x && cur_y == goal_y){
+            return;
+        }
+
+        for(int i = 0; i < 8; i++){
+            next_y = cur_y + dir[i][0];
+            next_x = cur_x + dir[i][1];
+
+            // map의 범위 안에 있고, 아직 방문하지 않은 곳이라면
+            if(isInside(next_y, next_x) && arr[next_y][next_x] == 0){
+                arr[next_y][next_x] = arr[cur_y][cur_x] + 1;
+                que.push(pair<int, int>(next_y, next_x));
+            }
+        }
+    }
+}
+
+int main() {
+
+    scanf("%d", &testcase);
+
+    for(int i = 0; i < testcase; i++){
+        input();
+        BFS(cur_x, cur_y);
+        printf("%d\n", arr[goal_y][goal_x] - 1);
+
+        init();
+    }
+
+    return 0;
+}
+
