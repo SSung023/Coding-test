@@ -19,7 +19,7 @@ int main() {
     while(M--){
         int num, index;
         cin >> num;
-        // 찾고자하는 num의 index를 찾는다
+        // 찾고자 하는 num의 index를 찾는다
         for(int i = 0; i < dq.size(); i++){
             if(num == dq[i]){
                 index = i;
