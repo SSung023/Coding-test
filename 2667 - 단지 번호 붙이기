@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+int n, numOfHouse, next_x, next_y;
+int arr[26][26];
+int dx[4] = {-1, 0, 1, 0};
+int dy[4] = {0, -1, 0, 1};
+bool isVisited[26][26];
+
+vector<int> v;
+queue<pair<int, int>> que; // bfs
+
+void input(){
+    scanf("%d", &n);
+
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < n; k++){
+            scanf("%1d", &arr[i][k]);
+        }
+    }
+}
+
+bool isInside(int y, int x){
+    return (0 <= x && x < n)&&(0 <= y && y < n);
+}
+
+// 재귀를 통한 DFS
+void DFS(int y, int x){
+
+    numOfHouse++;
+    isVisited[y][x] = true;
+
+    for(int i = 0; i < 4; i++){
+        next_x = x + dx[i];
+        next_y = y + dy[i];
+
+        if(arr[next_y][next_x] == 1 && !isVisited[next_y][next_x]){
+            isVisited[next_y][next_x] = true;
+            // 재귀적으로 DFS 실행
+            DFS(next_y, next_x);
+        }
+    }
+
+}
+
+int main() {
+
+    input();
+
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < n; k++){
+            // 해당 지점에 건물이 있고 && 맵 안에 있으며 && 아직 방문을 하지 않았다면
+            if(arr[i][k] == 1 && isInside(i,k) && !isVisited[i][k]){
+                DFS(i, k);
+                v.push_back(numOfHouse); // 집의 갯수 push
+                numOfHouse = 0; // 초기화
+            }
+        }
+    }
+
+    sort(v.begin(), v.end()); // 오름차순으로 정렬
+    printf("%d\n", v.size()); // 단지의 갯수 출력
+
+    vector<int>::iterator iter;
+    for(iter = v.begin(); iter != v.end(); iter++){
+        printf("%d\n", *iter);
+    }
+
+    return 0;
+}
+
