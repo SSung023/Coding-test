@@ -17,7 +17,7 @@ int main() {
     while(k--){
         int temp;
         cin >> temp;
-        //0을 입력받으면 가장 최근에 입력받은 수를 pop
+        // 0을 입력받으면 가장 최근에 입력받은 수를 pop
         if(temp == 0){
             if(st.empty())
                 continue;
