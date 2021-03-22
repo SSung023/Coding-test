@@ -1,0 +1,107 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+
+using namespace std;
+
+enum {null = -1, RED = 0, BLUE = 1};
+
+int testcase, v, e;
+int color[20001]; // 노드의 색을 저장
+bool isVisited[20001], isBi = false; // 방문 여부 저장
+vector<int> adjList[200001]; // 방문하는 노드의 번호, 숫자
+
+
+void init(){
+    memset(color, null, sizeof(color));
+    memset(isVisited, false, sizeof(isVisited));
+    memset(adjList, 0, sizeof(adjList));
+}
+
+void input(){
+    scanf("%d %d", &v, &e);
+
+    // 간선 정보를 받아서 저장, 일단 모든
+    for(int i = 0; i < e; i++){
+        int start, end;
+        scanf("%d %d", &start, &end);
+        adjList[start].push_back(end);
+        adjList[end].push_back(start);
+    }
+
+//    for(int i = 0; i < v; i++){
+//        sort(adjList[i].begin(), adjList[i].end());
+//    }
+    color[1] = RED; // 첫번째 노드는 빨간색으로 저장
+}
+
+void DFS(int idx){
+    if(isVisited[idx]){
+        return;
+    }
+    isVisited[idx] = true;
+    int cur_color = color[idx]; // 현재 색을 받아옴
+
+    // 인접한 노드들 순회
+    for(int i = 0; i < adjList[idx].size(); i++){
+        int next = adjList[idx][i];
+        if(!isVisited[next]){
+            switch (cur_color) {
+                case RED:
+                    color[next] = BLUE;
+                    break;
+                case BLUE:
+                    color[next] = RED;
+                    break;
+            }
+        }
+
+        DFS(next);
+    }
+}
+
+void isBipartite(){
+    // 모든 정점을 순회하면서, 인접한 정점의 색이 같은지 확인
+    for(int i = 1; i <= v; i++){
+        for(int k = 0; k < adjList[i].size(); k++){
+            int adj_color = color[adjList[i][k]]; // 인접한 노드의 색
+            if(color[i] == adj_color){
+                isBi = false;
+                return;
+            }
+        }
+    }
+    isBi = true;
+    return;
+}
+
+int main() {
+
+    scanf("%d", &testcase);
+    for(int i = 0; i < testcase; i++){
+        init();
+        input();
+        for(int k = 1; k <= v; k++){
+            // 만일 아직 방문하지 않았다면 해당 스타트 지점을 RED로 설정
+            if(!isVisited[k]){
+                color[k] = RED;
+                DFS(k);
+            }
+        }
+        isBipartite();
+        if(isBi)    printf("YES\n");
+        else    printf("NO\n");
+    }
+
+    // 이분 그래프 판별 방법
+    // 1. 먼저 DFS/BFS를 통해 노드에 색을 부여한다
+    // 2. 다시 DFS/BFS를 통해 인접 노드에 같은 색이 있는지 확인한다.
+    // 2-1. 만일 인접한 노드가 같은 색이라면 false
+    // 2-2. 만일 인접한 노드 중 같은 색이 없다면 true
+
+    return 0;
+}
+
