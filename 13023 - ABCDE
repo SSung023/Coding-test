@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+
+using namespace std;
+
+int n, m; // 사람의 수, 친구 관계의 수
+//int cnt = 0; // 연결된 체인 수가 4 이상이라면 해당 관계 존재
+bool isVaild = false;
+bool isVisited[2001];
+vector<int> adjList[2001];
+
+
+void input(){
+    scanf("%d %d", &n, &m);
+    for(int i = 0; i < m; i++){
+        int start, end;
+        scanf("%d %d", &start, &end);
+
+        adjList[start].push_back(end);
+        adjList[end].push_back(start);
+    }
+}
+
+void DFS(int idx, int cnt){
+    if(cnt == 4){
+        isVaild = true;
+        return;
+    }
+    for(int i = 0; i < adjList[idx].size(); i++){
+        int next = adjList[idx][i];
+
+        if(!isVisited[next]){
+            isVisited[next] = true;
+            DFS(next, cnt + 1);
+            isVisited[next] = false;
+        }
+
+    }
+}
+
+int main() {
+
+    input();
+    for(int i = 0; i < n; i++){
+        memset(isVisited, false, sizeof(isVisited));
+        isVisited[i] = true;
+        DFS(i, 0);
+
+        if(isVaild) break;
+    }
+
+    if(isVaild) printf("1");
+    else    printf("0");
+
+
+
+    return 0;
+}
+
