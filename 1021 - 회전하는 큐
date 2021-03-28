@@ -38,7 +38,7 @@ int main() {
                 dq.push_back(dq.front());
                 dq.pop_front();
             }
-            else{ //오른쪽으로 미는 것이 더 빠른 경우
+            else{ // 오른쪽으로 미는 것이 더 빠른 경우
                cnt++;
                 dq.push_front(dq.back());
                 dq.pop_back();
