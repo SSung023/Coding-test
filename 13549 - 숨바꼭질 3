@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+
+using namespace std;
+
+const int MAX = 100000 + 1;
+int n, k, result = 0;
+bool isVisited[MAX];
+deque<pair<int, int>> dq; //bfs
+
+
+void input(){
+    scanf("%d %d", &n ,&k);
+}
+
+void BFS(){
+    dq.push_back(make_pair(n, 0));
+    isVisited[n] = true;
+
+    while(!dq.empty()){
+        int curLoc = dq.front().first;
+        int curSec = dq.front().second;
+        dq.pop_front();
+
+        if(curLoc == k){
+            result = curSec;
+            return;
+        }
+
+        // 순간이동하는 경우, curSec이 유지되기 때문에 우선순위로 두어야한다.
+        // 따라서 deque에 push_front() 실행
+        if (curLoc * 2 < MAX && !isVisited[curLoc * 2])
+        {
+            dq.push_front(make_pair(curLoc * 2, curSec));
+            isVisited[curLoc * 2] = true;
+        }
+        // 걸어가는 경우, 초가 1초씩 추가되기 때문에 일반 queue와 같이 push_back() 실행
+        if (curLoc + 1 < MAX && !isVisited[curLoc + 1])
+        {
+            dq.push_back(make_pair(curLoc + 1, curSec + 1));
+            isVisited[curLoc + 1] = true;
+        }
+        if (curLoc - 1 >= 0 && !isVisited[curLoc - 1])
+        {
+            dq.push_back(make_pair(curLoc - 1, curSec + 1));
+            isVisited[curLoc - 1] = true;
+        }
+    }
+}
+
+int main() {
+
+    input();
+    BFS();
+
+    printf("%d", result);
+
+    return 0;
+}
+
