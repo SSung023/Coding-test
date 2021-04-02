@@ -1,0 +1,70 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+#define INF 1e9
+#define MAX 20000 + 1
+
+using namespace std;
+
+
+int v, e, k; // 정점의 개수, 간선의 개수, 시작 정점
+int dist[MAX];
+priority_queue<pair<int, int>> pq; // dijkstra, first:cost, second:end
+vector<pair<int, int>> graph[MAX]; // 간선의 정보, first:cost, second:end -> 한번 맞춰보자
+
+
+void input(){
+    scanf("%d %d %d", &v, &e, &k);
+    for(int i = 0; i < e; i++){
+        int start, end, cost;
+        scanf("%d %d %d", &start, &end, &cost);
+        graph[start].push_back(make_pair(cost, end)); // 간선의 정보 입력
+    }
+
+    fill(dist, dist + MAX, INF);
+}
+
+void dijkstra(int start){
+    pq.push(make_pair(0, start)); // 시작점의 정보를 넣는다
+    dist[start] = 0;
+
+    while (!pq.empty()){
+        int d = -pq.top().first;
+        int cur = pq.top().second;
+        pq.pop();
+
+        if(dist[cur] < d){ // 이미 최소경로
+            continue;
+        }
+        for(int i = 0; i < graph[cur].size(); i++){ // 현재 노드와 연결된 노드들을 둘러보면서 최소 비용 갱신
+            int cost = d + graph[cur][i].first;
+
+            if(cost < dist[graph[cur][i].second]){ // 최소 비용이므로 갱신
+                dist[graph[cur][i].second] = cost;
+                pq.push(make_pair(-cost, graph[cur][i].second));
+            }
+
+        }
+    }
+}
+
+int main(){
+
+    input();
+    dijkstra(k);
+
+    for(int i = 1; i <= v; ++i){
+        if(dist[i] == INF){
+            printf("INF\n");
+        }
+        else{
+            printf("%d\n", dist[i]);
+        }
+    }
+
+    // 1 2 3 4 5
+    return 0;
+}
