@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+#define INF 1e9
+#define MAX 1000 + 1
+
+using namespace std;
+
+int n, m, departure, destination; //도시의 개수, 버스의 개수, 시작도시, 도착도시
+int dist[MAX]; // 각 정점까지의 비용
+vector<pair<int, int>> graph[MAX]; // 정점의 근접 노드에 대한 정보. first:cost, second:destination
+priority_queue<pair<int, int>> pq; // first:cost, second:destination
+
+
+void input(){
+    scanf("%d %d", &n, &m); // 도시, 버스의 개수 입력
+
+    for(int i = 0; i < m; i++){
+        int s, e, c;
+        scanf("%d %d %d", &s, &e, &c);
+        graph[s].push_back(make_pair(c, e));
+    }
+
+    scanf("%d %d", &departure, &destination);
+
+    fill(dist, dist + MAX, INF); // 모든 정점까지의 거리를 INF로 설정
+}
+
+void dijkstra(int start){
+    pq.push(make_pair(0, start));
+    dist[start] = 0;
+
+    while(!pq.empty()){
+        int d = -pq.top().first; // 현재 정점까지의 비용
+        int cur = pq.top().second; // 현재 정점
+        pq.pop();
+
+        if(dist[cur] < d){
+            continue;
+        }
+        for(int i = 0; i < graph[cur].size(); i++){
+            // 가능한 비용을 계산해본다
+            int cost = d + graph[cur][i].first;
+            if(cost < dist[graph[cur][i].second]){
+                dist[graph[cur][i].second] = cost;
+                pq.push(make_pair(-cost, graph[cur][i].second));
+            }
+        }
+    }
+}
+
+int main(){
+
+    input();
+    dijkstra(departure);
+
+    printf("%d", dist[destination]);
+
+    return 0;
+}
