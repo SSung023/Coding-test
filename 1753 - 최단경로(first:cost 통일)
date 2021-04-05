@@ -36,7 +36,7 @@ void dijkstra(int start){
         int cur = pq.top().second;
         pq.pop();
 
-        if(dist[cur] < d){ // 이미 최소경로
+        if(dist[cur] < d){ // 이미 최소경로일 때
             continue;
         }
         for(int i = 0; i < graph[cur].size(); i++){ // 현재 노드와 연결된 노드들을 둘러보면서 최소 비용 갱신
