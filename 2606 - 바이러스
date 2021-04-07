@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+
+#define INF 1e9
+#define MAX 100 + 1
+
+using namespace std;
+
+
+int numOfCom, network, cnt = 0;
+bool isVisited[MAX];
+vector<int> graph[MAX];
+queue<int> que;
+
+
+void input(){
+    scanf("%d %d", &numOfCom, &network);
+    for(int i = 0; i < network; i++){
+        int s, e;
+        scanf("%d %d", &s, &e);
+        graph[s].push_back(e);
+        graph[e].push_back(s);
+    }
+
+    memset(isVisited, false, sizeof(isVisited));
+}
+
+void BFS(int idx){
+    que.push(idx);
+    isVisited[idx] = true;
+
+    while(!que.empty()){
+        int cur = que.front();
+        que.pop();
+
+        isVisited[cur] = true;
+
+        for(int i = 0; i < graph[cur].size(); i++){
+            int next = graph[cur][i];
+            if(!isVisited[next]){
+                isVisited[next] = true;
+                que.push(next);
+            }
+        }
+    }
+}
+
+int main(){
+
+    input();
+    BFS(1);
+
+    for(int i = 1; i <= numOfCom; i++){
+        if(isVisited[i]){
+            cnt++;
+        }
+    }
+    printf("%d", cnt- 1);
+
+    return 0;
+}
