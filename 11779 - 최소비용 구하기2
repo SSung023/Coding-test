@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+
+#define INF 1e9
+#define MAX 1000 + 1
+
+using namespace std;
+
+int n, m, departure, destination; // 도시의 개수, 버스의 개수, 시작도시, 도착도시
+int dist[MAX], parent[MAX];
+// first:cost, second:end
+priority_queue<pair<int, int>> pq;
+vector<pair<int, int>> graph[MAX];
+vector<int> path;
+
+
+
+void input(){
+    scanf("%d %d", &n, &m);
+    for(int i = 0; i < m; i++){
+        int s, e, c;
+        scanf("%d %d %d", &s, &e, &c);
+        graph[s].push_back(make_pair(c, e));
+    }
+    scanf("%d %d", &departure, &destination);
+}
+
+void init(){
+    fill(dist, dist+MAX, INF);
+}
+
+void dijkstra(int start){
+    pq.push(make_pair(0, start));
+    dist[start] = 0;
+
+    while(!pq.empty()){
+        int d = -pq.top().first;
+        int cur = pq.top().second;
+        pq.pop();
+
+        if(dist[cur] < d){
+            continue;
+        }
+
+        for(int i = 0; i < graph[cur].size(); i++){
+            int cost = d + graph[cur][i].first;
+
+            if(cost < dist[graph[cur][i].second]){
+                dist[graph[cur][i].second] = cost;
+                pq.push(make_pair(-cost, graph[cur][i].second));
+
+                parent[graph[cur][i].second] = cur;
+            }
+        }
+    }
+}
+
+
+int main(){
+
+    input();
+    init();
+    dijkstra(departure);
+
+    printf("%d\n", dist[destination]);
+
+    int tmp = destination;
+    while(tmp){
+        path.push_back(tmp);
+        tmp = parent[tmp];
+    }
+
+    printf("%d\n", path.size());
+
+    for(int i = path.size()-1; i >= 0; i--){
+        printf("%d ", path[i]);
+    }
+
+    return 0;
+}
