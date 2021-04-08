@@ -1,0 +1,87 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+
+#define INF 1e9
+#define MAX 50 + 1
+
+using namespace std;
+
+
+int testcase, m, n, k, cnt = 0; // 배추밭의 가로, 세로, 배추가 심어져 있는 위치의 개수
+int dy[4] = {0, -1, 0, 1}, dx[4] = {-1, 0, 1, 0};
+int graph[MAX][MAX];
+bool isVisited[MAX][MAX];
+queue<pair<int, int>> que;
+
+
+void input(){
+    scanf("%d %d %d", &m, &n, &k);
+    for(int i = 0; i < k; i++){
+        int x, y;
+        scanf("%d %d", &x, &y);
+        graph[y][x] = 1;
+    }
+
+    memset(isVisited, false, sizeof(isVisited));
+}
+
+void init(){
+    memset(graph, 0, sizeof(graph));
+    memset(isVisited, false, sizeof(isVisited));
+
+    while(!que.empty()){
+        que.pop();
+    }
+    cnt = 0;
+}
+
+bool isInside(int y, int x){
+    return (0 <= y && y <= n)&&(0 <= x && x <= m);
+}
+
+void BFS(int y, int x){
+    que.push(make_pair(y, x));
+    isVisited[y][x] = true;
+
+    while(!que.empty()){
+        int cur_y = que.front().first;
+        int cur_x = que.front().second;
+        que.pop();
+
+        for(int i = 0; i < 4; i++){
+            int next_y = cur_y + dy[i];
+            int next_x = cur_x + dx[i];
+
+            // 범위 내 && 배추가 심어져있는 땅 && 아직 방문하지 않은 곳
+            if(isInside(next_y, next_x) && graph[next_y][next_x] == 1 && !isVisited[next_y][next_x]){
+                que.push(make_pair(next_y, next_x));
+                isVisited[next_y][next_x] = true;
+            }
+        }
+    }
+}
+
+int main(){
+
+    scanf("%d", &testcase);
+    for(int i = 0; i < testcase; i++){
+        init();
+        input();
+
+        for(int k = 0; k < n; k++){
+            for(int j = 0; j < m; j++){
+                if(!isVisited[k][j] && graph[k][j] == 1){
+                    BFS(k, j);
+                    cnt++;
+                }
+            }
+        }
+        printf("%d\n", cnt);
+    }
+
+    return 0;
+}
