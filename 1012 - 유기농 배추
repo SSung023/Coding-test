@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 int testcase, m, n, k, cnt = 0; // 배추밭의 가로, 세로, 배추가 심어져 있는 위치의 개수
 int dy[4] = {0, -1, 0, 1}, dx[4] = {-1, 0, 1, 0};
 int graph[MAX][MAX];
