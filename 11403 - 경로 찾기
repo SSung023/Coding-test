@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+
+#define INF 1e9
+#define MAX 100 + 1
+
+using namespace std;
+
+int n;
+int graph[MAX][MAX];
+bool isVisited[MAX];
+
+
+void input(){
+    scanf("%d", &n);
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < n; k++){
+            int tmp;
+            scanf("%d", &tmp);
+            graph[i][k] = tmp;
+        }
+    }
+}
+
+void init(){
+    memset(isVisited, false, sizeof(isVisited));
+}
+
+void DFS(int idx){
+    for(int k = 0; k < n; k++){
+        if(graph[idx][k] == 1 && !isVisited[k]){
+            isVisited[k] = true;
+            DFS(k);
+        }
+    }
+}
+
+int main(){
+
+    input();
+    for(int i = 0; i < n; i++){
+        init();
+        DFS(i);
+
+        for(int k = 0; k < n; k++){
+            if(isVisited[k]){
+                graph[i][k] = 1;
+            }
+        }
+    }
+
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < n; k++){
+            printf("%d ", graph[i][k]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
