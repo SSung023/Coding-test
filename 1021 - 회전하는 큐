@@ -44,7 +44,6 @@ int main() {
                 dq.pop_back();
             }
         }
-
     }
 
     cout << cnt;
