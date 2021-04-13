@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+
+#define INF 1e9
+#define MAX 100 + 1
+
+using namespace std;
+
+int m, n, k; // 세로, 가로, 직사각형 갯수
+int cnt = 0, area = 0;
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+bool isBlocked[MAX][MAX], isVisited[MAX][MAX];
+vector<int> result;
+
+
+void input(){
+    scanf("%d %d %d", &m, &n, &k);
+    for(int i = 0; i < k; i++){
+        int left_bx, left_by, right_ux, right_uy;
+        scanf("%d %d %d %d", &left_bx, &left_by, &right_ux, &right_uy);
+
+        int left_ux, left_uy, right_bx, right_by;
+        left_ux = left_bx;
+        left_uy = m - right_uy;
+        right_bx = right_ux;
+        right_by = m - left_by;
+
+        for(int k = left_uy; k < right_by; k++){
+            for(int j = left_ux; j < right_bx; j++){
+                isBlocked[k][j] = true;
+            }
+        }
+    }
+}
+
+bool isInside(int y, int x){
+    return (0 <= y && y < m) && (0 <= x && x < n);
+}
+
+void DFS(int y, int x){
+    if(isVisited[y][x] || isBlocked[y][x]){
+        return;
+    }
+    isVisited[y][x] = true;
+    area++;
+
+    for(int i = 0; i < 4; i++){
+        int next_y = y + dy[i];
+        int next_x = x + dx[i];
+
+        // 범위 안에 있으며, 직사각형에 의해 막힌 곳이 아니고, 아직 방문하지 않은 곳
+        if(isInside(next_y, next_x) && !isBlocked[next_y][next_x] && !isVisited[next_y][next_x]){
+            DFS(next_y, next_x);
+        }
+    }
+}
+
+
+int main(){
+
+    input();
+    for(int i = 0; i < m; i++){
+        for(int k = 0; k < n; k++){
+            if(!isVisited[i][k] && !isBlocked[i][k]){
+                area = 0;
+                DFS(i, k);
+                result.push_back(area);
+                cnt++;
+            }
+        }
+    }
+    sort(result.begin(), result.end());
+    printf("%d\n", cnt);
+    for(int i = 0; i < result.size(); i++){
+        printf("%d ", result[i]);
+    }
+
+    return 0;
+}
