@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <memory.h>
+
+#define INF 1e9
+#define MAX 100 + 1
+
+using namespace std;
+
+int n;
+int cnt = 0;
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+char graph[MAX][MAX];
+bool isVisited[MAX][MAX];
+
+void input(){
+    scanf("%d", &n);
+
+    for(int i = 0; i < n; i++){
+        for (int k = 0; k < n; k++) {
+            scanf(" %c", &graph[i][k]);
+        }
+    }
+}
+
+void init(){
+    memset(isVisited, false, sizeof(isVisited));
+    cnt = 0;
+}
+
+bool isInside(int y, int x){
+    return (0 <= y && y < n) && (0 <= x && x < n);
+}
+
+//적록색약 X
+void distinct(int y, int x, char cur){
+    if(isVisited[y][x]){
+        return;
+    }
+    isVisited[y][x] = true;
+
+    for(int i = 0; i < 4; i++){
+        int next_y = y + dy[i];
+        int next_x = x + dx[i];
+
+        // 현재와 같은 문자일 때만
+        if(isInside(next_y, next_x) && !isVisited[next_y][next_x] && cur == graph[next_y][next_x]){
+            distinct(next_y, next_x, graph[y][x]);
+        }
+    }
+}
+
+//적록색약
+void nonDistinct(int y, int x, char cur){
+    if(isVisited[y][x]){
+        return;
+    }
+    isVisited[y][x] = true;
+
+    for(int i = 0; i < 4; i++){
+        int next_y = y + dy[i];
+        int next_x = x + dx[i];
+
+        if(isInside(next_y, next_x) && !isVisited[next_y][next_x]){
+            if(cur == 'B' && cur == graph[next_y][next_x]){
+                nonDistinct(next_y, next_x, graph[next_y][next_x]);
+            }
+            else if((cur == 'R' || cur == 'G') && graph[next_y][next_x] != 'B'){
+                nonDistinct(next_y, next_x, graph[next_y][next_x]);
+            }
+        }
+    }
+}
+
+
+int main(){
+
+    input();
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if(!isVisited[i][j]){
+                distinct(i, j, graph[i][j]);
+                cnt++;
+            }
+        }
+    }
+    printf("%d ", cnt);
+
+    init();
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if(!isVisited[i][j]){
+                nonDistinct(i, j, graph[i][j]);
+                cnt++;
+            }
+        }
+    }
+    printf("%d", cnt);
+
+    return 0;
+}
