@@ -74,6 +74,7 @@ int main(){
         }
     }
     sort(result.begin(), result.end());
+    
     printf("%d\n", cnt);
     for(int i = 0; i < result.size(); i++){
         printf("%d ", result[i]);
