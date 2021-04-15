@@ -35,7 +35,7 @@ bool isInside(int y, int x){
     return (0 <= y && y < n) && (0 <= x && x < n);
 }
 
-//적록색약 X
+// 적록색약 X
 void distinct(int y, int x, char cur){
     if(isVisited[y][x]){
         return;
