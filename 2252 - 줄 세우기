@@ -1,0 +1,58 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+#define MAX 32000 + 1
+using namespace std;
+
+int n, m; // 학생의 수, 관계의 수
+int inDegree[MAX], result[MAX];
+vector<int> graph[MAX];
+queue<int> q;
+
+
+void input(){
+    scanf("%d %d", &n, &m);
+    for(int i = 0; i < m; i++){
+        int a, b;
+        scanf("%d %d", &a, &b);
+        graph[a].push_back(b);
+        inDegree[b]++;
+    }
+}
+
+void topologySort(){
+    for(int i = 1; i <= n; i++){
+        if(inDegree[i] == 0){
+            q.push(i);
+        }
+    }
+    for(int i = 1; i <= n; i++){
+        if(q.empty()){
+            // cycle 발생
+            return;
+        }
+        int cur = q.front();
+        q.pop();
+        result[i] = cur;
+
+        for(int i = 0; i < graph[cur].size(); i++){
+            int next = graph[cur][i];
+            if(--inDegree[next] == 0){
+                q.push(next);
+            }
+        }
+    }
+}
+
+int main(void) {
+
+    input();
+    topologySort();
+
+    for(int i = 1; i <= n; i++){
+        printf("%d ", result[i]);
+    }
+
+    return 0;
+}
