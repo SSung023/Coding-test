@@ -1,0 +1,58 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+#define MAX 32000 + 1
+using namespace std;
+
+int n, m; //문제의 수, 먼저 푸는 것이 좋은 문제에 대한 관계의 수
+int inDegree[MAX], result[MAX]; // 진입차수, 위상정렬 결과
+vector<int> graph[MAX]; // 간선 정보
+priority_queue<int> q; //위상정렬에 필요한 큐, 난이도 순서대로 풀어야하므로 우선순위 큐 사용
+
+void input(){
+    scanf("%d %d", &n, &m);
+
+    for(int i = 0; i < m; i++){
+        int a, b; // a 문제는 b 문제보다 먼저 푸는 것이 좋다
+        scanf("%d %d", &a, &b);
+        graph[a].push_back(b); // a -> b (a 다음이 b)
+        inDegree[b]++;
+    }
+}
+
+void topologySort(){
+    // 차수가 0인 노드들을 큐에 push
+    for(int i = 1; i <= n; i++){
+        if(inDegree[i] == 0){
+            q.push(-i);
+        }
+    }
+    for(int i = 1; i <= n; i++){
+        if(q.empty()){
+            return; // 모든
+        }
+        int cur = -q.top();
+        q.pop();
+        result[i] = cur;
+
+        for(int i = 0; i < graph[cur].size(); i++){
+            int next = graph[cur][i];
+            if(--inDegree[next] == 0){
+                q.push(-next);
+            }
+        }
+    }
+}
+
+int main(void) {
+
+    input();
+    topologySort();
+
+    for(int i = 1; i <= n; i++){
+        printf("%d ", result[i]);
+    }
+
+    return 0;
+}
