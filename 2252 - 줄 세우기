@@ -5,6 +5,7 @@
 #define MAX 32000 + 1
 using namespace std;
 
+
 int n, m; // 학생의 수, 관계의 수
 int inDegree[MAX], result[MAX];
 vector<int> graph[MAX];
