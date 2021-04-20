@@ -53,7 +53,7 @@ void distinct(int y, int x, char cur){
     }
 }
 
-//적록색약
+// 적록색약
 void nonDistinct(int y, int x, char cur){
     if(isVisited[y][x]){
         return;
