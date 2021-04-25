@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+#define MAX 1000000 + 1
+using namespace std;
+
+
+int n, m, parent[MAX];
+
+
+void init(){
+    for(int i = 0; i <= n; i++){
+        parent[i] = i;
+    }
+}
+
+int getParent(int x){
+    if(parent[x] == x)  return x;
+    return parent[x] = getParent(parent[x]);
+}
+
+void unionParent(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+
+    // 부모는 숫자가 더 작은 쪽으로 합친다
+    if(a < b){
+        parent[b] = a;
+    }
+    else{
+        parent[a] = b;
+    }
+}
+
+bool isParentSame(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+
+    if(a == b){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+
+
+int main(void) {
+
+    scanf("%d %d", &n ,&m);
+    init();
+
+    for(int i = 0; i < m; i++){
+        int q, a, b;
+        scanf("%d %d %d", &q, &a, &b);
+        if(q == 0){
+            //두 개의 집합 union 실시
+            unionParent(a, b);
+        }
+        else if(q == 1){
+            //두 개의 원소가 하나의 집합으로 이루어져 있는지 확인
+            bool ans = isParentSame(a, b);
+            if(ans){
+                printf("YES\n");
+            }
+            else{
+                printf("NO\n");
+            }
+        }
+    }
+
+
+    return 0;
+}
