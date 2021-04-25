@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+#define MAX 1000 + 1
+using namespace std;
+
+
+int n, m, parent[MAX];
+int plan[200+1];
+
+
+void init(){
+    for(int i = 0; i <= n; i++){
+        parent[i] = i;
+    }
+}
+
+int getParent(int x){
+    if(parent[x] == x)  return x;
+    return parent[x] = getParent(parent[x]);
+}
+
+void unionParent(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+
+    // 부모는 숫자가 더 작은 쪽으로 합친다
+    if(a < b){
+        parent[b] = a;
+    }
+    else{
+        parent[a] = b;
+    }
+}
+
+bool isParentSame(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+
+    if(a == b){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+
+
+int main(void) {
+
+    scanf("%d %d", &n, &m); // 도시의 수, 여행 계획에 포함된 도시의 수
+    init();
+
+    // i <-> k 서로 연결되어 있음
+    // i에서 k까지 연결
+    for(int i = 1; i <= n; i++){
+        for(int k = 1; k <= n; k++){
+            int tmp;
+            scanf("%d", &tmp);
+            if(tmp == 1){
+                unionParent(i, k);
+            }
+        }
+    }
+
+    int tmp, node;
+    scanf("%d", &node);
+
+    tmp = getParent(node);
+    for(int i = 1; i < m; i++){
+        scanf("%d", &node);
+        if(tmp != getParent(node)){
+            printf("NO");
+            return 0;
+        }
+    }
+
+    printf("YES");
+
+    return 0;
+}
