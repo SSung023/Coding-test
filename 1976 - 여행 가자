@@ -54,7 +54,6 @@ int main(void) {
     init();
 
     // i <-> k 서로 연결되어 있음
-    // i에서 k까지 연결
     for(int i = 1; i <= n; i++){
         for(int k = 1; k <= n; k++){
             int tmp;
