@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <stack>
+
+#define MAX 1000000 + 1
+using namespace std;
+
+
+int n;
+int arr[MAX];
+
+int main(void) {
+
+    scanf("%d", &n);
+
+    vector<int> ans(n, -1);
+    stack<int> s;
+
+    for(int i = 0; i < n; i++){
+        scanf("%d", &arr[i]);
+    }
+
+    // 처음부터 검사할 것이기 때문에 초기 설정으로 stack에 0(index 0)을 push한다.
+    s.push(0);
+
+    // 첫 비교는 index 1부터 시작한다(index 0 오른쪽으로 검사)
+    for(int i = 1; i < n; i++){
+        // 만일 비어있다면 인덱스 push
+        if(s.empty()){
+            s.push(i);
+        }
+        // arr[s.top()] < arr[i]: 오큰수를 찾으면
+        while(!s.empty() && arr[s.top()] < arr[i]){
+            ans[s.top()] = arr[i];
+            s.pop(); // 해당 값의 오큰수를 찾았으므로 stack에서 pop
+        }
+        // 다음으로 검사할 인덱스 push
+        s.push(i);
+    }
+
+    for(int i = 0; i < n; i++){
+        printf("%d ", ans[i]);
+    }
+
+    return 0;
+}
