@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 20 + 1
+using namespace std;
+
+int r, c, result = 0; // 세로, 가로, 결과 값
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+char graph[MAX][MAX];
+bool isVisited[26]; // 알파벳은 26자이므로
+
+
+void input(){
+    scanf("%d %d", &r, &c);
+
+    for(int i = 0; i < r; i++){
+        for(int k = 0; k < c; k++){
+            scanf(" %c", &graph[i][k]);
+        }
+    }
+    // [0][0]에 해당하는 알파벳은 방문 처리
+   isVisited[graph[0][0] - 'A'] = true;
+}
+
+bool isInside(int y, int x){
+    return (0 <= y && y < r)&&(0 <= x && x < c);
+}
+
+void DFS(int y, int x, int cnt){
+
+    result = max(result, cnt);
+    char cur =  graph[y][x];
+
+    for(int i = 0; i < 4; i++){
+        int next_y = y + dy[i];
+        int next_x = x + dx[i];
+
+        // 1)범위 안에 존재  2)아직 방문하지 않았을 때  3)현재와 다른 문자일 때
+        if(isInside(next_y, next_x) && !isVisited[graph[next_y][next_x] - 'A'] && (cur != graph[next_y][next_x])){
+            isVisited[graph[next_y][next_x] - 'A'] = true;
+            DFS(next_y, next_x, cnt + 1);
+
+            isVisited[graph[next_y][next_x] - 'A'] = false;
+        }
+    }
+}
+
+int main(void) {
+
+    input();
+    DFS(0, 0, 1);
+
+    printf("%d", result);
+
+    return 0;
+}
