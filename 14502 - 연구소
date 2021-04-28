@@ -1,0 +1,114 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 8 + 1
+using namespace std;
+
+
+int n, m, cnt = -10; // 세로, 가로, 안전지대의 수를 담을 변수
+int graph[MAX][MAX], tmp[MAX][MAX]; // 연구소의 지도
+int dy[4] = {0, -1, 0, 1}, dx[4] = {-1, 0, 1, 0};
+queue<pair<int, int>> q;
+
+
+void input(){
+    scanf("%d %d", &n, &m);
+
+    for(int i = 0; i < n; i++){
+        for (int k = 0; k < m; k++){
+            scanf("%d", &graph[i][k]);
+        }
+
+    }
+}
+
+bool isInside(int y, int x){
+    return (0 <= y && y < n)&&(0 <= x && x < m);
+}
+
+void BFS(){
+    int pollution[MAX][MAX];
+    memcpy(pollution, tmp, sizeof(tmp));
+
+    // 바이러스(2)인 지점을 queue에 넣는다
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            if(pollution[i][k] == 2){
+                q.push(make_pair(i, k));
+            }
+        }
+    }
+
+    while(!q.empty()){
+        int cur_y = q.front().first;
+        int cur_x = q.front().second;
+        q.pop();
+
+        for(int i = 0; i < 4; i++){
+            int next_y = cur_y + dy[i];
+            int next_x = cur_x + dx[i];
+            if(isInside(next_y, next_x) && pollution[next_y][next_x] == 0){
+                pollution[next_y][next_x] = 2;
+                q.push(make_pair(next_y, next_x));
+            }
+        }
+    }
+
+    int c = 0;
+
+    // 안전지대가 몇 개인지 count
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            if(pollution[i][k] == 0){
+                c++;
+            }
+        }
+    }
+    cnt = max(c, cnt);
+}
+
+void setWall(int cnt){
+    // 벽이 모두 세워졌을 때
+    if(cnt == 3){
+        BFS();
+        return;
+    }
+    // main에서 하나의 벽은 세웠으니, 두 개의 벽을 더 세운다.
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            if(tmp[i][k] == 0){
+                tmp[i][k] = 1;
+                setWall(cnt+1);
+
+                // 재귀를 끝내면서 벽을 다시 되돌려준다.
+                tmp[i][k] = 0;
+            }
+        }
+    }
+}
+
+
+
+int main(void) {
+
+    input();
+
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            if(graph[i][k] == 0){
+                memcpy(tmp, graph, sizeof(graph));
+                // 이 자리는 고정으로 벽으로 세워놓고, 2개의 벽을 더 세운다
+                tmp[i][k] = 1;
+                setWall(1);
+                tmp[i][k] = 0;
+            }
+        }
+    }
+
+    printf("%d", cnt);
+
+    return 0;
+}
