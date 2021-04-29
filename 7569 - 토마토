@@ -1,0 +1,91 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 100 + 1
+using namespace std;
+
+typedef struct {
+    // z,y,x좌표, c:익는데에 걸리는 날짜
+    int z, y, x, c;
+}point;
+int m, n, h, cnt = 0; // 가로, 세로, 높이,
+int graph[MAX][MAX][MAX];
+int dz[6] = {0, -1, 0, 1, 0, 0}, dy[6] = {0, 0, 0, 0, -1, 1}, dx[6] = {-1, 0, 1, 0, 0, 0};
+bool isVisited[MAX][MAX][MAX];
+queue<point> q;
+
+void input(){
+    scanf("%d %d %d", &m, &n, &h); // 가로, 세로, 높이
+
+    for(int i = 0; i < h; i++){
+        for(int k = 0; k < n; k++){
+            for(int j = 0; j < m; j++){
+                scanf("%d", &graph[i][k][j]);
+
+                // 익은 토마토일 때 방문 처리를 해주고 queue에 넣는다.
+                if(graph[i][k][j] == 1){
+                    isVisited[i][k][j] = true;
+                    q.push({i, k, j, 0});
+                }
+            }
+        }
+    }
+}
+
+void isTomato(){
+    for(int i = 0; i < h; i++){
+        for(int k = 0; k < n; k++){
+            for(int j = 0; j < m; j++){
+                //아직 익지 않은 토마토가 존재할 때
+                if(graph[i][k][j] == 0){
+                    cnt = -1;
+                    return;
+                }
+            }
+        }
+    }
+}
+
+bool isInside(int x, int y, int z){
+    return (0 <= x && x < m)&&(0 <= y && y < n)&&(0 <= z && z < h);
+}
+
+void BFS(){
+    while(!q.empty()){
+        int cur_z = q.front().z;
+        int cur_y = q.front().y;
+        int cur_x = q.front().x;
+        int cost = q.front().c;
+        q.pop();
+
+        cnt = max(cost, cnt);
+
+        for(int i = 0; i < 6; i++){
+            int next_z = cur_z + dz[i];
+            int next_y = cur_y + dy[i];
+            int next_x = cur_x + dx[i];
+
+            if(isInside(next_x, next_y, next_z) && !isVisited[next_z][next_y][next_x] && graph[next_z][next_y][next_x] == 0){
+                isVisited[next_z][next_y][next_x] = true;
+                graph[next_z][next_y][next_x] = 1;
+                q.push({next_z, next_y, next_x, cnt+1});
+            }
+        }
+    }
+}
+
+int main(void) {
+
+    input();
+    BFS();
+
+    // 토마토가 모두 익었는지의 여부
+    isTomato();
+
+    printf("%d", cnt);
+
+    return 0;
+}
