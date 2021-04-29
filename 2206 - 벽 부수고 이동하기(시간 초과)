@@ -1,0 +1,99 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 1000 + 1
+using namespace std;
+
+typedef struct{
+    int y, x, c;
+}point;
+int n, m, cnt, result = 100000000; // 세로, 가로, 거리
+int graph[MAX][MAX], tmp[MAX][MAX];
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+bool isVisited[MAX][MAX], ans = false, valid = false;
+queue<point> q;
+
+void input(){
+    scanf("%d %d", &n, &m);
+
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            scanf("%1d", &graph[i][k]);
+        }
+    }
+}
+
+void init(){
+    memcpy(tmp, graph, sizeof(graph));
+    memset(isVisited, false, sizeof(isVisited));
+}
+
+bool isInside(int y, int x){
+    return (0 <= y && y < n)&&(0 <= x && x < m);
+}
+
+void BFS(){
+    q.push({0, 0, 1});
+    isVisited[0][0] = true;
+    cnt = 1;
+    ans = false;
+
+    while(!q.empty()){
+        int cur_y = q.front().y;
+        int cur_x = q.front().x;
+        int cost = q.front().c;
+
+        cnt = max(cost, cnt);
+        q.pop();
+
+        if(cur_y == n-1 && cur_x == m-1){
+            ans = true;
+            return;
+        }
+
+        for(int i = 0; i < 4; i++){
+            int next_y = cur_y + dy[i];
+            int next_x = cur_x + dx[i];
+
+            if(isInside(next_y, next_x) && !isVisited[next_y][next_x] && tmp[next_y][next_x] == 0){
+                isVisited[next_y][next_x] = true;
+                q.push({next_y, next_x, cnt + 1});
+            }
+        }
+    }
+}
+
+int main(void) {
+
+    input();
+
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            init();
+            if(tmp[i][k] == 1){
+                tmp[i][k] = 0;
+                BFS();
+
+                if(ans){
+                    result = min(cnt, result);
+                    valid = true;
+                }
+            }
+        }
+    }
+
+
+    if(valid){
+        printf("%d", result);
+    }
+    else{
+        printf("-1");
+    }
+
+
+
+    return 0;
+}
