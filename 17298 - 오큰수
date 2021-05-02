@@ -21,7 +21,7 @@ int main(void) {
         scanf("%d", &arr[i]);
     }
 
-    // 처음부터 검사할 것이기 때문에 초기 설정으로 stack에 0(index 0)을 push한다.
+    // 처음부터 검사할 것이기 때문에 초기 설정으로 stack에 0(index 0)을 push
     s.push(0);
 
     // 첫 비교는 index 1부터 시작한다(index 0 오른쪽으로 검사)
