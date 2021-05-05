@@ -1,0 +1,114 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 50 + 1
+#define INF 100000000
+using namespace std;
+
+typedef struct {
+    int y, x, c;
+}point;
+int r, c, result = 0, end_y, end_x; // 세로, 가로
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+int flood[MAX][MAX]; // 물이 몇 분에 차오르는지 저장하는 배열
+char graph[MAX][MAX];
+bool isVisited[MAX][MAX], w_Visited[MAX][MAX], isValid = false;
+queue<pair<int, int>> water; // 홍수
+queue<point> q; // 고슴도치가 갈 수 있는 방법
+
+
+void input(){
+    scanf("%d %d", &r, &c);
+    for(int i = 0; i < r; i++){
+        for(int k = 0; k < c; k++){
+            scanf(" %c", &graph[i][k]);
+            flood[i][k] = INF;
+
+            if(graph[i][k] == 'D'){
+                //flood[i][k] = INF; // 평생 물이 차지 않는 곳
+                end_y = i;
+                end_x = k;
+            }
+            else if(graph[i][k] == 'S'){
+                flood[i][k] = 0;
+                q.push({i,k,0});
+                isVisited[i][k] = true;
+            }
+            else if (graph[i][k] == '*'){
+                flood[i][k] = 0;
+                water.push(make_pair(i, k));
+                w_Visited[i][k] = true;
+            }
+            else if(graph[i][k] == 'X'){
+                flood[i][k] = -1;
+            }
+        }
+    }
+}
+
+
+bool isInside(int y, int x){
+    return (0 <= y && y < r)&&(0 <= x && x < c);
+}
+
+void BFS(){
+    // water BFS를 실행하면서 각 칸에 몇 분 후에 물이 차는지 확인
+    while(!water.empty()){
+        int cur_y = water.front().first;
+        int cur_x = water.front().second;
+        water.pop();
+        for(int i = 0; i < 4; i++){
+            int next_y = cur_y + dy[i];
+            int next_x = cur_x + dx[i];
+            if(isInside(next_y, next_x) && (graph[next_y][next_x] == '.' || graph[next_y][next_x] == 'S') && !w_Visited[next_y][next_x]){
+                water.push(make_pair(next_y, next_x));
+                w_Visited[next_y][next_x] = true;
+                flood[next_y][next_x] = flood[cur_y][cur_x] + 1;
+            }
+        }
+    }
+
+    while(!q.empty()){
+        int cur_y = q.front().y;
+        int cur_x = q.front().x;
+        int cost = q.front().c;
+        q.pop();
+
+        if(cur_y == end_y && cur_x == end_x){
+            result = cost;
+            isValid = true;
+            return;
+        }
+        for(int i = 0; i < 4; i++){
+            int next_y = cur_y + dy[i];
+            int next_x = cur_x + dx[i];
+            int next_c = cost + 1;
+
+            // 벽(X)일 때 통과 X
+            if(isInside(next_y, next_x) && flood[next_y][next_x] > next_c && !isVisited[next_y][next_x]){
+                q.push({next_y, next_x, next_c});
+                isVisited[next_y][next_x] = true;
+            }
+        }
+    }
+    return;
+}
+
+int main(void) {
+
+    input();
+    BFS();
+
+    if(isValid){
+        printf("%d", result);
+    }
+    else{
+        printf("KAKTUS");
+    }
+    
+
+    return 0;
+}
