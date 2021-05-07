@@ -24,7 +24,7 @@ int main(void) {
     // 처음부터 검사할 것이기 때문에 초기 설정으로 stack에 0(index 0)을 push
     s.push(0);
 
-    // 첫 비교는 index 1부터 시작한다(index 0 오른쪽으로 검사)
+    // 첫 비교는 index 1부터 시작(index 0 오른쪽으로 검사)
     for(int i = 1; i < n; i++){
         // 만일 비어있다면 인덱스 push
         if(s.empty()){
