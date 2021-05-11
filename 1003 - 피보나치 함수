@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 40 + 1
+#define INF 100000000
+using namespace std;
+
+int t, dp[MAX];
+
+void input(){
+    scanf("%d", &t);
+}
+
+int Fibonacci(int n){
+    if(n == 0){
+        dp[0] = 0;
+        return 0;
+    }
+    else if(n == 1){
+        dp[1] = 1;
+        return 1;
+    }
+    // 이미 한번 계산한 값일 때
+    if(dp[n] != 0){
+        return dp[n];
+    }
+    // 계산한 값이 없을 때
+    else{
+        return dp[n] = Fibonacci(n-1) + Fibonacci(n-2);
+    }
+
+}
+
+
+int main(void) {
+
+    int testcase;
+    scanf("%d", &testcase);
+    for(int i = 0; i < testcase; i++){
+        input();
+        if(t == 0){
+            printf("1 0\n");
+        }
+        else if(t == 1){
+            printf("0 1\n");
+        }
+        else{
+            Fibonacci(t);
+            printf("%d %d\n", dp[t - 1], dp[t]);
+        }
+    }
+
+
+
+    return 0;
+}
