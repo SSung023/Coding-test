@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 1000 + 1
+#define INF 100000000
+using namespace std;
+
+int dp[MAX], n;
+
+int solution(int n){
+    if(n <= 1){
+        dp[n] = 1;
+        return 1;
+    }
+    if(n == 2){
+        dp[n] = 3;
+        return 3;
+    }
+    if(dp[n] != 0){
+        return dp[n];
+    }
+    else{
+        return dp[n] = (solution(n - 2) * 2 + solution(n - 1)) % 10007;
+    }
+}
+
+int main(void) {
+
+    scanf("%d", &n);
+    dp[0] = 1;
+
+    printf("%d", solution(n));
+
+    return 0;
+}
