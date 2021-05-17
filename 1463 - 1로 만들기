@@ -33,6 +33,5 @@ int main(void) {
     int result = DP(n);
     printf("%d", result);
 
-
     return 0;
 }
