@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 500 + 1
+#define INF 100000000
+using namespace std;
+
+char graph[MAX][MAX];
+int n, m, sx, sy; // 세로, 가로, 시작 x좌표, 시작 y좌표
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+bool isVisited[MAX][MAX], isValid, pos;
+
+
+void input(){
+    scanf("%d %d", &n, &m);
+
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            scanf(" %c", &graph[i][k]);
+        }
+    }
+}
+
+bool isInside(int y, int x){
+    return (0 <= y && y < n) && (0 <= x && x < m);
+}
+
+void DFS(int y, int x, int c){
+    if(isValid){
+        return;
+    }
+    isVisited[y][x] = true;
+    for (int i = 0; i < 4; i++) {
+        int ny = y + dy[i];
+        int nx = x + dx[i];
+
+        if(isInside(ny, nx)){
+            if(!isVisited[ny][nx] && graph[ny][nx] == graph[y][x]){
+                isVisited[ny][nx] = true;
+                DFS(ny, nx, c + 1);
+                isVisited[ny][nx] = false;
+            }
+            else{
+                if(c >= 4 && ny == sy && nx == sx){
+                    isValid = true;
+                    return;
+                }
+            }
+        }
+    }
+}
+
+int main(void) {
+
+    input();
+
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            isValid = false;
+            sx = k, sy = i;
+
+            DFS(sy, sx, 1);
+            if(isValid){
+                break;
+            }
+        }
+        if(isValid){
+            break;
+        }
+    }
+
+    if(isValid){
+        printf("Yes");
+    }
+    else{
+        printf("No");
+    }
+
+    return 0;
+}
