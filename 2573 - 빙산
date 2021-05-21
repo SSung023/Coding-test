@@ -1,0 +1,102 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 300 + 1
+#define INF 100000000
+using namespace std;
+
+int n, m, year = 0, land; // 세로, 가로, 정답
+int graph[MAX][MAX], graph_n[MAX][MAX]; // 현재의 그래프, 1년 후의 그래프
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+bool isVisited[MAX][MAX];
+queue<pair<int, int>> q;
+
+void input(){
+    scanf("%d %d", &n, &m);
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            scanf("%d", &graph[i][k]);
+        }
+    }
+}
+
+void melt(int y, int x){
+    // 빙산이 얼마나 녹는지 확인
+    int cnt = 0;
+    for(int i = 0; i < 4; i++){
+        int ny = y + dy[i];
+        int nx = x + dx[i];
+        if(graph[ny][nx] == 0){
+            cnt++;
+        }
+    }
+    // 0(바다)의 개수만큼 빙하를 녹인다
+    int tmp = graph[y][x] - cnt;
+    if(tmp < 0) tmp = 0;
+    graph_n[y][x] = tmp;
+    return;
+}
+
+bool isInside(int y, int x){
+    return (0 <= y && y < n) && (0 <= x && x < m);
+}
+
+void BFS(int y, int x){
+     // 연결되어 있는 빙산을 찾아서 녹인다
+     isVisited[y][x] = true;
+     while(!q.empty()){
+         int cur_y = q.front().first;
+         int cur_x = q.front().second;
+         q.pop();
+         melt(cur_y, cur_x);
+         for(int i = 0; i < 4; i++){
+             int ny = cur_y + dy[i];
+             int nx = cur_x + dx[i];
+
+             if(isInside(ny, nx) && !isVisited[ny][nx] && graph[ny][nx] != 0){
+                 isVisited[ny][nx] = true;
+                 q.push(make_pair(ny, nx));
+             }
+         }
+     }
+}
+
+void solution(){
+    // BFS()를 이용하여 문제 해결
+    while(true){
+        memset(isVisited, false, sizeof(isVisited));
+        memset(graph_n, 0, sizeof(graph_n));
+        land = 0;
+
+        for(int i = 0; i < n; i++){
+            for(int k = 0; k < m; k++){
+                if(graph[i][k] != 0 && !isVisited[i][k]){
+                    q.push(make_pair(i, k));
+                    BFS(i, k);
+                    land++;
+                }
+            }
+        }
+        if(land >= 2) return;
+        if(land == 0){
+            // 빙산이 다 녹았을 때
+            year = 0;
+            return;
+        }
+        year++;
+        memcpy(graph, graph_n, sizeof(graph_n));
+    }
+}
+
+int main(void) {
+
+    input();
+    solution();
+
+    printf("%d", year);
+
+    return 0;
+}
