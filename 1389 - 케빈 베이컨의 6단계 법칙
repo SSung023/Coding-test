@@ -1,0 +1,81 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 100 + 1
+#define INF 100000000
+using namespace std;
+
+int n, m; // 유저의 수(2<=n<=100), 관계의 수(1<=m<=5000)
+int result[MAX], bacon[MAX]; // 케빈 베이컨의 수를 저장(최종 결과, 각 유저의 값)
+bool isVisited[MAX];
+vector<int> graph[MAX];
+queue<pair<int, int>> q; // first: idx, second:cnt
+
+void init(){
+    memset(isVisited, false, sizeof(isVisited));
+
+    for(int i = 1; i <= n; i++){
+        bacon[i] = INF;
+    }
+}
+
+void input(){
+    scanf("%d %d", &n, &m);
+    for(int i = 0; i < m; i++){
+        int s, e;
+        scanf("%d %d", &s, &e);
+        graph[s].push_back(e);
+        graph[e].push_back(s);
+    }
+}
+
+void BFS(int idx){
+    isVisited[idx] = true;
+    q.push(make_pair(idx, 0));
+
+    while(!q.empty()){
+        int cur = q.front().first;
+        int cnt = q.front().second;
+        q.pop();
+        bacon[cur] = min(cnt, bacon[cur]);
+
+        for(int i = 0; i < graph[cur].size(); i++){
+            int next = graph[cur][i];
+            if(!isVisited[next]){
+                q.push(make_pair(next, cnt + 1));
+                isVisited[next] = true;
+            }
+        }
+    }
+}
+
+int main(void) {
+
+    input();
+
+    for(int i = 1; i <= n; i++){
+        init();
+        BFS(i);
+
+        int tmp = 0;
+        for(int k = 1; k <= n; k++){
+            tmp += bacon[k];
+        }
+        result[i] = tmp;
+    }
+
+    int tmp = INF, idx = 0;
+    for(int i = n; i > 0; i--){
+        if(tmp >= result[i]){
+            tmp = result[i];
+            idx = i;
+        }
+    }
+
+    printf("%d", idx);
+
+    return 0;
+}
