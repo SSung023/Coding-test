@@ -1,0 +1,119 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 50 + 1
+#define INF 100000000
+using namespace std;
+
+int n, r, l;
+int ground = 0, total = 0, result = 0; // 땅의 갯수, 총 인원 수
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+int graph[MAX][MAX];
+bool isVisited[MAX][MAX], flag; // v.size() > 1이라면 true
+vector<pair<int, int>> v; // 같은 연합에 있는(인구이동이 있는) 위치 저장
+queue<pair<int, int>> q;
+
+
+void init(){
+    flag = false;
+    memset(isVisited, false, sizeof(isVisited));
+}
+
+void input(){
+    scanf("%d %d %d", &n, &l, &r);
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < n; k++){
+            scanf("%d", &graph[i][k]);
+        }
+    }
+}
+
+// 인구 이동하는 알고리즘
+void movement(){
+    int p = ground / total;
+    for (int i = 0; i < v.size(); i++) {
+        int y = v[i].first;
+        int x = v[i].second;
+
+        graph[y][x] = p;
+    }
+}
+
+// 범위 안에 존재하는지 확인
+bool isInside(int y, int x){
+    return (0 <= x && x < n) && (0 <= y && y < n);
+}
+
+// 인구 차이가 L <=  <= R인지 확인
+bool inRange(int num){
+    return l <= num && num <= r;
+}
+
+void BFS(int y, int x){
+    isVisited[y][x] = true;
+    q.push(make_pair(y, x));
+    v.push_back(make_pair(y, x));
+    total++;
+    ground += graph[y][x];
+
+    while (!q.empty()){
+        int cur_y = q.front().first;
+        int cur_x = q.front().second;
+        q.pop();
+
+
+        for(int i = 0; i < 4; i++){
+            int ny = cur_y + dy[i];
+            int nx = cur_x + dx[i];
+            int num = abs(graph[ny][nx] - graph[cur_y][cur_x]);
+
+            if(isInside(ny, nx) && !isVisited[ny][nx] && inRange(num)){
+                isVisited[ny][nx] = true;
+                total++;
+                ground += graph[ny][nx];
+                q.push(make_pair(ny, nx));
+                v.push_back(make_pair(ny, nx));
+            }
+        }
+    }
+
+    // flag = true로 하는 코드 필요
+    if(v.size() > 1){
+        movement();
+        flag = true;
+    }
+}
+
+int main(void) {
+
+    input();
+
+    while(true){
+        init();
+        for(int i = 0; i < n; i++){
+            for(int k = 0; k < n; k++){
+                if(!isVisited[i][k]){
+                    v.clear();
+                    total = 0;
+                    ground = 0;
+
+                    BFS(i, k);
+                }
+            }
+        }
+        if(flag){
+            result++;
+        }
+        else{
+            break;
+        }
+    }
+
+    printf("%d", result);
+
+
+    return 0;
+}
