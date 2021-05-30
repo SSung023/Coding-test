@@ -76,6 +76,5 @@ int main(void) {
     }
 
     printf("%d", idx);
-
     return 0;
 }
