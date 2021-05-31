@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 1000 + 1
+#define INF 100000000
+using namespace std;
+
+int testcase, n, start = 0, cycle = 0;
+bool isVisited[MAX];
+vector<int> adjList[MAX];
+queue<int> q;
+
+void init(){
+    cycle = 0;
+    start = 0;
+    memset(isVisited, false, sizeof(isVisited));
+
+    for(int i = 1; i <= n; i++){
+        adjList[i].clear();
+    }
+}
+
+void input(){
+    scanf("%d", &n);
+
+    for(int k = 1; k <= n; k++){
+        int tmp;
+        scanf("%d", &tmp);
+        adjList[k].push_back(tmp);
+    }
+}
+
+void BFS(int idx){
+    isVisited[idx] = true;
+    q.push(idx);
+
+    while(!q.empty()){
+        int cur = q.front();
+        q.pop();
+
+        for(int i = 0; i < adjList[cur].size(); i++){
+            int next = adjList[cur][i];
+
+            // 처음으로 돌아왔을 때(사이클 형성)
+            if(next == start && isVisited[next]){
+                cycle++;
+                return;
+            }
+            if(!isVisited[next]){
+                q.push(next);
+                isVisited[next] = true;
+            }
+        }
+    }
+}
+
+int main(void) {
+
+    scanf("%d", &testcase);
+    for (int i = 0; i < testcase; i++) {
+        init();
+        // 간선 정보를 입력받음
+        input();
+        for(int i = 1; i <= n; i++){
+            if(!isVisited[i]){
+                start = i;
+                BFS(i);
+            }
+        }
+
+        printf("%d\n", cycle);
+    }
+
+
+    return 0;
+}
