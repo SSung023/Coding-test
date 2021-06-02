@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 1000000 + 1
+#define INF 100000000
+using namespace std;
+
+int f, s, g, u, d;
+int result;
+bool isVisited[MAX], flag = false;
+queue<pair<int ,int>> q; // first:idx, second:cnt(버튼 누르는 횟수)
+
+
+
+void input(){
+    // 전체 층, 현재 층, 목표 층, 위로 이동양, 아래로 이동양
+    scanf("%d %d %d %d %d", &f, &s, &g, &u, &d);
+}
+
+bool isInside(int x){
+    return 1 <= x && x <= f;
+}
+
+void BFS(int idx){
+    isVisited[idx] = true;
+    q.push(make_pair(idx, 0));
+
+    while(!q.empty()){
+        int cur = q.front().first;
+        int cnt = q.front().second;
+        q.pop();
+
+        if(cur == g){
+            flag = true;
+            result = cnt;
+            return;
+        }
+
+        int next_u = cur + u, next_d = cur - d; // 위, 아래로 이동 예상 층
+
+        // 전체 층 범위 안에 있고, 아직 방문하지 않았을 때
+        if(isInside(next_u) && !isVisited[next_u]){
+            q.push(make_pair(next_u, cnt + 1));
+            isVisited[next_u] = true;
+        }
+
+        if(isInside(next_d) && !isVisited[next_d]){
+            q.push(make_pair(next_d, cnt + 1));
+            isVisited[next_d] = true;
+        }
+
+    }
+}
+
+int main(void) {
+
+    input();
+    BFS(s);
+
+    // 엘리베이터를 이용하여 갈 수 있을 때
+    if(flag){
+        printf("%d", result);
+    }
+    // 엘리베이터를 이용하여 갈 수 없을 때
+    else{
+        printf("use the stairs");
+    }
+
+    return 0;
+}
