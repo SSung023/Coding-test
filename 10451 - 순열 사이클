@@ -70,7 +70,6 @@ int main(void) {
                 BFS(i);
             }
         }
-
         printf("%d\n", cycle);
     }
 
