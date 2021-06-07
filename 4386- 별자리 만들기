@@ -1,0 +1,104 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+#include <algorithm>
+#include <math.h>
+
+#define MAX 100 + 1
+#define INF 100000000
+using namespace std;
+
+class Edge{
+public:
+    int node[2];
+    double distance;
+
+    Edge(int a, int b, float distance){
+        this->node[0] = a;
+        this->node[1] = b;
+        this->distance = distance;
+    }
+    bool operator < (Edge edge){
+        return this->distance < edge.distance;
+    }
+};
+
+int n, parent[MAX];
+double sum;
+vector<pair<float, float>> pos;
+vector<Edge> v;
+
+
+
+void initParent(){
+    for(int i = 1; i <= n; i++){
+        parent[i] = i;
+    }
+}
+
+void input(){
+    scanf("%d", &n);
+    // 정점의 위치를 입력받음
+    for(int i = 0; i < n; i++){
+        float x, y;
+        scanf("%f %f", &x, &y);
+        pos.push_back(make_pair(x, y));
+    }
+
+    // 모든 간선의 경우 수를 구한다
+    for(int i = 0; i < n; i++){
+        for (int j = i + 1; j < n; j++){
+            double cost = pow(pos[i].first - pos[j].first, 2) + pow(pos[i].second - pos[j].second, 2);
+            double r = sqrt(cost);
+            v.push_back(Edge(i+1, j+1, r));
+        }
+    }
+
+    sort(v.begin(), v.end());
+    initParent();
+}
+
+int getParent(int x){
+    if(x == parent[x])  return x;
+    return parent[x] = getParent(parent[x]);
+}
+
+bool isParentSame(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+    return a == b;
+}
+
+void unionParent(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+    if(a < b){
+        parent[b] = a;
+    }
+    else{
+        parent[a] = b;
+    }
+}
+
+void Dijkstra(){
+    sum = 0;
+    for(int i = 0; i < v.size(); i++){
+        if(!isParentSame(v[i].node[0], v[i].node[1])){
+            sum += v[i].distance;
+            unionParent(v[i].node[0], v[i].node[1]);
+        }
+    }
+}
+
+int main(void) {
+
+    input();
+    Dijkstra();
+
+    //cout << sum;
+    printf("%.2f", sum);
+
+    return 0;
+}
