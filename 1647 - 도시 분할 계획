@@ -1,0 +1,99 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+#include <algorithm>
+
+#define MAX 100000 + 1
+#define INF 100000000
+using namespace std;
+
+class Edge{
+public:
+    int node[2], distance;
+    Edge(int a, int b, int distance){
+        this->node[0] = a;
+        this->node[1] = b;
+        this->distance = distance;
+    }
+    bool operator < (Edge edge){
+        return this->distance < edge.distance;
+    }
+};
+
+int n, m, parent[MAX], sum = 0, cnt = 0;
+vector<Edge> v;
+vector<Edge> edge; // MST에 포함되는 간선들
+
+
+void initParent(){
+    for(int i = 1; i <= n; i++){
+        parent[i] = i;
+    }
+}
+
+void input(){
+    scanf("%d %d", &n, &m);
+    for(int i = 0; i < m; i++){
+        int s, e, c;
+        scanf("%d %d %d", &s, &e, &c);
+        v.push_back(Edge(s,e,c));
+    }
+    sort(v.begin(), v.end());
+
+    initParent();
+}
+
+int getParent(int x){
+    if(x == parent[x])  return x;
+    return parent[x] = getParent(parent[x]);
+}
+
+bool isParentSame(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+    return a == b;
+}
+
+void unionParent(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+    if(a < b){
+        parent[b] = a;
+    }
+    else{
+        parent[a] = b;
+    }
+}
+
+void Dijkstra(){
+    sum = 0;
+    for(int i = 0; i < v.size(); i++){
+        if(!isParentSame(v[i].node[0], v[i].node[1])){
+            sum += v[i].distance;
+            unionParent(v[i].node[0], v[i].node[1]);
+
+            // MST에 포함되는 간선이므로 edge에 push_back
+            edge.push_back(Edge(v[i].node[0], v[i].node[1], v[i].distance));
+            cnt++; // MST에 포함되는 간선이 몇 개인지 count
+        }
+    }
+}
+
+int main(void) {
+
+    input();
+    Dijkstra();
+    
+    sort(edge.begin(), edge.end());
+
+    sum -= edge[cnt-1].distance;
+
+    printf("%d", sum);
+
+    
+    // Dijkstra를 통해 MST를 구하고, MST에 포함된 간선 중 제일 가중치가 높은 간선을 제거한다면 길의 유지비를 최소한으로 할 수 있을 것이다.
+    
+    return 0;
+}
