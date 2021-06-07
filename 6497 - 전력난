@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+#include <algorithm>
+#include <math.h>
+
+#define MAX 200000 + 1
+#define INF 100000000
+using namespace std;
+
+class Edge{
+public:
+    int node[2];
+    int distance;
+
+    Edge(int a, int b, int distance){
+        this->node[0] = a;
+        this->node[1] = b;
+        this->distance = distance;
+    }
+    bool operator < (Edge edge){
+        return this->distance < edge.distance;
+    }
+};
+
+int m, n, parent[MAX], result = 0, total = 0; // 집의 수, 길의 수
+vector<Edge> v;
+
+
+void initParent(){
+    for(int i = 0; i <= n; i++){
+        parent[i] = i;
+    }
+}
+
+int getParent(int x){
+    if(x == parent[x])  return x;
+    return parent[x] = getParent(parent[x]);
+}
+
+bool isParentSame(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+    return a == b;
+}
+
+void unionParent(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+    if(a < b){
+        parent[b] = a;
+    }
+    else{
+        parent[a] = b;
+    }
+}
+
+void Dijkstra(){
+    result = 0;
+    for(int i = 0; i < v.size(); i++){
+        int n1 = v[i].node[0], n2 = v[i].node[1];
+
+        if(!isParentSame(n1, n2)){
+            result += v[i].distance;
+            unionParent(n1, n2);
+        }
+    }
+}
+
+int main(void) {
+
+    scanf("%d %d", &m, &n); // 집의 수, 길의 수
+
+    while(m != 0 && n != 0){
+
+        // 간선 정보를 받아서 저장
+        for(int i = 0; i < n; i++){
+            int s, e, c;
+            scanf("%d %d %d", &s, &e, &c);
+            v.push_back(Edge(s, e, c));
+
+            total += c;
+        }
+        // 간선을 가중치에 따라 오름차순으로 정렬
+        sort(v.begin(), v.end());
+        initParent();
+        Dijkstra();
+      
+        // 절약할 수 있는 비용 출력
+        result = total - result;
+        printf("%d\n", result);
+
+        // 초기화 부분
+        initParent();
+        v.clear();
+        result = 0;
+        total = 0;
+
+        scanf("%d %d", &m, &n);
+    }
+
+
+    return 0;
+}
