@@ -1,0 +1,131 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+#include <algorithm>
+#include <math.h>
+
+#define MAX 1000 + 1
+#define INF 100000000
+using namespace std;
+
+class Edge{
+public:
+    int node[2];
+    int distance;
+
+    Edge(int a, int b, int distance){
+        this->node[0] = a;
+        this->node[1] = b;
+        this->distance = distance;
+    }
+    bool operator < (Edge edge){
+        return this->distance < edge.distance;
+    }
+};
+
+int n, m, parent[MAX], result = 0, cnt = 0; // 건물의 수, 도로의 개수
+int best = 0, worst = 0, start = 0;
+vector<Edge> v;
+
+
+void initParent(){
+    for(int i = 0; i <= n; i++){
+        parent[i] = i;
+    }
+}
+
+int getParent(int x){
+    if(x == parent[x])  return x;
+    return parent[x] = getParent(parent[x]);
+}
+
+bool isParentSame(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+    return a == b;
+}
+
+void unionParent(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+    int p, target; // 현재 target이 부모노드로 되어 있는 값들을 p로 바꿔준다
+    if(a < b){
+        target = b;
+        p = a;
+    }
+    else{
+        p = b;
+        target = a;
+    }
+
+    for(int i = 1; i <= n; i++){
+        if(parent[i] == target){
+            parent[i] = p;
+        }
+    }
+}
+
+bool comp(Edge e1, Edge e2){
+    return e1.distance > e2.distance;
+}
+void input(){
+    scanf("%d %d", &n, &m);
+    int n0, n1, c;
+    scanf("%d %d %d", &n0, &n1, &c);
+    if(c == 0){
+        start++;
+        cnt = start;
+    }
+
+    for(int i = 0; i < m; i++){
+        int s, e, c;
+        scanf("%d %d %d", &s, &e, &c);
+        // 오르막일 때
+        if(c == 0){
+            c = 10;
+        }
+        v.push_back(Edge(s, e, c));
+    }
+}
+
+void Dijkstra(){
+    result = 0;
+
+    for(int i = 0; i < v.size(); i++){
+        if(!isParentSame(v[i].node[0], v[i].node[1])){
+            //오르막일 때
+            if(v[i].distance == 10){
+                cnt++;
+            }
+            unionParent(v[i].node[0], v[i].node[1]);
+        }
+    }
+}
+
+int main(void) {
+
+    input();
+
+    // 오름차순으로 정렬
+    sort(v.begin(), v.end());
+    initParent();
+    Dijkstra();
+    best = pow(cnt, 2);
+
+    // 내림차순으로 정렬
+    cnt = start;
+    sort(v.begin(), v.end(), comp);
+    initParent();
+    Dijkstra();
+    worst = pow(cnt, 2);
+
+
+    result = worst - best;
+    printf("%d", result);
+
+    // 먼저 최적의 경로를 구하고, 그 다음 최악의 경로를 구한다
+
+    return 0;
+}
