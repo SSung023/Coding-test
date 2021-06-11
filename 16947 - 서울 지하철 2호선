@@ -1,0 +1,105 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+#include <algorithm>
+#include <math.h>
+
+#define MAX 3000 + 1
+#define INF 100000000
+using namespace std;
+
+int n, cnt = 0, start; // 역의 개수, 여태까지 지나온 역의 개수
+int dist[MAX]; // 순환선까지의 거리
+bool flag = false;
+bool isVisited[MAX], isCycle[MAX];
+vector<int> adjList[MAX];
+queue<pair<int, int>> q;
+
+void input(){
+    scanf("%d", &n);
+    for(int i = 0; i < n; i++){
+        int s, e;
+        scanf("%d %d", &s, &e);
+        adjList[s].push_back(e);
+        adjList[e].push_back(s);
+    }
+}
+
+void init(){
+    memset(isVisited, false, sizeof(isVisited));
+    flag = false;
+}
+
+void DFS(int idx, int cnt){
+    isVisited[idx] = true;
+
+    for(int i = 0; i < adjList[idx].size(); i++){
+        int next = adjList[idx][i];
+
+        // 사이클 형성 조건
+        if(start == next && cnt > 2){
+            flag = true;
+            isCycle[start] = true;
+        }
+        if(!isVisited[next]){
+            DFS(next, cnt + 1);
+        }
+    }
+}
+
+// 순환선까지의 거리 측정
+void BFS(int idx){
+    isVisited[idx] = true;
+    q.push(make_pair(idx, 0));
+
+    while(!q.empty()){
+        int cur = q.front().first;
+        int distance = q.front().second;
+        q.pop();
+
+        for(int i = 0; i < adjList[cur].size(); i++){
+            int next = adjList[cur][i];
+            if(!isVisited[next]){
+                isVisited[next] = true;
+                if(!isCycle[next]){ // 사이클이 아닐 때
+                    q.push(make_pair(next, distance+1));
+                    dist[next] = distance + 1;
+                }
+                else{ // 사이클일 때
+                    q.push(make_pair(next, 0));
+                }
+            }
+        }
+    }
+}
+
+int main(void) {
+
+    input();
+    // 모든 노드를 방문하면서 사이클을 형성하는지 확인한다
+    for(int i = 1; i <= n; i++){
+        start = i;
+        DFS(i, 1);
+
+        if(flag){
+            isCycle[i] = true;
+        }
+        init();
+    }
+
+    // 사이클에 해당하는 노드를 찾으면 해당 노드를 중심으로 BFS 실행
+    for(int i = 1; i <= n; i++){
+        if(isCycle[i]){
+            BFS(i);
+            break;
+        }
+    }
+
+    for(int i = 1; i <= n; i++){
+        printf("%d ", dist[i]);
+    }
+
+    return 0;
+}
