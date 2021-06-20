@@ -13,6 +13,7 @@ bool isVisited[MAX];
 vector<int> adjList[MAX];
 queue<int> q;
 
+
 void init(){
     cycle = 0;
     start = 0;
