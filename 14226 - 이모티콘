@@ -1,0 +1,98 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+#include <algorithm>
+#include <math.h>
+
+#define MAX 1000 + 1
+#define INF 100000000
+using namespace std;
+
+typedef struct {
+    // 현재 이모티콘의 갯수, 클립보드에 복사되어 있는 이모티콘의 갯수, 흐른 시간
+    int display, clipboard, time;
+}emoticon;
+
+int s, result = 0;
+bool isVisited[MAX][MAX]; // display, clipboard
+queue<emoticon> q;
+
+
+void input(){
+    scanf("%d", &s);
+}
+
+// 1번의 경우 (화면에 있는 이모티콘을 모두 복사해서 클립보드에 저장)
+void saveClipboard(int display, int clipboard, int time){
+    time += 1;
+    clipboard = display;
+
+    isVisited[display][clipboard] = true;
+    q.push({display, clipboard, time});
+}
+
+// 2번 (클립모드에 있는 모든 이모티콘을 화면에 붙여넣기)
+void pasteClipboard(int display, int clipboard, int time){
+    time += 1;
+    display = display + clipboard;
+
+    isVisited[display][clipboard] = true;
+    q.push({display, clipboard, time});
+}
+
+// 3번 (화면에 있는 이모티콘 중 하나 삭제)
+void deleteEmoticon(int display, int clipboard, int time){
+    time += 1;
+    display -= 1;
+
+    isVisited[display][clipboard] = true;
+    q.push({display, clipboard, time});
+}
+
+void BFS(){
+    q.push({1, 0, 0});
+    isVisited[1][0] = true;
+
+    while(!q.empty()){
+        int dis = q.front().display;
+        int clip = q.front().clipboard;
+        int t = q.front().time;
+        q.pop();
+
+        // 원하는 갯수의 이모티콘을 만들었을 때
+        if(dis == s){
+            result = t;
+            return;
+        }
+
+        // 이모티콘의 갯수가 범위 안에 있을 때
+        if(0 < dis && dis < MAX){
+            // 1번
+            if(!isVisited[dis][dis]){
+                saveClipboard(dis, clip, t);
+            }
+            // 2번
+            if((0 < dis + clip && dis + clip < MAX) && !isVisited[dis + clip][clip]){
+                pasteClipboard(dis, clip, t);
+            }
+            // 3번
+            if((0 < dis - 1 && dis - 1 < MAX) && !isVisited[dis - 1][clip]){
+                deleteEmoticon(dis, clip, t);
+            }
+        }
+
+
+    }
+}
+
+int main(void) {
+
+    input();
+    BFS();
+
+    printf("%d", result);
+
+    return 0;
+}
