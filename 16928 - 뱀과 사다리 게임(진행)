@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+#include <algorithm>
+#include <math.h>
+
+#define MAX 100 + 1
+#define INF 100000000
+using namespace std;
+
+int n, m; // 사다리의 수, 뱀의 수
+int graph[MAX];
+int moveInfo[MAX];
+bool isVisited[MAX];
+queue<int> q;
+
+
+void input(){
+    scanf("%d %d", &n, &m);
+    // 사다리의 정보
+    for(int i = 0; i < n; i++){
+        int s, e;
+        scanf("%d %d", &s, &e);
+        moveInfo[s] = e;
+    }
+    // 뱀의 정보
+    for(int i = 0; i < m; i++){
+        int s, e;
+        scanf("%d %d", &s, &e);
+        moveInfo[s] = e;
+    }
+}
+
+void BFS(){
+    isVisited[1] = true;
+    q.push(1);
+
+    while(!q.empty()){
+        int cur = q.front();
+        q.pop();
+
+        for(int i = 1; i <= 6; i++){
+            if(moveInfo[i] != 0){
+                int next = moveInfo[cur];
+            }
+            else{
+                int next = i;
+            }
+
+            if(!isVisited[next]){
+
+            }
+        }
+
+
+    }
+}
+
+int main(void) {
+
+    input();
+    BFS();
+
+
+    return 0;
+}
