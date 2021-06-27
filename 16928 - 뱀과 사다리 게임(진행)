@@ -10,11 +10,11 @@
 #define INF 100000000
 using namespace std;
 
-int n, m; // 사다리의 수, 뱀의 수
+int n, m, result = 0; // 사다리의 수, 뱀의 수
 int graph[MAX];
 int moveInfo[MAX];
 bool isVisited[MAX];
-queue<int> q;
+queue<pair<int, int>> q; // first: 위치, second : 횟수
 
 
 void input(){
@@ -35,22 +35,33 @@ void input(){
 
 void BFS(){
     isVisited[1] = true;
-    q.push(1);
+    q.push(make_pair(1, 0));
 
     while(!q.empty()){
-        int cur = q.front();
+        int cur = q.front().first;
+        int cnt = q.front().second;
         q.pop();
 
+        if(cur == 100){
+            result = cnt;
+            return;
+        }
+
+        // 주사위의 수가 1~6이 나올 때
         for(int i = 1; i <= 6; i++){
+            int next;
             if(moveInfo[i] != 0){
-                int next = moveInfo[cur];
+                // 만일 이동정보가 있다면 뱀 or 사다리를 따라서 이동
+                next = moveInfo[cur];
             }
             else{
-                int next = i;
+                // 뱀 or 사다리가 없다면 주사위 수만큼 이동
+                next = cur + i;
             }
 
             if(!isVisited[next]){
-
+                q.push(make_pair(next, cnt + 1));
+                isVisited[next] = true;
             }
         }
 
@@ -63,6 +74,7 @@ int main(void) {
     input();
     BFS();
 
+    printf("%d", result);
 
     return 0;
 }
