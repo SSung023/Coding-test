@@ -14,7 +14,7 @@ int n, m, result = 0; // 사다리의 수, 뱀의 수
 int graph[MAX];
 int moveInfo[MAX];
 bool isVisited[MAX];
-queue<pair<int, int>> q; // first: 위치, second : 횟수
+queue<pair<int, int>> q; // first: 위치, second : 주사위를 굴리는 횟수
 
 
 void input(){
