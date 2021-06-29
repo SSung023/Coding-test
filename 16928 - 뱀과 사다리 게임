@@ -14,10 +14,13 @@ int n, m, result = 0; // 사다리의 수, 뱀의 수
 int graph[MAX];
 int moveInfo[MAX];
 bool isVisited[MAX];
-queue<pair<int, int>> q; // first: 위치, second : 주사위를 굴리는 횟수
+queue<pair<int, int>> q; // first: 위치, second : 횟수
 
 
 void input(){
+    //fill(&moveInfo[0], &moveInfo[MAX-1], -1);
+    memset(moveInfo, -1, sizeof(moveInfo));
+
     scanf("%d %d", &n, &m);
     // 사다리의 정보
     for(int i = 0; i < n; i++){
@@ -49,23 +52,21 @@ void BFS(){
 
         // 주사위의 수가 1~6이 나올 때
         for(int i = 1; i <= 6; i++){
-            int next;
-            if(moveInfo[i] != 0){
-                // 만일 이동정보가 있다면 뱀 or 사다리를 따라서 이동
-                next = moveInfo[cur];
-            }
-            else{
-                // 뱀 or 사다리가 없다면 주사위 수만큼 이동
-                next = cur + i;
+            int next = cur + i; // 주사위 수만큼 이동
+            if(next < MAX){ // 이동할 칸이 범위 내 일 때
+                if(moveInfo[next] != -1){
+                    // 이동할 칸에에 만일 이동정보가 있면 뱀 or 사다리를 따라서 이동
+                    isVisited[next] = true;
+                    next = moveInfo[next];
+                }
+
+                if(!isVisited[next]){
+                    q.push(make_pair(next, cnt + 1));
+                    isVisited[next] = true;
+                }
             }
 
-            if(!isVisited[next]){
-                q.push(make_pair(next, cnt + 1));
-                isVisited[next] = true;
-            }
         }
-
-
     }
 }
 
