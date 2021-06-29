@@ -1,0 +1,83 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+#include <algorithm>
+#include <math.h>
+
+#define MAX 100 + 1
+#define INF 100000000
+using namespace std;
+
+int n, m;
+int dist[MAX][MAX];
+
+
+void init(){
+    scanf("%d", &n);
+    for(int i = 1; i <= n; i++){
+        for(int k = 1; k <= n; k++){
+            if(i == k){
+                dist[i][k] = 0;
+            }
+            else{
+                dist[i][k] = INF;
+            }
+        }
+    }
+}
+
+void input(){
+    scanf("%d", &m);
+    for(int i = 0; i < m; i++){
+        int s, e, c;
+        scanf("%d %d %d", &s, &e, &c);
+
+        // 더 적은 cost일 때에만 갱신
+        if(dist[s][e] > c){
+            dist[s][e] = c;
+        }
+    }
+}
+
+void Floyd(){
+
+    for(int k = 1; k <= n; k++){
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= n; j++){
+                if(i == j){
+                    continue;
+                }
+                if(dist[i][k] + dist[k][j] < dist[i][j]){
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                }
+            }
+        }
+    }
+}
+
+int main(void) {
+
+    init();
+    input();
+    Floyd();
+
+    // 정답 출력
+    for(int i = 1; i <= n; i++){
+        for(int k = 1; k <= n; k++){
+            if(dist[i][k] == INF){
+                printf("0 ");
+            }
+            else{
+                printf("%d ", dist[i][k]);
+            }
+
+        }
+
+        printf("\n");
+    }
+
+
+    return 0;
+}
