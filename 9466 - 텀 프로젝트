@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 100000 + 1
+#define INF 100000000
+using namespace std;
+
+int testcase, n, cnt = 0;
+int graph[MAX];
+bool isVisited[MAX], isDone[MAX], isCycle[MAX]; //방문 여부, 방문 완료 여부, 사이클 포함 여부
+
+
+void input(){
+    scanf("%d", &n);
+    for(int i = 1; i <= n; i++){
+        scanf("%d", &graph[i]);
+    }
+}
+
+void DFS(int idx){
+    isVisited[idx] = true;
+    int next = graph[idx]; // 다음에 방문할 예정인 노드
+
+    if(!isVisited[next]){ // 아직 방문을 하지 않았을 때
+        DFS(next);
+    }
+    if(!isDone[next] && isVisited[next]){ // 방문은 했지만, 방문 완료 처리가 안됐을 때 == Cycle 형성 시
+        for(int i = next; i != idx; i = graph[i]){
+            cnt++;
+        }
+        cnt++;
+    }
+
+    isDone[idx] = true;
+}
+
+
+int main(void) {
+
+    scanf("%d", &testcase);
+    for(int i = 0; i < testcase; i++){
+        input();
+        for(int k = 1; k <= n; k++){
+            if(!isVisited[k]){
+                DFS(k);
+            }
+        }
+        cnt = n - cnt;
+        printf("%d\n", cnt);
+
+        memset(isVisited, false, sizeof(isVisited));
+        memset(isDone, false, sizeof(isDone));
+        memset(isCycle, false, sizeof(isCycle));
+        cnt = 0;
+    }
+
+    return 0;
+}
