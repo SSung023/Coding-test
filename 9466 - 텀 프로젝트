@@ -33,7 +33,6 @@ void DFS(int idx){
         }
         cnt++;
     }
-
     isDone[idx] = true;
 }
 
