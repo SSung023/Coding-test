@@ -18,7 +18,6 @@ queue<pair<int, int>> q; // first: 위치, second : 횟수
 
 
 void input(){
-    //fill(&moveInfo[0], &moveInfo[MAX-1], -1);
     memset(moveInfo, -1, sizeof(moveInfo));
 
     scanf("%d %d", &n, &m);
