@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string.h>
+#include <stack>
+
+#define MAX 50 + 1
+#define INF 100000000
+using namespace std;
+
+int n, root, deleteNode; // 노드의 갯수, 루트노드의 번호
+int result = 0;
+int parentInfo[MAX]; // i번째 노드의 부모노드 번호
+bool isVisited[MAX];
+vector<int> childInfo[MAX]; // i번째 노드의 자식노드 번호들을 저장
+
+
+void input(){
+    scanf("%d", &n);
+    for(int i = 0; i < n; i++){
+        int tmp;
+        scanf("%d", &tmp); // i번째 노드의 부모 노드 번호를 입력 받는다.
+        parentInfo[i] = tmp; // i번째 노드의 부모 노드 정보 저장
+        if(tmp == -1){
+            root = i;
+        }
+        else{
+            childInfo[tmp].push_back(i);
+        }
+    }
+    scanf("%d", &deleteNode); // 지우고자하는 노드의 번호 입력
+}
+
+void DFS(int idx){
+    isVisited[idx] = true;
+
+    for(int i = 0; i < childInfo[idx].size(); i++){
+        int next = childInfo[idx][i];
+        if(!isVisited[next]){
+            DFS(next);
+            childInfo[next].clear();
+        }
+    }
+    childInfo[idx].clear();
+}
+
+int main(void) {
+
+    int parent;
+
+    input();
+    if(deleteNode == root){ // 지우고자 하는 노드가 루트노드인 경우
+        result = 0;
+    }
+    else{
+        DFS(deleteNode);
+        parent = parentInfo[deleteNode];
+        for(int i = 0; i < childInfo[parent].size(); i++){
+            if(childInfo[parent][i] == deleteNode){
+                childInfo[parent].erase(childInfo[parent].begin() + i);
+                break;
+            }
+        }
+
+        for(int i = 0; i < n; i++){
+            if(!isVisited[i] && childInfo[i].size() == 0){
+                result++;
+            }
+        }
+    }
+
+    printf("%d", result);
+
+    return 0;
+}
