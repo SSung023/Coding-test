@@ -49,19 +49,19 @@ int main(void) {
     int parent;
 
     input();
-    if(deleteNode == root){ // 지우고자 하는 노드가 루트노드인 경우
-        result = 0;
+    if(deleteNode == root){ // 지우고자 하는 노드가 루트 노드인 경우
+        result = 0; // 트리 전체가 지워지므로 리프 노드는 없다
     }
     else{
-        DFS(deleteNode);
-        parent = parentInfo[deleteNode];
+        DFS(deleteNode); // DFS를 통해서 노드를 삭제한다.
+        parent = parentInfo[deleteNode]; // 지우고자하는 노드의 부모 노드 번호
         for(int i = 0; i < childInfo[parent].size(); i++){
-            if(childInfo[parent][i] == deleteNode){
+            if(childInfo[parent][i] == deleteNode){ // 부모노드의 자식 정보 중에서 지우고자 하는 노드를 제거한다
                 childInfo[parent].erase(childInfo[parent].begin() + i);
                 break;
             }
         }
-
+        // 방문하지 않은 노드(DFS를 거치지 않은 노드)임과 동시에 자식의 갯수가 0이라면 리프 노드
         for(int i = 0; i < n; i++){
             if(!isVisited[i] && childInfo[i].size() == 0){
                 result++;
