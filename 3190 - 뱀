@@ -1,0 +1,114 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string>
+#include <stack>
+
+#define MAX 100 + 1
+#define INF 100000000
+using namespace std;
+
+enum {Left, Up, Right, Down};
+int n, k, l; // 맵의 크기, 사과의 개수, 방향 정보
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+int map[MAX][MAX]; // 사과:1, 기본:0, 몸:-1
+queue<pair<int, char>> moveInfo; // 주어지는 뱀의 방향 전환 정보
+
+
+void input(){
+    scanf("%d %d", &n, &k);
+    for(int i = 0; i < k; i++){
+        int y, x;
+        scanf("%d %d", &y, &x);
+        map[y][x] = 1;
+    }
+    scanf("%d", &l);
+    for(int i = 0; i < l; i++){
+        int t;
+        char d;
+        scanf("%d %c", &t, &d);
+        moveInfo.push(make_pair(t, d));
+    }
+}
+bool canMove(int y, int x){
+    // 맵의 범위 안에 있고, 몸통이 아니라면
+    if(((0 < y && y <= n) && (0 < x && x <= n)) && (map[y][x] != -1)){
+        return true;
+    }
+    else{
+        return false;
+    }
+
+}
+int turnDirection(int d, char c){
+    // 현재 방향과 틀어야 할 방향을 받아서
+    if(c == 'L'){ // 왼쪽
+        if(d == Left)   return Down;
+        else if(d == Up)    return Left;
+        else if(d == Right) return Up;
+        else if(d == Down)  return Right;
+
+    }
+    else if(c == 'D'){ // 오른쪽
+        if(d == Left)   return Up;
+        else if(d == Up)    return Right;
+        else if(d == Right) return Down;
+        else if(d == Down)  return Left;
+    }
+}
+
+int solution(){
+    int time = 0, dir = Right;
+    int cur_x = 1, cur_y = 1;
+    map[1][1] = -1;
+    deque<pair<int, int>> pos; // 뱀의 머리, 꼬리의 좌표 저장 (y, x)
+    pos.push_front(make_pair(1, 1)); // 현재 뱀의 머리와 꼬리는 같은 곳
+
+     while(true){
+        // 다음으로 이동할 좌표 계산
+        time++;
+        int next_x = cur_x + dx[dir];
+        int next_y = cur_y + dy[dir];
+
+        // 이동할 수 없는 조건이라면 게임 종료
+        if(!canMove(next_y, next_x)){
+            return time;
+        }
+
+        // 사과가 있는 곳이라면 머리만 한 칸 앞으로 옮긴다.
+         if(map[next_y][next_x] == 1){
+            pos.push_front(make_pair(next_y, next_x));
+            map[next_y][next_x] = -1;
+        }
+        // 비어있는 곳이라면 꼬리와 머리 둘 다 이동
+         else if(map[next_y][next_x] == 0){
+            // 머리를 한 칸 앞으로 이동
+            pos.push_front(make_pair(next_y, next_x));
+            map[next_y][next_x] = -1;
+            // 꼬리 이동
+            map[pos.back().first][pos.back().second] = 0;
+            pos.pop_back();
+
+        }
+         
+        // 방향전환이 예약된 시간이 되었다면
+         if(!moveInfo.empty() && (time == moveInfo.front().first)){
+            // 뱀의 머리 방향을 틀어준다.
+            dir = turnDirection(dir, moveInfo.front().second);
+            moveInfo.pop();
+        }
+        cur_x = next_x;
+        cur_y = next_y;
+     }
+}
+
+int main(void) {
+
+    input();
+
+    int result = solution();
+    printf("%d", result);
+
+
+    return 0;
+}
