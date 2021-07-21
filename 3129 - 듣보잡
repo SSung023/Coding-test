@@ -1,0 +1,47 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <string>
+#include <stack>
+
+#define MAX 100 + 1
+#define INF 100000000
+using namespace std;
+
+int n, m; // 듣, 보
+vector<string> see, both; // 듣, 듣보잡
+
+
+int main(void) {
+
+    cin >> n >> m;
+    
+    // resize를 통해 입력한 수에 맞게 사이즈를 맞추고 속도를 높인다
+    see.resize(n);
+    // 우선 보도 못한 사람의 이름을 받는다
+    for(int i = 0; i < n; i++){
+        cin >> see[i];
+    }
+    sort(see.begin(), see.end()); // 정렬
+
+    // 듣도 못한 사람의 이름을 받아서 보도 못한 사람의 이름과 일치하는지 확인 후
+    // vector에 넣는다
+    string tmp;
+    for(int i = 0; i < m; i++){
+        cin >> tmp;
+
+        if(binary_search(see.begin(), see.end(), tmp)){
+            both.push_back(tmp);
+        }
+    }
+    sort(both.begin(), both.end());
+
+    cout << both.size() << endl;
+    for(int i = 0; i < both.size(); i++){
+        cout << both[i] << endl;
+    }
+
+
+    return 0;
+}
