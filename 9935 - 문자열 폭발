@@ -1,0 +1,67 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <string>
+#include <stack>
+
+#define MAX 100 + 1
+#define INF 100000000
+using namespace std;
+
+
+
+void input(string& str, string& explode){
+    cin >> str;
+    cin >> explode;
+}
+
+void solution(deque<char>& result, string& str, string& explode){
+    int len = explode.length();
+
+    for(int i = 0; i < str.length(); i++){
+        result.push_back(str[i]);
+
+        // 폭발 문자열의 끝 문자 발견 시 && result의 size가 충분히 클 때
+        if((result.back() == explode[len - 1]) && result.size() >= explode.length()){
+            int cnt = 0;
+            for(int k = 0; k < len; k ++){ // 폭발 문자열의 길이만큼 검사 실행
+                // 현재 result에서의 제일 끝 문자부터 폭발 문자열과 일치하는지 검사
+                if(explode[len - 1 - k] == result[result.size() - 1 - k]){
+                    cnt++;
+                }
+                // 일치한다면 폭발 문자열을 제거
+                if(cnt == len){
+                    for(int j = 0; j < len; j++){
+                        result.pop_back();
+                    }
+                }
+            }
+        }
+    }
+}
+
+int main(void) {
+
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    
+    string str, explode;
+    deque<char> result;
+    input(str, explode);
+    solution(result, str, explode);
+
+    if(result.empty()){
+        cout << "FRULA";
+    }
+    else{
+        while(!result.empty()){
+            char tmp = result.front();
+            cout << tmp;
+            result.pop_front();
+        }
+    }
+
+    return 0;
+}
