@@ -1,0 +1,85 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <string>
+#include <cstring>
+#include <stack>
+
+#define MAX 125 + 1
+#define INF 100000000
+using namespace std;
+
+class rupee{
+public:
+    // y좌표, x좌표, 도둑 루피의 개수
+    int y, x, n;
+};
+class Compare
+{
+public:
+    int operator()(rupee t, rupee u){
+        return t.n > u.n;
+    }
+};
+int n, cnt = 0;
+int map[MAX][MAX];
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+
+void input(){
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < n; k++){
+            scanf("%d", &map[i][k]);
+        }
+    }
+}
+
+bool isInside(int y, int x){
+    return ((0 <= y && y < n) && (0 <= x && x < n));
+}
+// BFS
+int solution(int y, int x){
+    priority_queue<rupee, vector<rupee>, Compare> pq;
+    bool isVisited[MAX][MAX];
+    memset(isVisited, false, sizeof(isVisited));
+    isVisited[y][x] = true;
+    pq.push({y, x, map[y][x]});
+
+    while(!pq.empty()){
+        int cur_y = pq.top().y;
+        int cur_x = pq.top().x;
+        int cur_n = pq.top().n;
+        pq.pop();
+
+        if(cur_y == n - 1 && cur_x == n - 1)
+            return cur_n;
+
+        for(int i = 0; i < 4; i++){
+            int next_y = cur_y + dy[i];
+            int next_x = cur_x + dx[i];
+            int next_n = cur_n + map[next_y][next_x];
+
+            if(isInside(next_y, next_x) && !isVisited[next_y][next_x]){
+                isVisited[next_y][next_x]= true;
+                pq.push({next_y, next_x, next_n});
+            }
+        }
+    }
+}
+
+int main(void) {
+
+    while(true){
+        scanf("%d", &n);
+        if(n == 0){
+            break;
+        }
+        input();
+        cnt++;
+        int result = solution(0, 0);
+
+        printf("Problem %d: %d\n", cnt, result);
+    }
+
+    return 0;
+}
