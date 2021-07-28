@@ -1,0 +1,81 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <string>
+#include <cstring>
+#include <stack>
+
+#define MAX 10000 + 1
+#define INF 100000000
+using namespace std;
+
+int t, n, target;
+queue<pair<int, string>> q;
+
+
+
+void BFS(){
+    bool isVisited[MAX];
+    memset(isVisited, false, sizeof(isVisited));
+    isVisited[n] = true;
+    q.push(make_pair(n, ""));
+
+    while(!q.empty()){
+        int cur = q.front().first;
+        string order = q.front().second;
+        q.pop();
+
+        // 원하는 값을 찾았을 때
+        if(cur == target){
+            cout << order << endl;
+            return;
+        }
+
+        // D 연산
+        int next = cur * 2 % 10000;
+        if(!isVisited[next]){
+            isVisited[next] = true;
+            q.push(make_pair(next, order + "D"));
+        }
+
+        // S 연산
+        next = (cur == 0) ? 9999 : cur - 1;
+        if(!isVisited[next]){
+            isVisited[next] = true;
+            q.push(make_pair(next, order + "S"));
+        }
+
+        // L 연산
+        next = (cur % 1000) * 10 + (cur / 1000);
+        if(!isVisited[next]){
+            isVisited[next] = true;
+            q.push(make_pair(next, order + "L"));
+        }
+
+        // R 연산
+        next = (cur / 10) + (cur % 10) * 1000;
+        if(!isVisited[next]){
+            isVisited[next] = true;
+            q.push(make_pair(next, order + "R"));
+        }
+    }
+}
+
+int main(void) {
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> t;
+    while(t--){
+        cin >> n >> target;
+        while(!q.empty()){
+            q.pop();
+        }
+        BFS();
+    }
+
+    return 0;
+}
