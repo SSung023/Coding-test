@@ -1,0 +1,119 @@
+#include <iostream>
+#include <queue>
+
+#define MAX 20 + 1
+using namespace std;
+
+
+int n, m, x, y, k;
+int dice[6 + 1], map[MAX][MAX], order[1000 + 1];
+vector<int> result;
+
+void input(){
+    cin >> n >> m >> y >> x >> k;
+
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            cin >> map[i][k];
+        }
+    }
+
+    for(int i = 0; i < k; i++){
+        cin >> order[i];
+    }
+}
+
+void changeDicePos(int cur_order){
+    int top = dice[1];
+
+    if(cur_order == 1){
+        dice[1] = dice[5];
+        dice[5] = dice[6];
+        dice[6] = dice[3];
+        dice[3] = top;
+    }
+    else if(cur_order == 2){
+        dice[1] = dice[3];
+        dice[3] = dice[6];
+        dice[6] = dice[5];
+        dice[5] = top;
+    }
+    else if(cur_order == 3){
+        dice[1] = dice[2];
+        dice[2] = dice[6];
+        dice[6] = dice[4];
+        dice[4] = top;
+    }
+    else if(cur_order == 4){
+        dice[1] = dice[4];
+        dice[4] = dice[6];
+        dice[6] = dice[2];
+        dice[2] = top;
+    }
+}
+
+bool isInside(int y, int x){
+    return (0 <= x && x < m) && (0 <= y && y < n);
+}
+
+void applyNum(int y, int x){
+
+    // 해당 지도 칸이 0이라면 주사위 바닥면의 숫자를 넣는다
+    if(map[y][x] == 0){
+        map[y][x] = dice[6];
+    }
+    // 해당 지도 칸에 숫자가 있다면 해당 숫자를 주사의의 바닥면에 넣는다
+    else if(map[y][x] != 0){
+        dice[6] = map[y][x];
+        map[y][x] = 0;
+    }
+}
+
+
+void solve(){
+    for(int i = 0; i < k; i++){
+        int cur_order = order[i];
+
+        if(cur_order == 1 && isInside(y, x + 1)){ // 오른쪽
+            changeDicePos(cur_order); // 이동 명령에 따라서 주사위를 돌린다
+            x++;
+            applyNum(y, x);
+            result.push_back(dice[1]);
+        }
+        else if(cur_order == 2 && isInside(y, x - 1)){ // 왼쪽
+            changeDicePos(cur_order); // 이동 명령에 따라서 주사위를 돌린다
+            x--;
+            applyNum(y, x);
+            result.push_back(dice[1]);
+        }
+        else if(cur_order == 3 && isInside(y - 1, x)){ // 위쪽
+            changeDicePos(cur_order); // 이동 명령에 따라서 주사위를 돌린다
+            y--;
+            applyNum(y, x);
+            result.push_back(dice[1]);
+        }
+        else if(cur_order == 4 && isInside(y + 1, x)){ // 아래쪽
+            changeDicePos(cur_order); // 이동 명령에 따라서 주사위를 돌린다
+            y++;
+            applyNum(y, x);
+            result.push_back(dice[1]);
+        }
+    }
+
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    solve();
+
+    for(vector<int>::iterator iter = result.begin(); iter != result.end(); iter++){
+        cout << *iter << endl;
+    }
+
+    return 0;
+}
