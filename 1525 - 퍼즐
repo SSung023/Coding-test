@@ -1,0 +1,87 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <queue>
+
+#define MAX 20 + 1
+using namespace std;
+
+// 123456780으로 하면 안된다. 왜냐면 자리를 바꾸고 string<->int 하는 과정에서 0이 날라가기 때문
+int const target = 123456789; // 원하는 정렬 상태
+int initialValue = 0, initial_blankPos = 0;
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+/// map을 사용하는 이유
+/// 어떤 값에 대응하는 또 다른 값을 저장하고 싶을 때(key, value)
+map<int, int> isVisited; // first:key(정렬 상태)  second:value(이동 횟수)
+
+
+void input(){
+    for(int i = 0; i < 9; i++){
+        int tmp;
+        scanf("%d", &tmp);
+        if(tmp == 0){
+            initial_blankPos = i;
+            tmp = 9;
+        }
+        initialValue = initialValue * 10 + tmp;
+    }
+}
+
+bool isInside(int y, int x){
+    return (0 <= y && y < 3) && (0 <= x && x < 3);
+}
+
+void BFS(){
+    queue<pair<int, int>> q; //first: 정렬 상태, second: 빈칸의 위치(0~8)
+    q.push(make_pair(initialValue, initial_blankPos));
+    isVisited[initialValue] = 0;
+
+    while(!q.empty()){
+        int cur = q.front().first;
+        int blank_pos = q.front().second;
+        string cur_str = to_string(cur); // 문자열로 변경
+        q.pop();
+
+        // 빈칸의 위치를 2차원적으로 변환
+        int blank_y = blank_pos / 3;
+        int blank_x = blank_pos % 3;
+        if(cur == target){ // 원하는 배치를 찾았을 때
+            return;
+        }
+
+        // 빈칸이 이동할 수 있는 위치인지 확인 후, 빈 칸을 이동시킨다
+        for(int i = 0; i < 4; i++){
+            int blank_ny = blank_y + dy[i];
+            int blank_nx = blank_x + dx[i];
+            if(isInside(blank_ny, blank_nx)){
+                int next_blank_pos = blank_ny * 3 + blank_nx; // 빈칸의 다음 칸 계산
+                string next_str = cur_str;
+                swap(next_str[blank_pos], next_str[next_blank_pos]); // 빈칸 이동
+
+                int next_num = stoi(next_str); // 숫자로 변환
+                if(isVisited.count(next_num) == 0){ // 해당 키 값이 아직 없다면
+                    isVisited[next_num] = isVisited[cur] + 1;
+                    q.push(make_pair(next_num, next_blank_pos));
+                }
+            }
+        }
+    }
+}
+
+
+
+
+int main(void){
+
+    input();
+    BFS();
+
+    if(isVisited.count(target) == 0){
+        printf("-1");
+    }
+    else{
+        printf("%d", isVisited[target]);
+    }
+
+    return 0;
+}
