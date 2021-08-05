@@ -1,0 +1,39 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <queue>
+
+#define MAX 20 + 1
+using namespace std;
+
+int n;
+// 정렬 기준을 바꾸어 최대 힙으로 사용
+priority_queue<int, vector<int>, less<int>> pq;
+
+void solve(){
+
+    for(int i = 0 ; i < n; i++){
+        int order;
+        scanf("%d", &order);
+        if(order != 0){
+            pq.push(order);
+        }
+        else{
+            if(pq.empty()){
+                printf("0\n");
+            }
+            else{
+                printf("%d\n", pq.top());
+                pq.pop();
+            }
+        }
+    }
+}
+
+int main(void){
+
+    scanf("%d", &n);
+    solve();
+
+    return 0;
+}
