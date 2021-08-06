@@ -1,0 +1,35 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <map>
+#include <queue>
+
+#define MAX 20 + 1
+using namespace std;
+
+
+int main(void){
+
+    int n, m; // 가지고 있는 카드의 개수, 궁금한 카드의 개수
+    
+    scanf("%d", &n);
+    vector<int> card(n);
+
+    for(int i = 0; i < n; i++){
+        scanf("%d", &card[i]);
+    }
+    sort(card.begin(), card.end());
+
+    scanf("%d", &m);
+    for(int i = 0; i < m; i++){
+        int tmp;
+        scanf("%d", &tmp);
+        vector<int>::iterator upper_iter = upper_bound(card.begin(), card.end(), tmp);
+        vector<int>::iterator lower_iter = lower_bound(card.begin(), card.end(), tmp);
+
+        printf("%d ", upper_iter - lower_iter);
+    }
+
+
+    return 0;
+}
