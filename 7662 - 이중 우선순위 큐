@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <map>
+#include <set>
+
+#define MAX 20 + 1
+using namespace std;
+
+int t, k; // 테스트케이스, 연산의 개수
+multiset<int> double_pq;
+
+
+void solve(int k){
+    for(int i = 0; i < k; i++){
+        int n;
+        char order;
+        cin >> order;
+
+        // 삽입 명령
+        if(order == 'I'){
+            cin >> n;
+            double_pq.insert(n);
+        }
+        // 삭제 명령령
+       else if(order == 'D'){
+            cin >> n;
+            if(n == 1){ // 최대값 삭제
+                if(!double_pq.empty()){
+                    multiset<int>::iterator iter = double_pq.end();
+                    iter--;
+                    double_pq.erase(iter);
+                }
+            }
+            else if(n == -1){ // 최소값 삭제
+                if(!double_pq.empty()){
+                    double_pq.erase(double_pq.begin());
+                }
+            }
+        }
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> t;
+    for(int i = 0; i < t; i++){
+        cin >> k;
+        solve(k);
+
+        if(double_pq.empty()){
+            cout << "EMPTY" << endl;
+        }
+        else{
+            multiset<int>::iterator iter = double_pq.end();
+            iter--;
+            cout << *iter << " " << *double_pq.begin() << endl;
+        }
+        double_pq.clear();
+    }
+
+
+    return 0;
+}
