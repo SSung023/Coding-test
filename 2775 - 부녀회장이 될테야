@@ -1,0 +1,40 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 1000 + 1
+using namespace std;
+
+int testcase, k, n;
+
+// 층수, 호수
+int getResidentNum(int floor, int num){
+    if(floor == 0){ // 0층이라면 호수만큼 사람이 있다
+        return num;
+    }
+    if(num == 1){ // 호수는 1호가 제일 첫번째 호수
+        return 1;
+    }
+
+    return getResidentNum(floor - 1, num) + getResidentNum(floor, num - 1);
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> testcase;
+    for(int i = 0; i < testcase; i++){
+        cin >> k >> n;
+        cout << getResidentNum(k, n) << "\n";
+    }
+
+
+    return 0;
+}
