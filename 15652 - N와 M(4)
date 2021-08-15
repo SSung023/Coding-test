@@ -1,0 +1,42 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 20 + 1
+using namespace std;
+
+int N, M;
+int progression[MAX];
+
+
+void backTracking(int len, int idx){
+
+    if(len == M){
+        for(int i = 0; i < M; i++){
+            cout << progression[i] << " ";
+        }
+        cout << "\n";
+        return;
+    }
+
+    for(int i = idx; i <= N; i++){
+        progression[len] = i;
+        backTracking(len + 1, i);
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> N >> M;
+    backTracking(0, 1);
+
+
+    return 0;
+}
