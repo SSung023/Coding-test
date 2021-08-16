@@ -1,0 +1,60 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 13 + 1
+using namespace std;
+
+int k = 1;
+bool isVisited[MAX];
+vector<int> candidate, lotto(6,0); // 집합 S, 로또에 들어갈 숫자들을 저장하는 배열
+
+void backTracking(int len, int idx){
+    if(len == 6){
+        for(int i = 0; i < 6; i++){
+            cout << lotto[i] << " ";
+        }
+        cout << "\n";
+        return;
+    }
+
+    for(int i = idx; i < k; i++){
+        if(!isVisited[i]){
+            isVisited[i] = true;
+            lotto[len] = candidate[i];
+            backTracking(len + 1, i + 1);
+            isVisited[i] = false;
+        }
+    }
+
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+
+    while(k != 0){
+        cin >> k;
+
+        memset(isVisited, false, sizeof(isVisited));
+        candidate.clear();
+
+        for(int i = 0; i < k; i++){
+            int tmp;
+            cin >> tmp;
+            candidate.push_back(tmp);
+        }
+        backTracking(0, 0);
+        cout << "\n";
+    }
+
+
+    return 0;
+}
