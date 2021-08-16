@@ -1,0 +1,46 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 1000 + 1
+using namespace std;
+
+string str1, str2;
+
+
+int getLCS(){
+    vector<vector<int>> dp(str1.length() + 1, vector<int>(str2.length() + 1, 0));
+
+    for(int i = 1; i <= str1.length(); i++){
+        for(int k = 1; k <= str2.length(); k++){
+            // 만일 같은 문자라면
+            if(str1[i - 1] == str2[k - 1]){ // str은 인덱스가 0부터 시작하고 dp검사는 [1][1]부터 시작한다 이를 맞춰야한다
+                dp[i][k] = dp[i-1][k-1] + 1;
+            }
+            // 서로 다른 문자라면
+            else{
+                dp[i][k] = max(dp[i - 1][k], dp[i][k - 1]);
+            }
+        }
+    }
+
+    return dp[str1.length()][str2.length()];
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> str1 >> str2;
+    int result = getLCS();
+
+    cout << result;
+
+    return 0;
+}
