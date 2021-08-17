@@ -1,0 +1,59 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 8 + 1
+using namespace std;
+
+int n, m;
+int progression[MAX];
+bool isVisited[MAX];
+vector<int> num;
+
+
+void backTracking(int len){
+    if(len == m){
+        for(int i = 0; i < m; i++){
+            cout << progression[i] << " ";
+        }
+        cout << "\n";
+        return;
+    }
+
+    for(int i = 0; i < num.size(); i++){
+        if(!isVisited[i]){
+            isVisited[i] = true;
+            progression[len] = num[i];
+            backTracking(len + 1);
+            isVisited[i] = false;
+        }
+    }
+}
+
+void input(){
+    cin >> n >> m;
+
+    for(int i = 0; i < n; i++){
+        int tmp;
+        cin >> tmp;
+        num.push_back(tmp);
+    }
+
+    sort(num.begin(), num.end());
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    backTracking(0);
+
+    return 0;
+}
