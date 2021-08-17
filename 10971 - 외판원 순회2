@@ -1,0 +1,63 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 10 + 1
+using namespace std;
+
+int n, min_cost = 100000000;
+int costMatrix[MAX][MAX]; // 비용 행렬
+bool isVisited[MAX]; // 해당 도시를 방문했는지의 여부
+
+
+void input(){
+    cin >> n;
+    for(int i = 1; i <= n; i++){
+        for(int k = 1; k <= n; k++){
+            cin >> costMatrix[i][k];
+        }
+    }
+}
+
+// 시작 도시, 현재까지의 순회 비용, 현재까지 순회한 도시의 수
+void backTracking(int originStart, int start, int cost, int cityNum){
+    // 탈출 조건에 맞을 때
+    if(cityNum == n && start == originStart){
+        min_cost = min(min_cost, cost);
+        return;
+    }
+    // 연결되어 있는 도시를 모두 둘러보아야 한다
+    // [start][1]부터 [start][n]까지
+    for(int i = 1; i <= n; i++){
+        if(!isVisited[i] && costMatrix[start][i] != 0){
+            isVisited[i] = true;
+            backTracking(originStart, i,cost + costMatrix[start][i], cityNum + 1);
+            isVisited[i] = false;
+        }
+        if(isVisited[i] && i == originStart && cityNum == n && costMatrix[start][i] != 0){
+            backTracking(originStart, i, cost + costMatrix[start][i], cityNum);
+        }
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    for(int i = 1; i <= n; i++){
+        isVisited[i] = true;
+        backTracking(i, i, 0, 1);
+        isVisited[i] = false;
+    }
+
+    cout << min_cost;
+
+    return 0;
+}
