@@ -1,0 +1,76 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 9 + 1
+using namespace std;
+
+int sudoku[MAX][MAX];
+bool row[MAX][MAX], column[MAX][MAX], box[MAX][MAX];
+bool isVisited[MAX][MAX]; // [i][k]번째칸에
+
+void input(){
+    for(int i = 0; i < 9; i++){
+        for(int k = 0; k < 9; k++){
+            cin >> sudoku[i][k];
+            // 빈 칸이 아닌 경우 정보 입력
+            if(sudoku[i][k] != 0){
+                row[i][sudoku[i][k]]= true; // k번째 가로줄에 해당 숫자가 존재 →
+                column[k][sudoku[i][k]] = true; // i번째 세로줄에 해당 숫자가 존재 ↓
+                box[(i / 3) * 3 + (k / 3)][sudoku[i][k]]= true;
+            }
+        }
+    }
+}
+
+void backTracking(int pos){
+    int y = pos / 9;
+    int x = pos % 9;
+
+    if(pos == 81){
+        // 출력 후 종료
+        for(int i = 0; i < 9; i++){
+            for(int k = 0; k < 9; k++){
+                cout << sudoku[i][k] << " ";
+            }
+            cout << "\n";
+        }
+        exit(0);
+    }
+    if(sudoku[y][x] != 0){ // 해당 위치가 빈 칸이 아닌 경우 다음으로 진행
+        backTracking(pos + 1);
+        return;
+    }
+
+    for(int i = 1; i <= 9; i++){
+        if(!row[y][i] && !column[x][i] && !box[(y/3)*3 + (x/3)][i]){
+            row[y][i] = true;
+            column[x][i] = true;
+            box[(y/3)*3 + (x/3)][i] = true;
+            sudoku[y][x] = i;
+            backTracking(pos + 1);
+
+            row[y][i] = false;
+            column[x][i] = false;
+            box[(y/3)*3 + (x/3)][i] = false;
+            sudoku[y][x] = 0;
+        }
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+
+    backTracking(0);
+
+    return 0;
+}
