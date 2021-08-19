@@ -1,0 +1,61 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <string>
+#include <cstring>
+#include <stack>
+
+#define MAX 8 + 1
+using namespace std;
+
+int N, M;
+int progression[MAX];
+bool isVisited[MAX];
+vector<int> num;
+
+
+void input(){
+    cin >> N >> M;
+    for(int i = 1; i <= N; i++){
+        int tmp;
+        cin >> tmp;
+        num.push_back(tmp);
+    }
+
+    sort(num.begin(), num.end());
+}
+
+void backTracking(int len){
+    if(len == M){
+        for(int i = 0; i < M; i++){
+            cout << progression[i] << " ";
+        }
+        cout << "\n";
+        return;
+    }
+
+    int pre_num = 0;
+    for(int i = 0; i < num.size(); i++){
+        if(!isVisited[i] && pre_num != num[i]){
+            pre_num = num[i];
+            progression[len] = num[i];
+            isVisited[i] = true;
+            backTracking(len + 1);
+            isVisited[i] = false;
+        }
+    }
+}
+
+int main(void) {
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    backTracking(0);
+
+
+    return 0;
+}
