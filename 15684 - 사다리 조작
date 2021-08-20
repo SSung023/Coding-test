@@ -1,0 +1,77 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 30 + 1
+using namespace std;
+
+int N, M, H;
+int result = 1000000000;
+bool info[10 + 1][30 + 1]; // [H-1][M] 세로, 가로
+
+
+bool isAnswer(){ // i -> i로 이어지는지 확인
+    for(int i = 1; i <= N; i++){
+        int curLine = i;
+
+        for(int row = 1; row <= H; row++){
+            if(info[curLine][row])  curLine++;
+            else if(info[curLine - 1][row]) curLine--;
+        }
+
+        if(curLine != i)    return false;
+    }
+    return true;
+}
+
+void input(){
+    cin >> N >> M >> H;
+    for(int i = 0; i < M; i++){
+        int a, b;
+        cin >> a >> b; // b와 b+1번 사이에 a점선 위치에 가로선을 놓는다
+        info[b][a] = true;
+    }
+}
+
+void backTracking(int lineNum, int idx){
+    if(lineNum > 3){
+        return;
+    }
+    if(isAnswer()){ // 만일 i->i로 이어져있는 경우
+        result = min(result, lineNum);
+        return;
+    }
+
+    // 가로선을 놓을 수 있는 위치들을 모두 탐색해본다
+    for(int i = idx; i <= H; i++){
+        for(int k = 1; k < N; k++){
+            if(!info[k][i] && !info[k - 1][i] && !info[k + 1][i]){
+                info[k][i] = true;
+                backTracking(lineNum + 1, i);
+                info[k][i] = false;
+            }
+        }
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    backTracking(0,1);
+
+    if(result > 3){
+        result = -1;
+    }
+
+    cout << result;
+
+    return 0;
+}
