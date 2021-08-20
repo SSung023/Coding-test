@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 9 + 1
+using namespace std;
+
+int n;
+string min_value = "ZZZZZZZZZZ", max_value = "0000000000";
+bool isVisited[10]; // 0 ~ 9
+char inequality[MAX]; // 0 ~ n-1
+
+void input(){
+    cin >> n;
+    for(int i = 0; i < n; i++){
+        cin >> inequality[i];
+    }
+}
+
+bool isValid(int front, int back, char sign){
+    if (sign == '<')    return front < back;
+    else if(sign == '>')    return front > back;
+}
+
+void backTracking(string cur, int idx, int len){
+    if(len == n + 1){
+        min_value = min(min_value, cur);
+        max_value = max(max_value, cur);
+        return;
+    }
+
+    for(int i = idx; i < n; i++){
+        char sign = inequality[i];
+        int cur_num = cur[cur.length() - 1] - '0';
+
+        for(int next = 0; next < 10; next++){
+            if(isValid(cur_num, next, sign) && !isVisited[next]){
+                isVisited[next] = true;
+                backTracking(cur + to_string(next), i + 1, len + 1);
+                isVisited[next] = false;
+            }
+        }
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    for(int i = 0; i < 10; i++){
+        isVisited[i] = true;
+        backTracking(to_string(i), 0, 1);
+        isVisited[i] = false;
+    }
+
+    cout << max_value << "\n" << min_value;
+
+
+    return 0;
+}
