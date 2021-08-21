@@ -1,0 +1,52 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 9 + 1
+using namespace std;
+
+//11399번 : ATM
+// Greedy 문제로써 시간이 제일 적게 걸리는 순서대로 더하면 된다.
+
+int n;
+vector<int> time;
+
+void input(){
+    cin >> n;
+    for(int i = 0; i < n; i++){
+        int tmp;
+        cin >> tmp;
+        time.push_back(tmp);
+    }
+}
+
+int getTotalTime(){
+    int result = 0;
+
+    for(int idx = 0; idx < n; idx++){
+        for(int i = 0; i <= idx; i++){
+            result += time[i];
+        }
+    }
+
+    return result;
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    sort(time.begin(), time.end());
+    cout << getTotalTime();
+
+
+    return 0;
+}
