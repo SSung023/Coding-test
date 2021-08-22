@@ -1,0 +1,55 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 8 + 1
+using namespace std;
+// 11047번 - 동전 0
+
+int n, k; // 동전의 종류 개수, k원을 만들고자 한다
+int cnt = 0;
+vector<int> value; // 동전의 가치가 오름차순으로 주어진다
+
+
+void input(){
+    cin >> n >> k;
+    for(int i = 0; i < n; i++){
+        int tmp;
+        cin >> tmp;
+        value.push_back(tmp);
+    }
+}
+
+void getMinCoinNum(){
+    int idx = 0;
+    while(k != 0){
+        int cur_value = value[idx];
+        if(cur_value <= k){
+            k -= cur_value;
+            cnt++;
+        }
+        else{
+            idx++;
+        }
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    sort(value.begin(), value.end(), greater<>());
+
+    getMinCoinNum();
+    cout << cnt;
+
+    return 0;
+}
