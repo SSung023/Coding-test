@@ -1,0 +1,61 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 8 + 1
+using namespace std;
+// 1931 - 회의실 배정
+
+int n; // 회의의 수
+vector<pair<int, int>> info; // 회의의 정보, first:시작시간, second:끝나는시간
+
+
+bool cmp(const pair<int, int> &a, const pair<int, int> &b)
+{
+    if(a.second == b.second){
+        return a.first < b.first;
+    }
+    return a.second < b.second;
+}
+
+void input(){
+    cin >> n;
+    for(int i = 0; i < n; i++){
+        int startTime, endTime;
+        cin >> startTime >> endTime;
+        info.push_back(make_pair(startTime,endTime));
+    }
+}
+
+int getMaxMeetingCnt(){
+    int cnt = 0;
+    int endTime = 0;
+
+    for(int i = 0; i < n; i++){
+        int startTime = info[i].first;
+        if(endTime <= info[i].first){
+            endTime = info[i].second;
+            cnt++;
+        }
+    }
+    return cnt;
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    sort(info.begin(), info.end(), cmp);
+
+    cout << getMaxMeetingCnt();
+
+    return 0;
+}
