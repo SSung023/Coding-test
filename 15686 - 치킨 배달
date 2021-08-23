@@ -1,0 +1,79 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 50 + 1
+using namespace std;
+
+// 15686 - 치킨 배달
+
+int n, m;
+int min_chickenDistance = 1000000000;
+int info[MAX][MAX], selectedChicken[13 + 1]; // 지도 정보, 선택된 치킨집의 인덱스 저장
+vector<pair<int, int>> chicken, home; // 지도에 있는 치킨 집들과 집들의 위치를 저장
+
+
+
+void input(){
+    cin >> n >> m;
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < n; k++){
+            cin >> info[i][k];
+            if(info[i][k] == 2){
+                chicken.push_back(make_pair(i, k));
+            }
+            else if(info[i][k] == 1){
+                home.push_back(make_pair(i, k));
+            }
+        }
+    }
+}
+
+int getCityDistance(){
+    int result = 0;
+    // 모든 각 집에 대하여 골라진 치킨집과의 최소 치킨거리를 구한다.
+    for(int i = 0; i < home.size(); i++){
+        int chickenDis = 100000000;
+        for(int k = 0; k < m; k++){
+            int dis = abs(home[i].first - chicken[selectedChicken[k]].first) + abs(home[i].second - chicken[selectedChicken[k]].second);
+            chickenDis = min(chickenDis, dis);
+        }
+        result += chickenDis;
+    }
+
+    return result;
+}
+
+// 여러 개의 치킨 집 중에서 m개의 치킨집을 고른다
+void backTracking(int idx, int cnt){
+    if(cnt == m){
+        // 집과 치킨집 사이의 최소거리 계산
+        int result = getCityDistance();
+        min_chickenDistance = min(min_chickenDistance, result);
+        return;
+    }
+
+    for(int i = idx; i < chicken.size(); i++){
+        selectedChicken[cnt] = i;
+        backTracking(i + 1, cnt + 1);
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    backTracking(0, 0);
+
+    cout << min_chickenDistance;
+
+    return 0;
+}
