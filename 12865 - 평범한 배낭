@@ -1,0 +1,59 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 100000 + 1
+using namespace std;
+
+// 12865 - 평범한 배낭
+int n, k; // 물품의 수, 배낭의 최대 무게
+vector<pair<int, int>> info; // 물품의 정보. first:무게, second:가치
+
+
+void input(){
+    info.push_back(make_pair(0, 0));
+    cin >> n >> k;
+    for(int i = 1; i <= n; i++){
+        int weight, value;
+        cin >> weight >> value;
+        info.push_back(make_pair(weight, value));
+    }
+}
+
+int knapsackProblem(){
+    vector<vector<int>> dp(n + 1, vector<int>(k + 1, 0));
+
+    for(int i = 1; i < info.size(); i++){ // 물품의 수 만큼
+        for(int j = 1; j <= k; j++){ // 배낭에 담을 수 있는 무게를 늘려가면서
+
+            if(info[i].first > j){ // i번째 물건의 무게가 더 무거울 때
+                dp[i][j] = dp[i - 1][j];
+            }
+            else{ // i번째 물건을 넣을 수 있는 무게가 되었을 때
+                int not_included = dp[i - 1][j];
+                int included = info[i].second + dp[i - 1][j - info[i].first];
+                dp[i][j] = max(not_included, included);
+            }
+        }
+    }
+    return dp[n][k];
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+
+    cout << knapsackProblem();
+
+
+    return 0;
+}
