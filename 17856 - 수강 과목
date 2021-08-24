@@ -1,0 +1,60 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <map>
+#include <set>
+
+#define MAX 100000 + 1
+using namespace std;
+
+//17856 - 수강 과목
+int n, k; // 최대 공부시간, 과목 수
+vector<pair<int, int>> info; // 과목에 대한 정보. first:중요도, second:공부시간
+
+
+void input(){
+    info.push_back(make_pair(0, 0));
+
+    cin >> n >> k;
+    for(int i = 0; i < k; i++){
+        int value, time;
+        cin >> value >> time;
+        info.push_back(make_pair(value, time));
+    }
+}
+
+int knapsackProblem(){
+    vector<vector<int>> dp(k + 1, vector<int>(n + 1, 0));
+
+    for(int i = 1; i <= k; i++){ // 과목의 개수만큼
+        for(int j = 1; j <= n; j++){ // 가능한 공부시간만큼
+
+           if(info[i].second > j){
+               dp[i][j] = dp[i - 1][j];
+           }
+           else{
+               int not_included = dp[i - 1][j];
+               int included = info[i].first + dp[i - 1][j - info[i].second];
+               dp[i][j] = max(not_included, included);
+           }
+        }
+    }
+
+    return dp[k][n];
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+
+    cout << knapsackProblem();
+
+    return 0;
+}
