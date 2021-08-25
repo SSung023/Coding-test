@@ -1,0 +1,90 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define MAX 50 + 1
+using namespace std;
+
+// 1339 - 단어 수학
+int n, cnt = 0; // 문자의 개수, 사용된 알파벳의 개수
+int result = 0;
+int alpaValue[26];
+bool alpaIdx[26]; // 사용된 알파벳이 무엇인지 체크
+bool isVisited[10];
+
+vector<int> v;
+string *words; // n개의 문자
+
+int arr[80];
+
+void input(){
+    cin >> n;
+    words = new string[n];
+
+    for(int i = 0; i < n; i++){
+        cin >> words[i];
+
+        for(int k = 0; k < words[i].length(); k++){
+            if(!alpaIdx[words[i][k] - 'A']){
+                alpaIdx[words[i][k] - 'A'] = true;
+                cnt++;
+                v.push_back(words[i][k] - 'A');
+            }
+        }
+    }
+}
+
+int getSum(){
+    int returnVal = 0;
+    for(int i = 0; i < n; i++){
+        int digit = 0; // 몇번째 자리수인지 확인
+        int tmp = 0;
+        for(int k = words[i].length() - 1; k >= 0; k--){ // 1의 자리부터 시작
+            char n = words[i][k];
+            int num = alpaValue[words[i][k] - 'A'];
+            tmp += pow(10, digit) * alpaValue[words[i][k] - 'A'];
+            digit++;
+        }
+        returnVal += tmp;
+    }
+    return returnVal;
+}
+
+void backtracking(int len){
+    if(len == cnt){ // 알파벳 개수만큼 숫자 할당이 끝났다면
+        int tmp = getSum();
+        result = max(result, tmp);
+        return;
+    }
+
+    for(int i = 0; i < cnt; i++){
+        if(!isVisited[i]){
+            alpaValue[len] = 10 - i - 1;
+            isVisited[i] = true;
+            backtracking(len + 1);
+            isVisited[i] = false;
+        }
+    }
+
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+
+    backtracking(0);
+
+    cout << result;
+
+    delete [] words;
+
+    return 0;
+}
