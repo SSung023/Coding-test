@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define MAX 50 + 1
+using namespace std;
+
+// 1339 - 단어 수학
+int n; // 단어의 개수
+vector<int> alphaValue(26, 0);
+string *words; // n개의 문자
+
+
+void input(){
+    cin >> n;
+    words = new string[n];
+
+    for(int i = 0; i < n; i++){
+        cin >> words[i];
+    }
+}
+
+void giveWeights(){
+    for(int i = 0; i < n; i++){
+        int digit = 0;
+        for(int k = words[i].length() - 1; k >= 0; k--){ // 1의 자리부터 가중치를 준다
+            alphaValue[words[i][k] - 'A'] += pow(10, digit);
+            digit++;
+        }
+    }
+}
+
+int getSum(){
+    int result = 0;
+    int i = 0, value = 9;;
+
+    sort(alphaValue.begin(), alphaValue.end(), greater<int>());
+
+    while(alphaValue[i] != 0){
+        if(alphaValue[i] == 0)  break;
+
+        result += alphaValue[i] * value;
+        i++;
+        value--;
+    }
+
+    return result;
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    giveWeights();
+    cout << getSum();
+
+
+    delete [] words;
+
+    return 0;
+}
