@@ -1,0 +1,58 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define MAX 50 + 1
+using namespace std;
+
+// 1541 - 잃어버린 괄호
+string str;
+int result = 0;
+
+
+void input(){
+    cin >> str;
+}
+
+void getMinNum(){
+    bool isMinus = false;
+    string num;
+
+    for(int i = 0; i <= str.length(); i++){
+        // 연산자이거나 제일 마지막 값(숫자)일 때때
+       if(str[i] == '+' || str[i] == '-' || i == str.length()){
+           if(isMinus){
+                result -= stoi(num);
+                num = "";
+           }
+           else{
+               result += stoi(num);
+               num = "";
+           }
+        }
+       else{ // 숫자일 때에는 문자열을 더하여 전체 숫자가 나오도록 한다.
+           num += str[i];
+       }
+
+       if(str[i] == '-')    isMinus = true;
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+
+    getMinNum();
+
+    cout << result;
+
+    return 0;
+}
