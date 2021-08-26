@@ -1,0 +1,55 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define MAX 50 + 1
+using namespace std;
+
+// 1932 - 정수 삼각형
+int n;
+vector<vector<int>> triangle;
+vector<vector<int>> dp;
+
+
+void input(){
+    cin >> n;
+    triangle.assign(n + 1, vector<int>(n + 2, 0));
+    dp.assign(n + 1, vector<int>(n + 2, 0));
+
+    // 층 수만큼 입력 받기
+    for(int i = n; i > 0; i--){
+        for(int k = 1; k <= n - i + 1; k++){
+            cin >> triangle[i][k];
+        }
+    }
+}
+
+int getMaxSum(){
+
+    for(int i = 1; i <= n; i++){
+        for(int k = 1; k <= n - i + 1; k++){
+            int value = triangle[i][k];
+            int more = max(dp[i - 1][k], dp[i - 1][k + 1]);
+            dp[i][k] = triangle[i][k] + max(dp[i - 1][k], dp[i - 1][k + 1]);
+        }
+    }
+
+    return dp[n][1]; // 제일 꼭대기에 있는 누적 합
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+
+    cout << getMaxSum();
+
+    return 0;
+}
