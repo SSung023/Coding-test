@@ -1,0 +1,61 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define MAX 1000 + 1
+using namespace std;
+
+// 2467 - 용액
+int n;
+long long result_1, result_2;
+vector<long long> solution;
+
+void input(){
+    cin >> n;
+    solution.assign(n, 0);
+
+    for(int i = 0; i < n; i++){
+        cin >> solution[i];
+    }
+}
+
+void getMin_property(){
+    vector<long long>::iterator iter_left = solution.begin();
+    vector<long long>::iterator iter_right = solution.end() - 1;
+
+    long long tmp = 100000000000;
+
+    while(iter_left < iter_right){
+        long long sum = *iter_left + *iter_right;
+
+        if(abs(sum) < abs(tmp)){ // 절댓값이 더 작을 때
+            result_1 = *iter_left;
+            result_2 = *iter_right;
+            tmp = sum;
+        }
+        if(sum > 0){ // 양수인 경우, 양수를 줄여주기 위해 right를 왼쪽으로 이동
+            iter_right--;
+        }
+        else{ // 음수인 경우, 음수를 줄여주기 위해 left를 오른쪽으로 이동
+            iter_left++;
+        }
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    getMin_property();
+
+    cout << result_1 << " " << result_2;
+
+    return 0;
+}
