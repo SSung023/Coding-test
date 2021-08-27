@@ -1,0 +1,153 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define MAX 1000 + 1
+using namespace std;
+
+// 15683 - 감시
+typedef struct {
+    int y, x, dir; // y,x 좌표, 바라보고 있는 방향(0:왼쪽, 1:위, 2:오른, 3:아래)
+}info;
+
+int n, m; // 세로 크기, 가로 크기
+int result = 1000000000;
+
+vector<vector<int>> office; // 사무실의 상태 origin
+vector<vector<int>> testOffice; // 사무실의 상태 copy
+
+vector<info> cctv; // cctv의 정보
+vector<pair<int, int>> selectedCCTV; // cctv의 인덱스, 바라보고 있는 방향
+
+void input(){
+    cin >> n >> m;
+    office.assign(n, vector<int>(m, 0));
+    testOffice.assign(n, vector<int>(m, 0));
+
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            cin >> office[i][k];
+
+            if(1 <= office[i][k] && office[i][k] <= 5){ // cctv를 입력받은 경우
+                cctv.push_back({i, k, 0});
+            }
+        }
+    }
+}
+
+// 사각지대가 몇 개인지 확인하는 함수
+int get_BlindSpot(){
+    int tmp = 0;
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            if(testOffice[i][k] == 0){
+                tmp++;
+            }
+        }
+    }
+    return tmp;
+}
+
+// [y][x]에서 dir 방향으로 영역을 업데이트해준다
+void updateArea(int y, int x, int dir){
+    dir = dir % 4;
+    if(dir == 0){ // 왼쪽
+        for(int i = x; i >= 0; i--){
+            if(testOffice[y][i] == 6){
+                break;
+            }
+            testOffice[y][i] = -1;
+        }
+    }
+    else if(dir == 1){ // 위
+        for(int i = y; i >= 0; i--){
+            if(testOffice[i][x] == 6){
+                break;
+            }
+            testOffice[i][x] = -1;
+        }
+    }
+    else if(dir == 2){ // 오른쪽
+        for(int i = x; i < m; i++){
+            if(testOffice[y][i] == 6){
+                break;
+            }
+            testOffice[y][i] = -1;
+        }
+    }
+    else if(dir == 3){ // 아래
+        for(int i = y; i < n; i++){
+            if(testOffice[i][x] == 6){
+                break;
+            }
+            testOffice[i][x] = -1;
+        }
+    }
+}
+
+// cctv의 현재 방향 정보를 받아와서 cctv의 영역을 체크
+void checkCCTVspace(){
+    for(int i = 0; i < selectedCCTV.size(); i++){
+        int cur_y = cctv[selectedCCTV[i].first].y;
+        int cur_x = cctv[selectedCCTV[i].first].x;
+        int cur_d = selectedCCTV[i].second; // 3인 경우 반대편은?
+
+        if(office[cur_y][cur_x] == 1){
+            updateArea(cur_y, cur_x, cur_d);
+        }
+        else if(office[cur_y][cur_x] == 2){
+            updateArea(cur_y, cur_x, cur_d);
+            updateArea(cur_y, cur_x, cur_d + 2);
+        }
+        else if(office[cur_y][cur_x] == 3){
+            updateArea(cur_y, cur_x, cur_d);
+            updateArea(cur_y, cur_x, cur_d + 1);
+        }
+        else if(office[cur_y][cur_x] == 4){
+            updateArea(cur_y, cur_x, cur_d);
+            updateArea(cur_y, cur_x, cur_d + 1);
+            updateArea(cur_y, cur_x, cur_d + 2);
+        }
+        else if(office[cur_y][cur_x] == 5){
+            updateArea(cur_y, cur_x, cur_d);
+            updateArea(cur_y, cur_x, cur_d + 1);
+            updateArea(cur_y, cur_x, cur_d + 2);
+            updateArea(cur_y, cur_x, cur_d + 3);
+        }
+
+    }
+}
+
+void backtracking(int idx){
+    if(idx == cctv.size()){
+        copy(office.begin(), office.end(), testOffice.begin()); // 초기 상태를 복사
+
+        checkCCTVspace();
+        int tmp = get_BlindSpot();
+        result = min(result, tmp);
+        return;
+    }
+    for(int i = 0; i < 4; i++){
+        selectedCCTV.push_back({idx, i}); // idx번째 cctv의 방향을 i로 설정
+        backtracking(idx + 1);
+        selectedCCTV.pop_back();
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+
+    backtracking(0);
+    cout << result;
+
+    return 0;
+}
