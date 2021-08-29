@@ -1,0 +1,65 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define MAX 1000 + 1
+using namespace std;
+
+// 14921 - 용액 합성하기
+int n;
+vector<int> property; // 특성값들을 저장하는 변수
+
+void input(){
+    cin >> n;
+    property.assign(n, 0);
+
+    for(int i = 0; i < n; i++){
+        cin >> property[i];
+    }
+}
+
+int getProperty(){
+    int result = 10000000000;
+
+    vector<int>::iterator left_iter = property.begin();
+    vector<int>::iterator right_iter = property.end() - 1;
+
+    while(left_iter < right_iter){
+        int sum = *left_iter + *right_iter;
+        if(sum == 0){
+            result = 0;
+            return result;
+        }
+
+        if(sum < 0){ // 결과 값이 음수가 나왔을 때에는, -를 줄여야 하므로 left++
+            left_iter++;
+        }
+        else if(sum > 0){ // 결과 값이 양수가 나왔을 때에는, +를 줄여야 하므로 right--
+            right_iter--;
+        }
+
+        if(abs(result) > abs(sum)){ // 0에 더 가까운 수가 나왔을 때 갱신
+           result = sum;
+        }
+
+    }
+
+    return result;
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+
+    cout << getProperty();
+
+    return 0;
+}
