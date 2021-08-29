@@ -1,0 +1,85 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define INF 987654321
+#define MAX 10000 + 1
+using namespace std;
+
+// 10282 - 해킹
+int testcase, n, d, c; // 테스트케이스의 수, 컴퓨터의 수, 의존하는 컴퓨터의 수, 처음 해킹한 컴퓨터
+int infected_num = 0, infect_time = 0; // 감염된 컴퓨터의 수, 감염되는데 걸린 시간
+
+vector<int> dist;
+vector<pair<int, int>> graph[MAX]; // 간선의 정보 저장. [i]:start, second:end, first:cost
+
+
+void input(){
+    cin >> n >> d >> c;
+    dist.assign(n + 1, INF);
+
+    for(int i = 0; i < d; i++){
+        int a, b, s; // b->a, s초 소요
+        cin >> a >> b >> s;
+        graph[b].push_back({a, s});
+    }
+}
+
+void dijkstra(int start){
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq; // second:현재 노드, first: 현재노드까지의 cost
+    pq.push({0, start});
+    dist[start] = 0;
+
+    while(!pq.empty()){
+        int cur_cost = pq.top().first;
+        int cur_node = pq.top().second;
+        pq.pop();
+
+        for(int i = 0; i < graph[cur_node].size(); i++){
+            int target = graph[cur_node][i].first;
+            int cost = graph[cur_node][i].second + cur_cost;
+
+            if(dist[target] > cost){
+                dist[target] = cost;
+                pq.push(make_pair(cost, target));
+            }
+        }
+    }
+
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> testcase;
+    for(int i = 0; i < testcase; i++){
+        infect_time = 0;
+        infected_num = 0;
+        for(int i = 1; i <= n; i++){
+            graph[i].clear();
+        }
+
+        input();
+        dijkstra(c);
+
+        for(int k = 1; k <= n; k++){
+            if(dist[k] != INF){
+                infected_num++;
+                infect_time = max(infect_time, dist[k]);
+            }
+        }
+
+        cout << infected_num << " " << infect_time << "\n";
+    }
+
+
+
+    return 0;
+}
