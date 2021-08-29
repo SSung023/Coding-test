@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define MAX 1000 + 1
+using namespace std;
+
+// 1806 - 부분합
+int n, s; // 수열의 길이, 합이 s 이상이 되어야한다
+int result = 1000000000;
+vector<int> sequence;
+
+void input(){
+    cin >> n >> s;
+    sequence.assign(n, 0);
+
+    for(int i = 0; i < n; i++){
+        cin >> sequence[i];
+    }
+}
+
+void partialSum(){
+    vector<int>::iterator left_iter = sequence.begin();
+    vector<int>::iterator right_iter = sequence.begin();
+
+    int sum = sequence[0];
+    while((left_iter <= right_iter) && (right_iter < sequence.end())){
+        // 원하는 조건이 되었을 때 최소 값 갱신
+        if(sum >= s){
+            int tmp = right_iter - left_iter + 1;
+            result = min(result, tmp);
+        }
+
+        if(sum < s){
+            right_iter++;
+            if(right_iter != sequence.end()){
+                sum += *right_iter;
+            }
+        }
+        else{
+            sum -= *left_iter;
+            left_iter++;
+        }
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    partialSum();
+
+    if(result == 1000000000){
+        cout << 0;
+    }
+    else{
+        cout << result;
+    }
+
+    return 0;
+}
