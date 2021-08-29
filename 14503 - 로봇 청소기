@@ -1,0 +1,141 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define MAX 1000 + 1
+using namespace std;
+
+// 14503 - 로봇 청소기
+typedef struct{
+    int y, x, dir;
+}Robot;
+
+int n, m;
+Robot robot;
+vector<vector<int>> graph; // 0:빈칸, 1:벽, -1:청소한 칸
+
+
+void input(){
+    cin >> n >> m;
+    graph.assign(n, vector<int>(m, 0));
+
+    cin >> robot.y >> robot.x >> robot.dir; // 로봇의 위치, 초기 방향
+
+    for(int i = 0; i < n; i++){
+        for (int k = 0; k < m; k++) {
+            cin >> graph[i][k];
+        }
+    }
+}
+
+bool isInside(int y, int x){
+    return (0 <= y && y < n) &&(0 <= x && x < m);
+}
+// 현재의 위치, 방향을 전달받아서 현재 기준 왼쪽 칸이 어디인지 return
+Robot getLeftArea(Robot curInfo){
+    Robot candidate = curInfo;
+    candidate.dir = (curInfo.dir + 3) % 4; // 방향을 왼쪽으로 튼다
+
+    if(candidate.dir == 0){ // 위
+        candidate.y--;
+    }
+    else if(candidate.dir == 1){ // 오른쪽
+        candidate.x++;
+    }
+    else if(candidate.dir == 2){ // 아래
+        candidate.y++;
+    }
+    else if(candidate.dir == 3){ // 왼쪽
+        candidate.x--;
+    }
+
+    return candidate;
+}
+
+// 현재 위치에서 바라보고 있는 방향 기준으로 바로 뒤에 칸이 어디인지 return
+Robot canGoBack(Robot curInfo){
+    if(curInfo.dir == 0){ // 위
+        curInfo.y++;
+    }
+    else if(curInfo.dir == 1){ // 오른쪽
+        curInfo.x--;
+    }
+    else if(curInfo.dir == 2){ // 아래
+        curInfo.y--;
+    }
+    else if(curInfo.dir == 3){ // 왼쪽
+        curInfo.x++;
+    }
+    return curInfo;
+}
+
+void getNumOfCleaningRoom(){
+    bool canMove = true;
+    bool canClean = true;
+
+    while (true){
+        if(!canMove)    break;
+
+        graph[robot.y][robot.x] = -1; // 현재 위치를 청소
+
+        Robot nextRobot = robot; // 초기 위치 설정
+
+        for(int i = 0; i < 4; i++){
+            Robot tmp = {robot.y, robot.x, nextRobot.dir};
+            nextRobot = getLeftArea(tmp); //
+
+            if(isInside(nextRobot.y, nextRobot.x) && graph[nextRobot.y][nextRobot.x] == 0){ // 청소할 수 있는 구간이라면
+                // 로봇을 해당 위치로 이동 && 방향 수정
+                robot.y = nextRobot.y;
+                robot.x = nextRobot.x;
+                robot.dir = nextRobot.dir;
+                canClean = true;
+                break;
+            }
+            canClean = false; // 4번 돌 때까지 빈 칸이 나오지 않는다면 청소가 불가능한 것
+        }
+
+        if(!canClean){
+            Robot tmp = canGoBack(robot); // 뒤에 칸이 어디인지 확인
+
+            if(isInside(tmp.y, tmp.x) && graph[tmp.y][tmp.x] != 1){ // 벽이 아니라면
+                // 로봇의 방향은 그대로 유지, 후진
+                robot.y = tmp.y;
+                robot.x = tmp.x;
+            }
+            else{
+                canMove = false;
+            }
+        }
+    }
+}
+
+int cleanedNum(){
+    int result = 0;
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            if(graph[i][k] == -1){
+                result++;
+            }
+        }
+    }
+    return result;
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    getNumOfCleaningRoom();
+
+    cout << cleanedNum();
+
+    return 0;
+}
