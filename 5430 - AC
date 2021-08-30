@@ -1,0 +1,119 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define INF 987654321
+#define MAX 10000 + 1
+using namespace std;
+
+// 5430 - AC
+int testcase, n;
+bool isFlip = false, error = false;
+deque<int> arr;
+string order, arr_str;
+
+void input(){
+    cin >> order;
+    cin >> n;
+    cin >> arr_str;
+}
+
+void parse(){
+    if(arr_str == "[]"){
+        return;
+    }
+    string tmp;
+    for(int i = 1; i < arr_str.length(); i++){
+
+        if('0' <= arr_str[i] && arr_str[i] <= '9'){
+            tmp += arr_str[i];
+        }
+        if(arr_str[i] == ','){
+            int num = stoi(tmp);
+            tmp = "";
+            arr.push_back(num);
+        }
+    }
+
+    int num = stoi(tmp);
+    arr.push_back(num);
+}
+
+void solve(){
+
+    for(int i = 0; i < order.length(); i++){
+        char cur_order = order[i];
+
+        // 배열에 있는 숫자의 순서를 뒤집는다
+        if(cur_order == 'R'){
+            isFlip = !isFlip;
+        }
+        // 첫번째 숫자를 버리는 함수
+        else if(cur_order == 'D'){
+            if(arr.empty()){
+                error = true;
+                return;
+            }
+            if(isFlip){
+                arr.pop_back();
+            }
+            else{
+                arr.pop_front();
+            }
+
+        }
+    }
+}
+
+void printArr(){
+    if(arr.empty() && error){
+        cout << "error\n";
+        return;
+    }
+    else if(arr.empty() && !error){
+        cout << "[]\n";
+        return;
+    }
+    cout << "[";
+
+    if(!isFlip){
+        for(int i = 0; i < arr.size() - 1; i++){
+            cout << arr[i] << ",";
+        }
+        cout << arr[arr.size() - 1] << "]\n";
+    }
+    else{
+        for(int i = arr.size() - 1; i > 0; i--){
+            cout << arr[i] << ",";
+        }
+        cout << arr[0] << "]\n";
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> testcase;
+    for(int i = 0; i < testcase; i++){
+        arr.clear();
+        arr_str = "";
+        order = "";
+        isFlip = false;
+        error = false;
+
+        input();
+        parse();
+        solve();
+
+        printArr();
+    }
+
+    return 0;
+}
