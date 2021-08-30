@@ -1,0 +1,100 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define INF 987654321
+#define MAX 10000 + 1
+using namespace std;
+
+// 16562 - 친구비
+int n, m, k; // 친구의 수, 친구 관계 수, 가지고 있는 돈
+vector<int> parent; // Disjoint-set
+vector<int> adjList[MAX];
+vector<pair<int, int>> cost; // 친구비(친구는 0 ~ n-1번까지). first:친구비, second:친구 번호
+
+
+void initParent(){
+    for(int i = 1; i <= n; i++){
+        parent[i] = i;
+    }
+}
+
+int getParent(int x){
+    if(parent[x] == x){
+        return parent[x];
+    }
+    return parent[x] = getParent(parent[x]);
+}
+
+void unionParent(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+    if(a < b){
+        parent[b] = a;
+    }
+    else{
+        parent[a] = b;
+    }
+}
+
+void input(){
+    cin >> n >> m >> k;
+
+    cost.assign(n, {0, 0});
+    parent.assign(n + 1, 0);
+    initParent();
+
+    for(int i = 0; i < n; i++){
+        cost[i].second = i + 1;
+        cin >> cost[i].first;
+    }
+
+    for(int i = 0; i < m; i++){
+        int s, e;
+        cin >> s >> e;
+        adjList[s].push_back(e);
+        adjList[e].push_back(s);
+        unionParent(s, e);
+    }
+}
+
+int makeFriends(){
+    sort(cost.begin(), cost.end());
+
+    int need = 0;
+
+    for(int i = 0; i < n; i++){ // cost를 쭉 돌면서
+        int cur_p = getParent(cost[i].second);
+        
+        // 만일 방문(연결)을 했다면 부모를 0으로 설정함으로써 방문 표시
+        if(cur_p != getParent(0)){
+            need += cost[i].first;
+            unionParent(0, cost[i].second);
+        }
+    }
+
+    return need;
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    int result = makeFriends();
+
+    if(result <= k){
+        cout << result;
+    }
+    else{
+        cout << "Oh no";
+    }
+
+    return 0;
+}
