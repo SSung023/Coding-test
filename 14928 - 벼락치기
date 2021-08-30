@@ -1,0 +1,60 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define INF 987654321
+#define MAX 10000 + 1
+using namespace std;
+
+// 14928 - 벼락치기
+int n, t; // 단원 개수, 공부 가능한 총 시간
+vector<pair<int, int>> info; // first: 공부 예상 시간, second: 얻을 수 있는 점수
+vector<vector<int>> dp;
+
+
+void input(){
+    cin >> n >> t;
+    info.assign(n + 1, make_pair(0, 0));
+    dp.assign(n + 1, vector<int>(t + 1, 0));
+
+    for(int i = 1; i <= n; i++){
+        cin >> info[i].first >> info[i].second;
+    }
+}
+
+void getMaxScore(){
+
+    for(int i = 1; i <= n; i++){
+        for(int k = 1; k <= t; k++){
+            // i번째 과목이 필요한 공부 시간이, 현재 공부할 수 있는 시간보다 더 크다면
+            if(info[i].first > k){
+                dp[i][k] = dp[i - 1][k];
+            }
+            // i번째 과목이 필요한 공부 시간이 더 적다면
+            else{
+                int not_included = dp[i - 1][k];
+                int included = info[i].second + dp[i - 1][k - info[i].first];
+
+                dp[i][k] = max(not_included, included);
+            }
+        }
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    getMaxScore();
+
+    cout << dp[n][t];
+
+    return 0;
+}
