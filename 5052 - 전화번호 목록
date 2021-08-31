@@ -1,0 +1,97 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define INF 987654321
+#define MAX 10000 + 1
+using namespace std;
+
+// 5052 - 전화번호 목록
+class TRIE{
+public:
+    bool finish;
+    TRIE *Node[10]; // 0 ~ 9
+
+    TRIE(){ // 생성자
+        finish = false;
+        memset(Node, 0, sizeof(Node));
+    }
+    ~TRIE(){ // 소멸자
+        for(int i = 0; i < 10; i++){
+            if(Node[i]){
+                delete Node[i];
+            }
+        }
+    }
+
+    void insert(char* key){
+        if(*key == NULL){
+            finish = true;
+            return;
+        }
+        int cur = *key - '0';
+        if(Node[cur] == 0)
+            Node[cur] = new TRIE();
+
+        Node[cur]->insert(key + 1);
+    }
+
+    bool find(char* key){
+        // 문자열을 전부 둘러보지 않았는데 finish가 나온 경우 -> 일관성이 없는 경우
+        if(*key == NULL){
+            return false;
+        }
+        if(finish){
+            return true;
+        }
+        int cur = *key - '0';
+        if(Node[cur] == 0)
+            return false;
+        return Node[cur]->find(key + 1);
+    }
+
+};
+
+
+int testcase;
+
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> testcase;
+    while(testcase--){
+        TRIE* root = new TRIE();
+        int n;
+        bool flag = false;
+        char phone[10001][11];
+
+        cin >> n;
+        for(int i = 0; i < n; i++){
+            cin >> phone[i];
+            root->insert(phone[i]);
+        }
+
+        for(int i = 0; i < n; i++){
+            if(root->find(phone[i])){
+                flag = true;
+            }
+        }
+        if(flag){
+            cout << "NO\n";
+        }
+        else{
+            cout << "YES\n";
+        }
+    }
+
+
+    return 0;
+}
