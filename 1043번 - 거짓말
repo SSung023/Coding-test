@@ -1,0 +1,107 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define INF 987654321
+#define MAX 10000 + 1
+using namespace std;
+
+// 1043번 - 거짓말
+int n, m; // 사람의 수, 파티의 수
+vector<int> parent;
+vector<int> knowTruth;
+vector<vector<int>> party;
+
+
+int getParent(int x){
+    if(parent[x] == x){
+        return x;
+    }
+    return parent[x] = getParent(parent[x]);
+}
+
+void unionParent(int a, int b){
+    a = getParent(a);
+    b = getParent(b);
+    if(a < b){
+        parent[b] = a;
+    }
+    else{
+        parent[a] = b;
+    }
+}
+
+void input(){
+    cin >> n >> m;
+    parent.assign(n + 1, 0); // 사람이 n명 존재 (1 ~ n)
+    party.assign(m + 1, vector<int>(0,0)); // 파티가 m개 존재 (1 ~ m)
+
+    int num;
+    cin >> num;
+    knowTruth.assign(num + 1, 0);
+    for(int i = 0; i < num; i++){
+        cin >> knowTruth[i];
+    }
+
+    for(int i = 1; i <= m; i++){
+        int num; // 파티에 참석하는 사람의 수
+        cin >> num;
+        party[i].assign(num, 0);
+
+        for(int k = 0; k < num; k++){
+            cin >> party[i][k];
+        }
+    }
+}
+
+void initParent(){
+    for(int i = 1; i <= n; i++){
+        parent[i] = i;
+    }
+
+    for(int i = 1; i <= m; i++){
+        int partyNum = party[i][0];
+        for(int k = 0; k < party[i].size(); k++){
+            unionParent(partyNum, party[i][k]);
+        }
+    }
+
+    // 진실을 알고 있는 사람은 0으로 설정
+    for(int i = 0; i < knowTruth.size(); i++){
+        unionParent(0, knowTruth[i]);
+    }
+}
+
+int solve(){
+    int result = 0;
+
+    for(int i = 1; i <= m; i++){
+        bool canLie = true;
+        for(int k = 0; k < party[i].size(); k++){
+            if(getParent(party[i][k]) == 0)
+                canLie = false;
+            break;
+        }
+        if(canLie)  result++;
+    }
+
+    return result;
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    initParent();
+    //check_knowTruth();
+    cout << solve();
+
+    return 0;
+}
