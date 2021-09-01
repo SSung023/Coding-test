@@ -1,0 +1,72 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <map>
+
+#define INF 987654321
+#define MAX 10000 + 1
+using namespace std;
+
+// 14725 - 개미굴
+class TRIE{
+public:
+    map<string, TRIE*> child; // 다음 문자열, 다음 객체
+    ~TRIE(){
+        for(map<string, TRIE*>::iterator iter = child.begin(); iter != child.end(); iter++){
+            delete (*iter).second;
+        }
+    }
+    void insert(vector<string> &str, int idx){
+        if(idx == str.size())   return;
+
+        // 다음에 오는 문자가 TRIE에 존재하지 않는다면
+        if(child.find(str[idx]) == child.end()){
+            child.insert({str[idx], new TRIE()});
+            //child[str[idx]] = new TRIE();
+        }
+        // 존재한다면 재귀를 통해 다음 문자 탐색
+        // child[str[idx]].insert
+        child[str[idx]]->insert(str, idx + 1);
+    }
+
+    void print(int depth){
+        for(map<string, TRIE*>::iterator iter = child.begin(); iter != child.end(); iter++){
+            for(int i = 0; i < depth; i++){
+                cout << "--";
+            }
+            cout << (*iter).first << "\n";
+            iter->second->print(depth + 1);
+        }
+    }
+};
+TRIE* root = new TRIE();
+
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int n;
+
+    cin >> n;
+    while(n--){
+        int k;
+        cin >> k;
+        vector<string> str(k);
+        for(int i = 0; i < k; i++){
+            cin >> str[i];
+        }
+
+        // root에서부터 insert 시작
+        root->insert(str, 0);
+    }
+    root->print(0);
+    delete root;
+
+    return 0;
+}
