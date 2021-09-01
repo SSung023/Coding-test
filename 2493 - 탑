@@ -1,0 +1,47 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <stack>
+
+#define INF 987654321
+#define MAX 10000 + 1
+using namespace std;
+
+// 2493 - 탑
+
+
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int n;
+    cin >> n;
+    stack<pair<int, int>> tower; // first: height, second: idx
+
+    for(int i = 0; i < n; i++){
+        int height;
+        cin >> height;
+
+        while(!tower.empty()){
+            if(height < tower.top().first){
+                cout << tower.top().second << " ";
+                break;
+            }
+            else{
+                tower.pop();
+            }
+        }
+
+        if(tower.empty())   cout << "0 ";
+
+        tower.push({height, i + 1});
+    }
+
+    return 0;
+}
