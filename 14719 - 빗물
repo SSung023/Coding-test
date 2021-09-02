@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <stack>
+
+#define INF 987654321
+#define MAX 10000 + 1
+using namespace std;
+
+// 14719 - 빗물
+int h, w, water = 0;
+vector<int> block;
+
+
+void input(){
+    cin >> h >> w;
+    block.assign(w, 0);
+    for(int i = 0; i < w; i++){
+        cin >> block[i];
+    }
+}
+
+int getMax_LeftSide(int idx){
+    int left = 0;
+    for(int i = idx - 1; i >= 0; i--){
+        left = max(left, block[i]);
+    }
+    return left;
+}
+
+int getMax_RightSide(int idx){
+    int right = 0;
+    for(int i = idx + 1; i < w; i++){
+        right = max(right, block[i]);
+    }
+    return right;
+}
+
+void get_rainWater(){
+    for(int i = 1; i < w; i++){
+        int cur_height = block[i];
+        int left = getMax_LeftSide(i);
+        int right = getMax_RightSide(i);
+
+        int max_height = min(left, right);
+        if(max_height - cur_height >= 0){
+            water += (max_height - cur_height);
+        }
+
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    get_rainWater();
+
+    cout << water;
+
+    return 0;
+}
