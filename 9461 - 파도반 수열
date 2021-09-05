@@ -1,0 +1,46 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <stack>
+
+#define INF 987654321
+#define MIN -987654321
+#define MAX 10000 + 1
+using namespace std;
+
+// 9461 - 파도반 수열
+int testcase;
+vector<long long> dp;
+
+void padoban(int n){
+    dp.assign(n + 1, 0);
+    dp[1] = 1;
+    dp[2] = 1;
+
+    for(int i = 3; i <= n; i++){
+        dp[i] = dp[i - 2] + dp[i - 3];
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cin >> testcase;
+    while(testcase--){
+        int n;
+        cin >> n;
+        padoban(n);
+
+        cout << dp[n] << "\n";
+    }
+
+
+    return 0;
+}
+
