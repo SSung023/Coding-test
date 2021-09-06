@@ -1,0 +1,174 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+// 17144 - 미세먼지 안녕!
+int r, c, t; // 세로, 가로, t초 후
+int result = 0;
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+vector<pair<int, int>> airCleanerPos;
+vector<vector<int>> room, originDust; // 방의 정보, 미세먼지가 퍼지기 전의 원래 미세먼지 값부
+queue<pair<int, int>> microDust; // 미세먼지
+
+
+
+void input(){
+    cin >> r >> c >> t;
+    room.assign(r, vector<int>(c, 0));
+    originDust.assign(r, vector<int>(c, 0));
+
+    for(int i = 0; i < r; i++){
+        for(int k = 0; k < c; k++){
+            cin >> room[i][k];
+
+            if(room[i][k] != -1 && room[i][k] != 0){
+                microDust.push(make_pair(i, k));
+            }
+            else if(room[i][k] == -1){
+                airCleanerPos.push_back(make_pair(i, k));
+            }
+        }
+    }
+
+    copy(room.begin(), room.end(), originDust.begin());
+}
+
+bool isInside(int y, int x){
+    return (0 <= x && x < c) && (0 <= y && y < r);
+}
+
+void circulate_upper(){
+    // 0: left, 1:up, 2:right, 3:down
+    int dir = 1;
+    int y = airCleanerPos[0].first;
+    int x = airCleanerPos[0].second;
+
+    while(true){
+        int next_y = y + dy[dir];
+        int next_x = x + dx[dir];
+
+        // 공기 청정기까지 온 경우
+        if(isInside(next_y, next_x) && room[next_y][next_x] == -1) {
+            originDust[y][x] = 0;
+            return;
+        }
+
+        // 맵의 범위를 벗어나거나, 공기청정기가 작동하는 범위를 벗어났을 때
+        if(!isInside(next_y, next_x) || next_y > airCleanerPos[0].first){
+            dir = (dir + 1) % 4; // 방향을 오른쪽으로 꺾는다
+            continue;
+        }
+        originDust[y][x] = originDust[next_y][next_x];
+
+        y = next_y;
+        x = next_x;
+    }
+}
+
+void circulate_lower(){
+    // 0: left, 1:up, 2:right, 3:down
+    int dir = 3;
+    int y = airCleanerPos[1].first + dy[dir];
+    int x = airCleanerPos[1].second + dx[dir];
+
+    while(true){
+        int next_y = y + dy[dir];
+        int next_x = x + dx[dir];
+
+        // 공기 청정기까지 온 경우
+        if(isInside(next_y, next_x) && room[next_y][next_x] == -1) {
+            originDust[y][x] = 0;
+            return;
+        }
+
+        // 맵의 범위를 벗어나거나, 공기청정기가 작동하는 범위를 벗어났을 때
+        if(!isInside(next_y, next_x) || next_y < airCleanerPos[1].first){
+            dir = (dir + 3) % 4; // 방향을 왼쪽으로 꺾는다
+            continue;
+        }
+        originDust[y][x] = originDust[next_y][next_x];
+
+        y = next_y;
+        x = next_x;
+    }
+}
+
+void spread_microDust(){
+
+    while(!microDust.empty()){
+        int cur_y = microDust.front().first;
+        int cur_x = microDust.front().second;
+        microDust.pop();
+
+        int spread_quantity = room[cur_y][cur_x] / 5;
+        int spread_time = 0;
+        int in_quantity = 0;
+
+        for(int i = 0; i < 4; i++){
+            int next_y = cur_y + dy[i];
+            int next_x = cur_x + dx[i];
+
+            // 범위 안에 있고, 공기청정기가 없는 칸 -> 미세먼지가 퍼질 수 있는 칸
+            if(isInside(next_y, next_x) && room[next_y][next_x] != -1){
+                if (originDust[next_y][next_x] == 0){ // 빈 칸일 때
+                    room[next_y][next_x] = room[next_y][next_x] + spread_quantity;
+                }
+                else if (originDust[next_y][next_x] != 0 && originDust[next_y][next_x] != -1){ // 미세먼지 발원지일 때
+                    in_quantity += originDust[next_y][next_x] / 5;
+                }
+                spread_time++;
+            }
+        }
+        room[cur_y][cur_x] -= (room[cur_y][cur_x] / 5) * spread_time; // 미세먼지를 퍼트리고 남은 양
+        room[cur_y][cur_x] += in_quantity; // 주변에서 날라온 미세먼지의 양 추가
+    }
+
+    copy(room.begin(), room.end(), originDust.begin());
+}
+
+void push_queue(){
+    result = 0;
+    for(int i = 0; i < r; i++){
+        for(int k = 0; k < c; k++){
+            if(originDust[i][k] != -1 && originDust[i][k] != 0){
+                microDust.push(make_pair(i, k));
+                result += originDust[i][k];
+            }
+        }
+    }
+}
+
+void operate_airCleaner(){
+    while(t--){
+        spread_microDust();
+        circulate_lower();
+        circulate_upper();
+
+        originDust[airCleanerPos[0].first][airCleanerPos[0].second] = -1;
+        originDust[airCleanerPos[1].first][airCleanerPos[1].second] = -1;
+        copy(originDust.begin(), originDust.end(), room.begin());
+
+        push_queue();
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    operate_airCleaner();
+
+    cout << result;
+
+    return 0;
+}
+
