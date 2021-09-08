@@ -1,0 +1,76 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define INF 987654321
+using namespace std;
+
+// 14002 - 가장 긴 증가하는 부분 수열 4
+int n, result_idx = 0;
+vector<pair<int, int>> dp; // first:부분 수열의 길이, second: 이전 부분 수열의 인덱스
+vector<int> num;
+
+
+void input(){
+    cin >> n;
+    num.assign(n, 0);
+    dp.assign(n, {1,-1});
+    for(int i = 0; i < n; i++){
+        cin >> num[i];
+    }
+}
+
+void partial(){
+    int max_len = 0;
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < i; k++){
+            // 비교 값이 기준 값보다 작을 때(증가하는 부분 수열일 때)
+            if(num[i] > num[k]){
+                // 부분 수열의 길이 갱신
+                if(dp[i].first < dp[k].first + 1){
+                    dp[i].first = dp[k].first + 1;
+                    dp[i].second = k;
+                }
+            }
+        }
+        if(max_len < dp[i].first){
+            result_idx = i;
+            max_len = dp[i].first;
+        }
+    }
+}
+
+void print_sequence(){
+    vector<int> seq;
+    int parent_idx = dp[result_idx].second;
+
+    seq.push_back(num[result_idx]);
+    while(parent_idx != -1){
+        seq.push_back(num[parent_idx]);
+        parent_idx = dp[parent_idx].second;
+    }
+
+    cout << dp[result_idx].first << "\n";
+    for(int i = seq.size() - 1; i >= 0; i--){
+        cout << seq[i] << " ";
+    }
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    partial();
+
+    print_sequence();
+
+    return 0;
+}
+
