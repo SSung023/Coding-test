@@ -1,0 +1,91 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define INF 987654321
+#define MAX 100000 + 1
+using namespace std;
+
+// 1939 - 중량 제한
+int n, m, start, destination; // 섬의 개수, 다리의 개수
+int low = INF, high = 0;
+bool isVisited[MAX], flag = false;
+vector<pair<int, long long>> graph[MAX];
+
+void input(){
+    cin >> n >> m;
+
+    for(int i = 0; i < m; i++){
+        int s, e, c;
+        cin >> s >> e >> c;
+
+        graph[s].emplace_back(e, c);
+        graph[e].emplace_back(s, c);
+
+        low = min(low, c);
+        high = max(high, c);
+    }
+    cin >> start >> destination;
+}
+
+void DFS(int mid, int idx){
+    if(idx == destination){
+        flag = true;
+        return;
+    }
+
+    for(int i = 0; i < graph[idx].size(); i++){
+        int next = graph[idx][i].first; // 다음 다리
+        int next_cost = graph[idx][i].second; // 중량
+
+        if(!isVisited[next] && next_cost >= mid){
+            isVisited[next] = true;
+            DFS(mid, next);
+        }
+    }
+}
+
+void binary_search(){
+    int mid = 0, result = 0;
+    while(low <= high){
+        mid = (low + high) / 2;
+        memset(isVisited, false, sizeof(isVisited));
+        isVisited[start] = true;
+        flag = false;
+        DFS(mid, start);
+
+        if(!flag){ // mid가 최소 중량인 길이 없음
+            high = mid - 1;
+        }
+        else{ // mid가 최소 중량이 길이 있음
+            low = mid + 1;
+            result = mid;
+        }
+    }
+    cout << result;
+    return;
+}
+
+int main(void){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    binary_search();
+
+
+    return 0;
+}
+
+/* 알고리즘
+ * input을 받으면서 중량의 최소, 최대값을 구한다
+ * 이분 탐색O(nlogn)을 통해 mid값을 선정
+ * DFS를 통해 start부터 destination까지 가는 길 중, 최소 중량이 mid인 길이 있는지 확인
+ * 만일 있다면 low = mid + 1, 만일 없다면 high = mid - 1 후, 다시 이분 탐색을 실행한다.
+ * 최종적으로 마지막의 mid 값이 정답이 된다.*/
