@@ -1,0 +1,63 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <string.h>
+#include <math.h>
+#include <vector>
+#include <queue>
+
+#define INF 987654321
+#define MAX 100000 + 1
+using namespace std;
+
+// 1946 - 신입 사원
+int n, result = 0;
+vector<pair<int, int>> score;
+
+void input(){
+    scanf("%d", &n);
+
+    for(int i = 0; i < n; i++){
+        int docu, speech;
+        scanf("%d %d", &docu, &speech);
+        score.push_back({docu, speech});
+    }
+}
+
+void getRecruit(){
+    int rank = score[0].second;
+
+    for(int i = 0; i < score.size(); i++){
+        int speech = score[i].second; // 2차 순위
+        if(speech > rank){ // i번째 지원자의 2차 순위가 더 낮을 때 불합격
+            continue;
+        }else{
+            rank = min(rank, speech);
+            result++;
+        }
+    }
+}
+
+int main(void){
+
+//    ios::sync_with_stdio(false);
+//    cin.tie(NULL);
+//    cout.tie(NULL);
+
+    int testcase;
+    scanf("%d", &testcase);
+
+    while(testcase--){
+        score.clear();
+        result = 0;
+
+        input();
+        sort(score.begin(), score.end());
+        getRecruit();
+
+        printf("%d\n", result);
+    }
+
+
+    return 0;
+}
