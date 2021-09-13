@@ -1,0 +1,97 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 987654321
+#define MAX 800 + 1
+using namespace std;
+
+// 1504 - 특정한 최단 경로
+int n, m; // 정점의 개수, 간선의 개수
+int v1, v2;
+vector<int> dist;
+vector<vector<pair<int, int>>> graph; // first:목적지, second:거리
+
+void input(){
+    scanf("%d %d", &n, &m);
+    dist.assign(n + 1, INF);
+    graph.assign(n + 1, vector<pair<int, int>>(0, {0,0}));
+
+    for(int i = 0; i < m; i++){
+        int a, b, c;
+        scanf("%d %d %d", &a, &b, &c);
+        graph[a].push_back({b, c});
+        graph[b].push_back({a, c});
+    }
+    scanf("%d %d", &v1, &v2);
+}
+
+void dijkstra(int start){
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq; //first:cost, second:목적지
+    pq.push({0, start});
+    dist[start] = 0;
+
+    while(!pq.empty()){
+        int cur = pq.top().second;
+        int cost = pq.top().first; // cur 노드까지 걸리는 현재 거리
+        pq.pop();
+
+        if(cost > dist[cur])    continue; // 이미 최단경로인 경우 pass
+
+        for(int i = 0; i < graph[cur].size(); i++){
+            int next_cost = cost + graph[cur][i].second; // 연결된 다음 노드까지의 거리
+
+            if(next_cost < dist[graph[cur][i].first]){ // 더 짧은 경로를 발견했다면
+                dist[graph[cur][i].first] = next_cost;
+                pq.push({next_cost, graph[cur][i].first});
+            }
+        }
+    }
+}
+
+void get_shortestPath(){
+    int path1 = 0, path2 = 0; // start -> v1, start -> v2
+    int path1_end = 0, path2_end = 0; // v2 -> end, v1 -> end
+
+    dijkstra(1);
+    path1 = dist[v1];
+    path2 = dist[v2];
+
+    fill(dist.begin(), dist.end(), INF);
+    dijkstra(v1);
+    int middle_path = dist[v2];
+    path2_end = dist[n];
+
+    fill(dist.begin(), dist.end(), INF);
+    dijkstra(v2);
+    path1_end = dist[n];
+
+    int result = min(path1 + path1_end, path2 + path2_end);
+    if(result >= INF || middle_path >= INF){
+        printf("-1");
+    }
+    else{
+        result += middle_path;
+        printf("%d", result);
+    }
+}
+
+int main(){
+
+    input();
+    get_shortestPath();
+
+    return 0;
+}
+
+/* 알고리즘
+ * 1. start -> v1과 start-> v2의 경로를 구해서 각각 값을 저장한다. (path1, path2)
+ * 2. v1 -> v2까지의 cost를 구한다.
+ * 3. v1 -> end와 v2 -> end의 경로를 구한다. (path2_end, path1_end)
+ * 4. start -> v1 + v2 -> end vs start -> v2 + v1 -> end의 값을 비교해서 더 작은 값을 취한다.
+ * 5. 4번의 값에 v1 -> v2의 값을 더한다.
+ * 만일 경로가 없는 경우에는 path1 + path1_end, path2 + path2_end 모두 INF 이상인 경우 혹은 middle_path가 INF인 경우이다.*/
