@@ -1,0 +1,50 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 800 + 1
+using namespace std;
+
+// 4358 - 생태학
+int num = 0;
+map<string, double> tree;
+
+
+void getPercentage(){
+
+    for(auto& elem : tree){
+        string tree_name = elem.first;
+        double tree_per = elem.second;
+
+        tree_per /= num;
+        tree_per *= 100;
+        cout << tree_name << " " << tree_per << "\n";
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    string str;
+    while(getline(cin, str)){
+        num++;
+        tree[str] += 1;
+    }
+
+    cout << fixed;
+    cout.precision(4);
+
+    getPercentage();
+
+    return 0;
+}
