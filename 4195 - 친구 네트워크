@@ -1,0 +1,87 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <unordered_map>
+
+using namespace std;
+
+// 4195 - 친구 네트워크
+unordered_map<string, int> hashmap;
+vector<int> parent, friend_num;
+
+
+int getParent(int x) {
+    if (parent[x] == x) return x;
+    return parent[x] = getParent(parent[x]);
+}
+
+void unionParent(int a, int b) {
+    a = getParent(a);
+    b = getParent(b);
+    if (a < b) {
+        parent[b] = a;
+        friend_num[a] += friend_num[b];
+    }
+    else if(a>b){
+        parent[a] = b;
+        friend_num[b] += friend_num[a];
+    }
+}
+
+void initParent(int num){
+    parent.assign(num * 2 + 1, 0);
+    friend_num.assign(num * 2 + 1, 1);
+
+    for (int i = 0; i <= num * 2; i++) {
+        parent[i] = i;
+    }
+}
+
+int main() {
+
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int testcase;
+
+    cin >> testcase;
+    while(testcase--){
+        hashmap.clear();
+        int idx = 0, f = 0;
+
+        cin >> f;
+        initParent(f);
+
+        int friend_n1 = 0, friend_n2 = 0;
+
+        for (int i = 0; i < f; i++) {
+            string id_1, id_2;
+            cin >> id_1 >> id_2;
+
+            if (hashmap.count(id_1) == 0) {
+                hashmap[id_1] = ++idx;
+                friend_n1 = idx;
+            }
+            else {
+                friend_n1 = hashmap[id_1];
+            }
+
+            if (hashmap.count(id_2) == 0) {
+                hashmap[id_2] = ++idx;
+                friend_n2 = idx;
+            }
+            else {
+                friend_n2 = hashmap[id_2];
+            }
+
+            unionParent(friend_n1, friend_n2);
+            int target = getParent(friend_n1);
+            cout << friend_num[target] << '\n';
+        }
+    }
+
+    return 0;
+}
