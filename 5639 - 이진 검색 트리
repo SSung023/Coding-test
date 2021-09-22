@@ -1,0 +1,73 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 5639 - 이진 검색 트리
+template<typename T>
+class Node{
+public:
+    T key;
+    Node* left;
+    Node* right;
+
+    /*이진 트리에서의 삽입
+     * 현재 위치한 노드가 null이라면, Node를 생성하고 key 삽입
+     * 만일 삽입하려는 key의 값이 더 크다면, node의 오른쪽 자식으로 이동
+     * 만일 삽입하려는 key의 값이 더 작다면, node의 왼쪽 자식으로 이동*/
+    Node* insert(Node* node, T _key){
+        if(node == nullptr){
+            node = new Node<int>;
+            node->key = _key;
+            node->left = nullptr;
+            node->right = nullptr;
+        }
+        else if(node->key < _key){
+            node->right = insert(node->right, _key);
+        }
+        else{
+            node->left = insert(node->left, _key);
+        }
+        return node;
+    }
+};
+
+// left -> right -> root
+void postOrder(Node<int>* node){
+    if(node->left != nullptr){
+        postOrder(node->left);
+    }
+    if(node->right != nullptr){
+        postOrder(node->right);
+    }
+    cout << node->key << '\n';
+}
+
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    Node<int>* root = nullptr;
+    int num = 0;
+    while(cin >> num){
+        if(num == cin.eof())    break;
+
+        root = root->insert(root, num);
+    }
+    postOrder(root);
+
+    return 0;
+}
