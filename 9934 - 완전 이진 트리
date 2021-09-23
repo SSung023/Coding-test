@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 9934 - 완전 이진 트리
+int k = 0;
+vector<int> num;
+vector<vector<int>> tree;
+
+void input(){
+    cin >> k;
+    int tree_size = pow(2, k) - 1;
+
+    num.assign(tree_size, 0);
+    tree.assign(k, vector<int>(0,0));
+
+    for(int i = 0; i < tree_size; i++){
+        cin >> num[i];
+    }
+}
+
+// root 노드들을 먼저 추출
+void setTree(int left, int right, int depth){
+    if(left == right){
+        tree[depth].emplace_back(num[left]);
+        return;
+    }
+    int mid = (left + right) / 2;
+    tree[depth].emplace_back(num[mid]);
+
+    setTree(left, mid - 1, depth + 1);
+    setTree(mid + 1, right, depth + 1);
+}
+
+void level_traversal(){
+    for(int i = 0; i < k; i++){
+        for(auto iter = tree[i].begin(); iter != tree[i].end(); iter++){
+            cout << *iter << ' ';
+        }
+        cout << '\n';
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+
+    setTree(0, num.size() - 1, 0);
+    level_traversal();
+
+
+    return 0;
+}
