@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 14425 - 문자열 집합
+
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int n, m;
+    int result = 0;
+    unordered_map<string, int> hashmap;
+
+    cin >> n >> m;
+
+    for(int i = 0; i < n; i++){
+        string tmp;
+        cin >> tmp;
+        hashmap[tmp] = 1;
+    }
+    for(int i = 0; i < m; i++){
+        string tmp;
+        cin >> tmp;
+        if(hashmap.count(tmp)){
+            result++;
+        }
+    }
+
+    cout << result;
+
+
+    return 0;
+}
