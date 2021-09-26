@@ -1,0 +1,78 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 1167 - 트리의 지름
+int v = 0, radius = 0, node = 0;
+vector<vector<pair<int, int>>> graph; // first: dest, second: cost
+vector<bool> isVisited;
+
+void input(){
+    cin >> v;
+    graph.assign(v + 1, vector<pair<int, int>>(0, {0, 0}));
+    isVisited.assign(v + 1, false);
+
+    for(int i = 1; i <= v; i++){
+        int node_num = 0, dest = 0, cost = 0;
+        cin >> node_num;
+        while(true){
+            cin >> dest;
+            if(dest == -1)  break;
+            cin >> cost;
+            // 그래프 형성
+            graph[node_num].emplace_back(make_pair(dest, cost));
+        }
+    }
+}
+
+void DFS(int idx, int total_cost){
+    if(radius < total_cost){
+        radius = total_cost;
+        node = idx;
+    }
+
+    for(int i = 0; i < graph[idx].size(); i++){
+        int next = graph[idx][i].first; // idx 노드와 연결된 노드의 번호
+        int cost = graph[idx][i].second; // 연결된 노드까지의 cost
+
+        if(!isVisited[next]){
+            isVisited[next] = true;
+            DFS(next, total_cost + cost);
+        }
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+
+    // 임시 정점(1)에서 제일 먼 정점을 찾는다.
+    isVisited[1] = true;
+    DFS(1, 0);
+
+
+    // 위에서 찾은 정점에서 다시 제일 먼 정점을 찾는다.
+    fill(isVisited.begin(), isVisited.end(), false);
+    isVisited[node] = true;
+    radius = 0;
+    DFS(node, 0);
+
+    cout << radius;
+
+    return 0;
+}
