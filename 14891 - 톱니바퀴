@@ -1,0 +1,120 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 14891 - 톱니바퀴
+int k = 0; // k번의 회전
+vector<deque<int>> gear(4 + 1); // 기어의 극의 정보
+vector<int> turnDir(4 + 1), isVisited(4 + 1, false); // 어느 방향으로 도는지에 대한 정보
+
+
+
+void turnClockwise(int target_gear_num){ // 시계 방향으로 기어 회전
+    int rear = gear[target_gear_num].back();
+    gear[target_gear_num].pop_back();
+    gear[target_gear_num].push_front(rear);
+}
+
+void turnAnticlockwise(int target_gear_num){ // 반시계 방향으로 기어 회전
+    int head = gear[target_gear_num].front();
+    gear[target_gear_num].pop_front();
+    gear[target_gear_num].push_back(head);
+}
+
+// 1:시계, -1:반시계, 0:회전 X
+void recursively_check(int target_gear_num, int direction){
+    isVisited[target_gear_num] = true;
+    turnDir[target_gear_num] = direction;
+
+    // 왼쪽 톱니바퀴 검사
+    if(target_gear_num > 1 && !isVisited[target_gear_num - 1]){
+        int next_gear = target_gear_num - 1;
+
+        if(direction == 0){
+            recursively_check(next_gear, 0);
+        }
+        if(gear[target_gear_num][6] != gear[next_gear][2]){
+            turnDir[next_gear] = -direction;
+            recursively_check(next_gear, -direction);
+        }
+        else{
+            recursively_check(next_gear, 0);
+        }
+    }
+
+    // 오른쪽 톱니바퀴 검사
+    if(target_gear_num < 4 && !isVisited[target_gear_num + 1]){
+        int next_gear = target_gear_num + 1;
+
+        if(direction == 0){
+            recursively_check(next_gear, 0);
+        }
+        if(gear[target_gear_num][2] != gear[next_gear][6]){
+            turnDir[next_gear] = -direction;
+            recursively_check(next_gear, -direction);
+        }
+        else{
+            recursively_check(next_gear, 0);
+        }
+    }
+}
+
+void turnGear(){
+    for(int i = 1; i <= 4; i++){
+        if(turnDir[i] == 0)
+            continue;
+
+        if(turnDir[i] == 1){
+            turnClockwise(i);
+        }
+        else if(turnDir[i] == -1){
+            turnAnticlockwise(i);
+        }
+    }
+}
+
+int getTotalScore(){
+    int result = 0;
+    for(int i = 1; i <= 4; i++){
+        if(gear[i].front() == 1)
+            result += pow(2, i - 1);
+    }
+
+    return result;
+}
+
+int main(){
+
+    for(int i = 1; i <= 4; i++){
+        for(int j = 0; j < 8; j++){
+            int pole = 0;
+            scanf("%1d", &pole);
+
+            gear[i].push_back(pole);
+        }
+    }
+
+    scanf("%d", &k);
+
+    for(int i = 0; i < k; i++){
+        int num = 0, direction = 0;
+        cin >> num >> direction;
+
+        fill(isVisited.begin(), isVisited.end(), false);
+        recursively_check(num, direction);
+        turnGear();
+    }
+
+    int result = getTotalScore();
+    printf("%d", result);
+
+    return 0;
+}
