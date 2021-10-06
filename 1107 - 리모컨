@@ -1,0 +1,76 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 1107 - 리모컨
+int n = 0, m = 0, times = INF; // 이동하고자하는 채널의 번호, 고장난 리모콘 버튼의 개수, 버튼을 누르는 최소 횟수
+bool canPush[10]; // 버튼을 누를 수 있는가의 여부
+
+
+void input(){
+    cin >> n;
+    cin >> m;
+    fill(canPush, canPush + 10, true);
+    for(int i = 0; i < m; i++){
+        int tmp;
+        cin >> tmp;
+        canPush[tmp] = false;
+    }
+}
+
+bool isValidNum(int x){
+    if(x == 0){
+        return canPush[0];
+    }
+
+    while(x){
+        if(!canPush[x % 10]){
+            return false;
+        }
+        x /= 10;
+    }
+    return true;
+}
+
+void solve(){
+    // 100인 경우에는 버튼을 누를 필요가 없음
+    if(n == 100){
+        times = 0;
+        return;
+    }
+
+    int start100 = abs(n - 100); // 100에서부터 버튼을 눌렀을 때
+    for(int i = 0; i <= MAX; i++){
+        if(isValidNum(i)){ // i번을 리모콘으로 누를 수 있다면
+            int push_time = to_string(i).length();
+            push_time += abs(i - n);
+            times = min(times, push_time);
+        }
+    }
+    times = min(times, start100);
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    solve();
+
+    cout << times;
+
+    return 0;
+}
