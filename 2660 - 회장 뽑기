@@ -1,0 +1,92 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 2660 - 회장 뽑기
+int n, min_score = INF;
+vector<vector<int>> graph;
+vector<int> score;
+vector<bool> isVisited;
+
+
+void input(){
+    cin >> n;
+    graph.assign(n + 1, vector<int>(0, 0));
+    score.assign(n + 1, 0);
+    isVisited.assign(n + 1, false);
+
+    int s, e;
+    while(true){
+        cin >> s >> e;
+        if(s == -1 && e == -1)  break;
+
+        graph[s].emplace_back(e);
+        graph[e].emplace_back(s);
+    }
+}
+
+void BFS(int idx){
+    int step = 0;
+    queue<pair<int, int>> q;
+    q.push({idx, 0});
+    isVisited[idx] = true;
+
+    while(!q.empty()){
+        int cur = q.front().first;
+        int cost = q.front().second;
+        q.pop();
+
+        step = max(step, cost);
+
+        for(int i = 0; i < graph[cur].size(); i++){
+            int next = graph[cur][i];
+            if(!isVisited[next]){
+                isVisited[next] = true;
+                q.push({next, cost + 1});
+            }
+        }
+    }
+
+    score[idx] = step;
+    min_score = min(min_score, step);
+}
+
+void printAnswer(){
+    vector<int> result;
+    int cnt = 0;
+    for(int i = 1; i <= n; i++){
+        if(score[i] == min_score){
+            cnt++;
+            result.emplace_back(i);
+        }
+    }
+    cout << min_score << ' ' << cnt << '\n';
+    for(int i = 0; i < result.size(); i++){
+        cout << result[i] << ' ';
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    input();
+    for(int idx = 1; idx <= n; idx++){
+        fill(isVisited.begin(), isVisited.end(), false);
+        BFS(idx);
+    }
+
+    printAnswer();
+
+    return 0;
+}
