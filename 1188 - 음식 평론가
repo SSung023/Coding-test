@@ -1,0 +1,46 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <set>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 1188 - 음식 평론가
+int n, m; // 소시지의 수, 평론가의 수
+
+void input(){
+    cin >> n >> m;
+}
+
+int GCD(int a, int b){
+    if(a == 0)  return b;
+    return GCD(b % a, a);
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    cout << m - GCD(n, m);
+
+    return 0;
+}
+
+/* 알고리즘
+ * 소세지를 일렬로 이은 다음(이음새가 잘려있지 않다고 가정)에, m - 1만큼 자르면 m명에게 같은 양은 나누어줄 수 있다.
+ * 소세지를 m - 1번 잘랐다고 가정하자.
+ * 그리고 소세지를 일렬로 이을 때 붙였던 부분을 다시 자른다고 해보자.
+ * 이 때, m - 1번 자를때 잘랐던 위치와 겹치는 위치가 있을 것이다.
+ * 따라서 따라서 겹치는 부분만큼을 제외하면 된다.
+ * 겹치는 부분의 수가 최대 공약수 이므로, m - (n과 m의 최대공약수)를 하면 답이 나온다.*/
