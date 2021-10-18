@@ -1,0 +1,88 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <set>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 1744 - 수 묶기
+int n;
+vector<int> nums, positive, negative;
+
+void input(){
+    cin >> n;
+    nums.assign(n, 0);
+    for(int i = 0; i < n; i++){
+        cin >> nums[i];
+        if(nums[i] > 0)    positive.emplace_back(nums[i]);
+        else    negative.emplace_back(nums[i]);
+    }
+
+    sort(positive.begin(), positive.end(), greater<>());
+    sort(negative.begin(), negative.end(), less<>());
+}
+
+int getMax(){
+   int result = 0;
+   int pos_len = positive.size();
+   if(pos_len % 2 == 0){
+       for(int i = 0; i < pos_len; i++){
+           if(positive[i] != 1 && positive[i + 1] != 1){
+               result += positive[i] * positive[i + 1];
+               i++;
+           }
+           else{
+               result += positive[i];
+           }
+       }
+   }
+   else{
+       for(int i = 0; i < pos_len - 1; i++){
+           if(positive[i] != 1 && positive[i + 1] != 1){
+               result += positive[i] * positive[i + 1];
+               i++;
+           }
+           else{
+               result += positive[i];
+           }
+       }
+       result += positive[pos_len - 1];
+   }
+
+
+   // 음수 계산
+   int ne_len = negative.size();
+   if(ne_len % 2 == 0){
+       for(int i = 0; i < ne_len; i+= 2){
+           result += (negative[i] * negative[i + 1]);
+       }
+   }
+   else{
+       for(int i = 0; i < ne_len - 1; i+= 2){
+           result += (negative[i] * negative[i + 1]);
+       }
+       result += negative[ne_len - 1];
+   }
+
+   return result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    cout << getMax();
+
+    return 0;
+}
