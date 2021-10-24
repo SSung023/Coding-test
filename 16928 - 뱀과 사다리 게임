@@ -10,6 +10,7 @@
 #define INF 100000000
 using namespace std;
 
+// 16928 - 뱀과 사다리 게임
 int n, m, result = 0; // 사다리의 수, 뱀의 수
 int graph[MAX];
 int moveInfo[MAX];
