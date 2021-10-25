@@ -1,0 +1,58 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <set>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 3649 - 로봇 프로젝트
+int x, n;
+vector<int> lego;
+
+
+void twoPointers(){
+    int low = 0, high = lego.size() - 1;
+    int target = x * 10000000;
+
+    while(low < high){
+        int num = lego[low] + lego[high];
+        if(num == target){
+            cout << "yes " << lego[low] << " " << lego[high] << '\n';
+            return;
+        }
+
+        if(num < target)    low++;
+        else    high--;
+    }
+
+    cout << "danger\n";
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    while(true){
+        cin >> x >> n;
+        if(cin.eof())   break;
+
+        lego.assign(n, 0);
+        for(int i = 0; i < n; i++){
+            cin >> lego[i];
+        }
+        sort(lego.begin(), lego.end());
+        twoPointers();
+    }
+
+    return 0;
+}
