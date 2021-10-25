@@ -1,0 +1,74 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <set>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 1092 - 배
+int n, m; // 크래인의 개수, 박스의 개수
+int crane_max_weight = 0, box_max_weight = 0;
+vector<int> crane, box;
+
+
+void input(){
+    cin >> n;
+    crane.assign(n, 0);
+    for(int i = 0; i < n; i++){
+        cin >> crane[i];
+        if(crane_max_weight < crane[i]) crane_max_weight = crane[i];
+    }
+
+    cin >> m;
+    box.assign(m, 0);
+    for(int i = 0; i < m; i++){
+        cin >> box[i];
+        // 박스의 무게가 크레인의 무게 중량보다 무거운 경우, 절대 박스를 배로 옮길 수 없다.
+        if(box[i] > crane_max_weight){
+            cout << "-1";
+            exit(0);
+        }
+    }
+
+    sort(crane.begin(), crane.end(), greater<>());
+    sort(box.begin(), box.end(), greater<>());
+}
+
+void moveBox(){
+    int time = 0;
+
+    while(!box.empty()){
+        for(int crane_idx = 0; crane_idx < crane.size(); crane_idx++){
+            for(int box_idx = 0; box_idx < box.size(); box_idx++){
+                if(crane[crane_idx] >= box[box_idx]){ // 크레인이 박스를 들 수 있다면
+                    box.erase(box.begin() + box_idx);
+                    break;
+                }
+            }
+        }
+
+        time++;
+    }
+
+    cout << time;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    moveBox();
+
+    return 0;
+}
