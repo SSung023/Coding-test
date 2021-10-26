@@ -1,0 +1,81 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <set>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 2457 - 공주님의 정원
+int n, result = 0;
+vector<pair<int, int>> flower;
+
+void input(){
+    cin >> n;
+
+    for(int i = 0; i < n; i++){
+        int start_m, start_d, end_m, end_d;
+        cin >> start_m >> start_d >> end_m >> end_d;
+
+        int startDate = start_m * 100 + start_d;
+        int endDate = end_m * 100 + end_d;
+        if(startDate < 301) startDate = 301;
+        if(endDate > 1130)  endDate = 1201;
+
+        flower.emplace_back(make_pair(startDate, endDate));
+    }
+
+    sort(flower.begin(), flower.end());
+}
+
+void getMinFlower(){
+    int startDate = 301;
+
+    while(true){
+        if(startDate >= 1201)   break;
+
+        int new_endDate = startDate, idx = 0;
+        bool flag = false;
+        for(int i = 0; i < flower.size(); i++){
+            // 꽃이 피는 시점이 startDate보다 작으면서, 제일 늦게 지는 꽃을 선택
+            if(flower[i].first <= startDate && flower[i].second > new_endDate){
+                new_endDate = flower[i].second; // 제일 늦게 지는 꽃
+                idx = i; // 제일 늦게 지는 꽃의 인덱스 저장
+                flag = true;
+            }
+        }
+
+        // 조건에 맞는 꽃이 있는 경우
+        if(flag){
+            startDate = new_endDate;
+            flower.erase(flower.begin() + idx);
+            result++;
+        }
+        // 조건에 맞는 꽃이 없는 경우
+        else{
+            result = 0;
+            return;
+        }
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    getMinFlower();
+
+    cout << result;
+
+    return 0;
+}
