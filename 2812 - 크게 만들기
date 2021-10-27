@@ -1,0 +1,54 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <set>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 2812 - 크게 만들기
+int n, k;
+vector<int> nums;
+deque<int> dq;
+
+void input(){
+    scanf("%d %d", &n, &k);
+    nums.assign(n, 0);
+
+    for(int i = 0; i < n; i++){
+        scanf("%1d", &nums[i]);
+    }
+}
+
+void solve(){
+    for(int i = 0; i < n; i++){
+        while(!dq.empty() && k && dq.back() < nums[i]){
+            k--;
+            dq.pop_back();
+        }
+        dq.push_back(nums[i]);
+    }
+}
+
+void printAnswer(){
+    // dq.size() - k : deque에서 k개를 충분히 뺐다면 모두 출력
+    for(int i = 0; i < dq.size() - k; i++){
+        printf("%d", dq[i]);
+    }
+}
+
+int main(){
+
+    input();
+    solve();
+    printAnswer();
+
+    return 0;
+}
