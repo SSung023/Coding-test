@@ -1,0 +1,61 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <map>
+#include <set>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 11000 - 강의실 배정
+int n;
+vector<pair<int, int>> lecture;
+
+
+void input(){
+    cin >> n;
+    lecture.assign(n, {0,0});
+    for(int i = 0; i < n; i++){
+        cin >> lecture[i].first >> lecture[i].second;
+    }
+
+    sort(lecture.begin(), lecture.end());
+}
+
+int solve(){
+    priority_queue<int, vector<int>, greater<>> pq;
+    pq.push(lecture[0].second);
+
+    for(int i = 1; i < n; i++){
+        int startTime = lecture[i].first;
+        int endTime = lecture[i].second;
+
+        if(startTime >= pq.top()){ // 시작하는 시간이 끝나는 시간 이후라면
+            pq.pop();
+            pq.push(endTime);
+        }
+        else{
+            pq.push(endTime);
+        }
+    }
+    return pq.size();
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+
+    cout << solve();
+
+    return 0;
+}
