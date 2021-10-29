@@ -1,0 +1,56 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 1374 - 강의실
+int n;
+vector<pair<int, int>> lecture;
+
+void input(){
+    cin >> n;
+    lecture.assign(n, {0, 0});
+    for(int i = 0; i < n; i++){
+        int num, s, e;
+        cin >> num >> s >> e;
+        lecture[i] = {s, e};
+    }
+}
+
+int getMinRoom(){
+    sort(lecture.begin(), lecture.end());
+    priority_queue<int, vector<int>, greater<>> pq;
+    pq.push(lecture[0].second);
+
+    for(int i = 1; i < n; i++){
+        int endTime = pq.top();
+        if(endTime <= lecture[i].first){ // 강의실을 이어서 사용할 수 있는 경우
+            pq.pop();
+            pq.push(lecture[i].second);
+        }
+        else{ // 강의실을 이어서 사용할 수 없는 경우
+            pq.push(lecture[i].second);
+        }
+    }
+    return pq.size();
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    cout << getMinRoom();
+
+    return 0;
+}
