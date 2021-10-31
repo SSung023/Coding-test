@@ -1,0 +1,55 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 6198 - 옥상 정원 꾸미기
+int n;
+vector<int> rooftop;
+
+void input(){
+    cin >> n;
+    rooftop.assign(n, 0);
+
+    for(int i = 0; i < n; i++){
+        cin >> rooftop[i];
+    }
+}
+
+long long benchmarking(){
+    long long result = 0;
+    stack<int> stk;
+    stk.push(rooftop[0]);
+
+    for(int i = 0; i < n; i++){
+        int cur_height = rooftop[i];
+
+        while(!stk.empty() && stk.top() <= cur_height){
+            stk.pop();
+        }
+        result += stk.size();
+        stk.push(cur_height);
+    }
+
+    return result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    cout << benchmarking();
+
+    return 0;
+}
