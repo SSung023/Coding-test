@@ -1,0 +1,57 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 6198 - 옥상 정원 꾸미기
+int n;
+vector<int> rooftop;
+
+void input(){
+    cin >> n;
+    rooftop.assign(n, 0);
+
+    for(int i = 0; i < n; i++){
+        cin >> rooftop[i];
+    }
+}
+
+int benchmarking(){
+    int result = 0;
+    deque<int> dq;
+    dq.push_back(rooftop[n - 1]);
+
+    for(int i = n - 2; i >= 0; i--){
+        int cur_height = rooftop[i]; // 현재 빌딩의 높이
+        int dq_s = dq.size() - 1; // 현재 stack.top 의 index
+        int cnt = 0; // 현재 빌딩에서 볼 수 있는 다른 빌딩의 수
+
+        while(dq_s >= 0 && dq[dq_s] <= cur_height){
+            cnt++;
+            dq_s--;
+        }
+        dq.push_back(cur_height);
+        result += cnt;
+    }
+    return result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    cout << benchmarking();
+
+    return 0;
+}
