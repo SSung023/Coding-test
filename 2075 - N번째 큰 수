@@ -1,0 +1,63 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 2075 - N번째 큰 수
+int n, result;
+vector<stack<int>> grid;
+priority_queue<pair<int, int>> pq;
+
+void input(){
+    cin >> n;
+    grid.assign(n, stack<int>());
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < n; k++){
+            int tmp;
+            cin >> tmp;
+            grid[k].push(tmp);
+        }
+    }
+
+    for(int i = 0; i < n; i++){
+        pq.push({grid[i].top(), i});
+    }
+}
+
+void solve(){
+    int cnt = 1;
+
+    while(true){
+        if(cnt == n){
+            result = pq.top().first;
+            break;
+        }
+        int idx = pq.top().second;
+        pq.pop();
+        grid[idx].pop();
+        pq.push({grid[idx].top(), idx});
+        cnt++;
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    cout << result;
+
+    return 0;
+}
