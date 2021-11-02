@@ -1,0 +1,63 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 1240 - 노드 사이의 거리
+int n, m, result;
+vector<vector<pair<int, int>>> graph; // first: next node, second: cost
+vector<int> isVisited;
+
+void input(){
+    cin >> n >> m;
+    graph.assign(n + 1, vector<pair<int, int>>(0));
+    isVisited.assign(n + 1, false);
+
+    for(int i = 0; i < n - 1; i++){
+        int s, e, c;
+        cin >> s >> e >> c;
+        graph[s].emplace_back(make_pair(e, c));
+        graph[e].emplace_back(make_pair(s, c));
+    }
+}
+
+void DFS(int target, int idx, int dist){
+    if(idx == target){
+        result = dist;
+        return;
+    }
+    isVisited[idx] = true;
+    for(int i = 0; i < graph[idx].size(); i++){
+        int next = graph[idx][i].first;
+        int cost = graph[idx][i].second;
+        if(!isVisited[next])
+            DFS(target, next, dist + cost);
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    for(int i = 0; i < m; i++){
+        int node1, node2;
+        cin >> node1 >> node2;
+
+        fill(isVisited.begin(), isVisited.end(), false);
+        DFS(node2, node1, 0);
+        cout << result << '\n';
+    }
+
+    return 0;
+}
