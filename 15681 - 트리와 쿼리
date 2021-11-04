@@ -1,0 +1,63 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 15681 - 트리와 쿼리
+int n, r, q; // 정점의 수, 루트의 번호, 쿼리의 수
+vector<vector<int>> graph;
+vector<int> query, isVisited;
+
+
+void input(){
+    cin >> n >> r >> q;
+    graph.assign(n + 1, vector<int>(0, 0));
+    query.assign(n + 1, 1);
+    isVisited.assign(n + 1, false);
+
+    for(int i = 0; i < n - 1; i++){
+        int s, e;
+        cin >> s >> e;
+        graph[s].emplace_back(e);
+        graph[e].emplace_back(s);
+    }
+}
+
+void setTree(int cur, int parent){
+    int g_size = graph[cur].size();
+
+    isVisited[cur] = true;
+    for(int i = 0; i < g_size; i++){
+        int next = graph[cur][i]; // 다음 방문 예정 노드
+        if(!isVisited[next]){
+            setTree(next, cur);
+        }
+    }
+    query[parent] += query[cur];
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    setTree(r, 0);
+
+    while(q--){
+        int question;
+        cin >> question;
+        cout << query[question] << '\n';
+    }
+
+    return 0;
+}
