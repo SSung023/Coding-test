@@ -1,0 +1,58 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 2263 - 트리의 순회
+int n;
+vector<int> post, in;
+unordered_map<int, int> hashmap; // post의 값의 인덱스 저장
+
+
+void input(){
+    cin >> n;
+    post.assign(n, 0);
+    in.assign(n, 0);
+
+    for(int i = 0; i < n; i++){
+        cin >> in[i];
+        hashmap.insert({in[i], i});
+    }
+    for(int i = 0; i < n; i++){
+        cin >> post[i];
+    }
+}
+
+void getPreOrder(int in_start, int in_end, int post_start, int post_end){
+    if(in_start > in_end || post_start > post_end)  return;
+
+    int root = post[post_end];
+    int root_idx = hashmap[root];
+    int left_size = root_idx - in_start;
+    int right_size = in_end - root_idx;
+
+    cout << root << ' ';
+    getPreOrder(in_start, root_idx - 1, post_start, post_start + left_size - 1);
+    getPreOrder(root_idx + 1, in_end, post_start + left_size, post_end - 1);
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    getPreOrder(0, n - 1, 0, n - 1);
+
+    return 0;
+}
