@@ -1,0 +1,73 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 1245 - 농장 관리
+int n, m;
+const int dy[8] = {0, -1, -1, -1, 0, 1, 1, 1}, dx[8] = {-1, -1, 0, 1, 1, 1, 0, -1};
+vector<vector<int>> grid;
+vector<vector<bool>> isVisited;
+
+
+void input(){
+    cin >> n >> m;
+    grid.assign(n, vector<int>(m, 0));
+    isVisited.assign(n, vector<bool>(m, false));
+
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            cin >> grid[i][k];
+        }
+    }
+}
+
+void DFS(int y, int x, bool& isPeak){
+
+    for(int i = 0; i < 8; i++){
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+
+        if(0 > ny || ny >= n || 0 > nx || nx >= m)  continue;
+
+        if(grid[y][x] < grid[ny][nx])   isPeak = false;
+        if(isVisited[ny][nx] || grid[ny][nx] != grid[y][x]) continue;
+
+        isVisited[ny][nx] = true;
+        DFS(ny, nx, isPeak);
+    }
+    return;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+
+    int result = 0;
+    for(int i = 0; i < n; i++){
+        for(int k = 0; k < m; k++){
+            if(!isVisited[i][k]){
+                bool isPeak = true;
+                DFS(i, k, isPeak);
+                if(isPeak)  result++;
+            }
+        }
+    }
+
+    cout << result;
+
+    return 0;
+}
