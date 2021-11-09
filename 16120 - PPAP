@@ -1,0 +1,61 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 16120 - PPAP
+string str;
+
+
+void input(){
+    cin >> str;
+}
+
+bool solve(){
+    stack<char> stk;
+    int cnt = 0;
+
+    for(int i = 0; i < str.length(); i++){
+        if(str[i] == 'P'){
+            stk.push(str[i]);
+            cnt++;
+        }
+        else if(str[i] == 'A' && str[i + 1] == 'P' && cnt >= 2){
+            stk.pop();
+            stk.pop();
+            cnt -= 2;
+        }
+        else{
+            return false;
+        }
+    }
+
+    if(stk.size() == 1) return true;
+    else    return false;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    if(solve()){
+        cout << "PPAP";
+    }
+    else{
+        cout << "NP";
+    }
+
+    return 0;
+}
