@@ -1,0 +1,85 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 10216 - Count Circle Groups
+struct Tower{
+    int y, x, dis;
+};
+int n;
+vector<Tower> tower;
+vector<int> isVisited;
+vector<vector<int>> graph;
+
+void input(){
+    cin >> n;
+    tower.assign(n, {});
+    isVisited.assign(n + 1, false);
+    graph.assign(n + 1, vector<int>(0, 0));
+
+    for(int i = 0; i < n; i++){
+        cin >> tower[i].x >> tower[i].y >> tower[i].dis;
+    }
+}
+
+void setEdge(){
+    for(int i = 0; i < n; i++){
+        for(int k = i + 1; k < n; k++){
+            double len = pow(tower[i].x - tower[k].x, 2) + pow(tower[i].y - tower[k].y, 2);
+            double receive_len = pow(tower[i].dis + tower[k].dis, 2);
+            if(len <= receive_len){
+                graph[i].emplace_back(k);
+                graph[k].emplace_back(i);
+            }
+        }
+    }
+}
+
+void DFS(int idx){
+    isVisited[idx] = true;
+
+    for(int i = 0; i < graph[idx].size(); i++){
+        int next = graph[idx][i];
+        if(!isVisited[next]){
+            isVisited[next] = true;
+            DFS(next);
+        }
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    int testcase = 0;
+    cin >> testcase;
+
+    while(testcase--){
+        input();
+        setEdge();
+
+        int cnt = 0;
+        for(int i = 0; i < n; i++){
+            if(!isVisited[i]){
+                isVisited[i] = true;
+                cnt++;
+                DFS(i);
+            }
+        }
+        cout << cnt << '\n';
+    }
+
+    return 0;
+}
