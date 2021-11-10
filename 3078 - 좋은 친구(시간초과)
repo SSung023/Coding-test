@@ -1,0 +1,52 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 3078 - 좋은 친구
+int n, k;
+vector<int> group;
+
+void input(){
+    cin >> n >> k;
+    group.assign(n, 0);
+    for(int i = 0; i < n; i++){
+        string str;
+        cin >> str;
+        group[i] = str.length();
+    }
+}
+
+void solve(){
+    int cnt = 0;
+
+    for(int i = 0; i <= n - k; i++){
+        for(int j = 1; j <= k; j++){
+            if(i + j < n && group[i] == group[i + j])
+                cnt++;
+        }
+    }
+
+    cout << cnt;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
