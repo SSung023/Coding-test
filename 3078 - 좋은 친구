@@ -1,0 +1,56 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 3078 - 좋은 친구
+int n, k;
+vector<int> group;
+queue<int> q[21]; // 이름의 최대 길이: 20
+
+void input(){
+    cin >> n >> k;
+    group.assign(n, 0);
+
+    for(int i = 0; i < n; i++){
+        string str;
+        cin >> str;
+        group[i] = str.length();
+    }
+}
+
+void solve(){
+    long long result = 0;
+
+    for(int i = 0; i < n; i++){
+        int cur_len = group[i];
+
+        while(!q[cur_len].empty() && i - q[cur_len].front() > k){
+            q[cur_len].pop();
+        }
+        result += q[cur_len].size();
+        q[cur_len].push(i);
+    }
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
