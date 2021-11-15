@@ -1,0 +1,59 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+
+#define INF 987654321
+#define MAX 1000000 + 1
+using namespace std;
+
+// 2109 - 순회강연
+int n;
+vector<pair<int, int>> lecture;
+
+
+void input(){
+    cin >> n;
+    lecture.assign(n, {0, 0});
+
+    for(int i = 0; i < n; i++){
+        int p, d;
+        cin >> p >> d;
+        lecture[i] = {d, p};
+    }
+}
+
+void solve(){
+    priority_queue<int, vector<int>, greater<>> pq;
+
+    int result = 0;
+    for(int i = 0; i < n; i++){
+        pq.push(lecture[i].second);
+        result += lecture[i].second;
+
+        if(lecture[i].first < pq.size()){ // 만일 강의를 추가로 더 할 수 없는 상황이라면
+            result -= pq.top(); // pay가 제일 적은 강의를 pass
+            pq.pop();
+        }
+    }
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    sort(lecture.begin(), lecture.end());
+
+    solve();
+
+    return 0;
+}
