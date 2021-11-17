@@ -9,7 +9,6 @@
 #include <unordered_map>
 
 #define INF 987654321
-#define MAX 1000000 + 1
 using namespace std;
 
 // 2109 - 순회강연
