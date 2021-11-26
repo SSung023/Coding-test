@@ -39,6 +39,7 @@ void BFS(int cur){
         bool flag = false;
         q.pop();
 
+        // 만일 연결된 간선 중 하나라도 추가로 더 방문하지 못한다면 해당 노드는 leaf 노드이다.
         for(int i = 0; i < graph[cur].size(); i++){
             int next = graph[cur][i];
             if(!isVisited[next]){
