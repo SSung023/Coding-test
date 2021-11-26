@@ -1,0 +1,67 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+
+using namespace std;
+
+// 17073 - 나무 위의 빗물
+int n, w;
+double leaf = 0;
+vector<int> isVisited;
+vector<vector<int>> graph;
+
+void input(){
+    cin >> n >> w;
+    isVisited.assign(n + 1, false);
+    graph.assign(n + 1, vector<int>(0, 0));
+
+    for(int i = 0; i < n - 1; i++){
+        int s, e;
+        cin >> s >> e;
+        graph[s].emplace_back(e);
+        graph[e].emplace_back(s);
+    }
+}
+
+void BFS(int cur){
+    queue<int> q;
+    q.push(cur);
+    isVisited[cur] = true;
+
+    while(!q.empty()){
+        int cur = q.front();
+        bool flag = false;
+        q.pop();
+
+        for(int i = 0; i < graph[cur].size(); i++){
+            int next = graph[cur][i];
+            if(!isVisited[next]){
+                isVisited[next] = true;
+                q.push(next);
+                flag = true;
+            }
+        }
+        if(!flag)   leaf++;
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    BFS(1);
+
+    double result = w / leaf;
+    cout.precision(6); cout << fixed << result;
+
+    return 0;
+}
