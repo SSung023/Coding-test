@@ -1,0 +1,88 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+
+using namespace std;
+#define MAX 99999 + 1
+
+// 16397 - 탈출
+int n, t, g;
+int result;
+bool flag = false;
+vector<int> isVisited(99999 + 1, false);
+
+
+void input(){
+    cin >> n >> t >> g;
+}
+
+int downNum(int cur){
+    int next = cur;
+    int digit = 1;
+    while(next){ // 최대 자릿수 파악하기
+        next /= 10;
+        digit *= 10;
+    }
+    digit /= 10;
+    cur -= digit;
+    return cur;
+}
+
+void BFS(){
+    queue<pair<int, int>> q;
+    q.push({n, 0});
+    isVisited[n] = true;
+
+    while(!q.empty()){
+        int cur = q.front().first;
+        int time = q.front().second;
+        q.pop();
+
+        if(time > t){ // 버튼을 누를 수 있는 횟수를 넘었을 때
+            flag = false;
+            return;
+        }
+        if(cur == g){ // 목표 값을 완성 했을 때
+            flag = true;
+            result = time;
+            return;
+        }
+
+        // 1. A 버튼을 누르는 경우
+        int next = cur + 1;
+        if(next < 100000 && !isVisited[next]){
+            q.push({next, time + 1});
+            isVisited[next] = true;
+        }
+
+        // 2. B 버튼을 누르는 경우
+        next = cur * 2;
+        if(next > 99999) continue; // 탈출 실패 조건
+        next = downNum(next);
+        if(next < 100000 && !isVisited[next]){
+            q.push({next, time + 1});
+            isVisited[next] = true;
+        }
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    BFS();
+
+    if(!flag)   cout << "ANG";
+    else    cout << result;
+
+    return 0;
+}
