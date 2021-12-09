@@ -1,58 +1,68 @@
 #include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
 #include <vector>
 #include <queue>
+#include <stack>
+#include <unordered_set>
 
-#define MAX 32000 + 1
+#define INF 987654321;
+#define RED 1
+#define BLUE 2
 using namespace std;
 
-
-int n, m; // 학생의 수, 관계의 수
-int inDegree[MAX], result[MAX];
-vector<int> graph[MAX];
-queue<int> q;
+// 2252 - 줄 세우기
+int n, m; // 학생의 수, 키를 비교한 횟수
+vector<int> inDegree, result;
+vector<vector<int>> graph; // 간선의 정보
 
 
 void input(){
-    scanf("%d %d", &n, &m);
+    cin >> n >> m;
+    inDegree.assign(n + 1, 0);
+    result.assign(n + 1, 0);
+    graph.assign(n + 1, vector<int>(0, 0));
+
     for(int i = 0; i < m; i++){
-        int a, b;
-        scanf("%d %d", &a, &b);
-        graph[a].push_back(b);
+        int a, b; // a가 b의 앞에 서야 한다
+        cin >> a >> b;
+        graph[a].emplace_back(b);
         inDegree[b]++;
     }
 }
 
-void topologySort(){
+void topology_sort(){
+    queue<int> q;
     for(int i = 1; i <= n; i++){
-        if(inDegree[i] == 0){
-            q.push(i);
-        }
+        if(inDegree[i] == 0)    q.push(i);
     }
-    for(int i = 1; i <= n; i++){
-        if(q.empty()){
-            // cycle 발생
-            return;
-        }
-        int cur = q.front();
-        q.pop();
-        result[i] = cur;
 
-        for(int i = 0; i < graph[cur].size(); i++){
-            int next = graph[cur][i];
-            if(--inDegree[next] == 0){
-                q.push(next);
-            }
+    for(int i = 0; i < n; i++){
+        if(q.empty())   return;
+        int cur = q.front();
+        result[i] = cur;
+        q.pop();
+
+        for(int k = 0; k < graph[cur].size(); k++){
+            int next = graph[cur][k];
+            if(--inDegree[next] == 0)   q.push(next);
         }
     }
 }
 
-int main(void) {
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
 
     input();
-    topologySort();
+    topology_sort();
 
-    for(int i = 1; i <= n; i++){
-        printf("%d ", result[i]);
+    for(int i = 0; i < n; i++){
+        cout << result[i] << " ";
     }
 
     return 0;
