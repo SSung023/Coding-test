@@ -1,45 +1,43 @@
 #include <iostream>
-#include <string>
-#include <vector>
-#include <stack>
 #include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_set>
 
+#define INF 987654321
 using namespace std;
 
+// 1934 - 최소공배수
 
-int GCD(int n1, int n2){
-    // 유클리드 호제법을 이용한 최대공약수 구하기
-    int r;
+int getGCD(int a, int b){
+    if(b == 0)  return a;
 
-    while(n2 != 0){
-        r = n1 % n2;
-        n1 = n2;
-        n2 = r;
-    }
-
-    return n1;
+    return getGCD(b, a % b);
 }
 
-int LCM(int n1, int n2){
-    int result;
-    result = (n1*n2)/GCD(n1, n2);
-
-    return result;
+int getLCM(int a, int b){
+    // a * b = LCM(a, b) * GCD(a, b)
+    return a * (b / getGCD(a, b));
 }
 
-int main() {
+int main(){
 
-    int n;
-    cin >> n;
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
 
-    while (n--){
-        int num1, num2;
-        cin >> num1 >> num2;
+    int testcase;
+    cin >> testcase;
+    while (testcase--){
+        int a, b;
+        cin >> a >> b;
 
-        cout << LCM(num1, num2) << endl;
+        cout << getLCM(a, b) << '\n';
     }
-
 
     return 0;
-
 }
