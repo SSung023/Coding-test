@@ -1,0 +1,38 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_set>
+
+#define INF 987654321
+using namespace std;
+
+// 11653 - 소인수분해
+
+void getPrimeFactor(int n){
+    for(int i = 2; i <= sqrt(n); i++){
+        while(n % i == 0){
+            n /= i;
+            cout << i << '\n';
+        }
+    }
+    if(n != 1)  cout << n;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    int n;
+    cin >> n;
+
+    getPrimeFactor(n);
+
+    return 0;
+}
