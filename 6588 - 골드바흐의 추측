@@ -1,53 +1,59 @@
 #include <iostream>
-#include <string>
-#include <vector>
-#include <cmath>
 #include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_set>
 
+#define INF 987654321
 using namespace std;
 
+// 6588 - 골드바흐의 추측
 
-int main() {
 
-    int input, i = 0;
-    bool prime[1000000 + 1];
+void getPrime(int x, vector<int> &prime){
+    for(int i = 2; i <= sqrt(x); i++){
+        if(prime[i] == 0)   continue;
 
-    for(int i = 1; i <= 1000000; i++){
-        prime[i] = true;
-    }
-
-    // 범위까지 소수를 추려놓는다
-    for(int i = 2; i <= sqrt(1000000); i++){ // n까지의 범위에 대해 소수를 구할 때엔, 루트n까지만 검사하면 된다
-        for(int j = i + i; j <= 1000000; j += i){ //
-            if(prime[j] == true)
-                prime[j] = false;
-
+        for(int k = i * i; k <= x; k += i){
+            prime[k] = 0;
         }
     }
+}
+
+void solve(int n, vector<int>& prime){
+    int range = n / 2 + 1;
+    for(int i = 2; i <= range; i++){
+        if(prime[i] && prime[n - i]){
+            cout << n << " = " << i << " + " << n - i << '\n';
+            return;
+        }
+    }
+    cout << "Goldbach's conjecture is wrong.\n";
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    int n;
+    
+    // 미리 범위 내의 소수를 모두 구해놓고 시작한다.
+    vector<int> prime(1000000 + 1, 1);
+    getPrime(1000000, prime);
 
     while(true){
+        cin >> n;
+        if(n == 0)  break;
 
-        scanf("%d", &input);
-        if(input == 0)  break;
-
-        i = 3; // 제일 작은 홀수 소수부터 검사 시작
-
-        while(true){
-            if(input - i < 0 ){ //
-                printf("Goldbach's conjecture is wrong.\n");
-                break;
-            }
-
-            // input을 이루는 두 수가 소수라면 출력
-            if (prime[i] == true && prime[input-i] == true) {
-                printf("%d = %d + %d\n", input, i, input-i);
-                break;
-            }
-            i++;
-        }
-
+        solve(n, prime);
     }
 
-    return 0;
 
+    return 0;
 }
