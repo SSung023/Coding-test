@@ -1,0 +1,49 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_set>
+
+#define INF 987654321
+using namespace std;
+
+// 1735 - 분수 합
+
+
+void input(pair<int, int>& n1, pair<int, int>& n2){
+    cin >> n1.first >> n1.second;
+    cin >> n2.first >> n2.second;
+}
+
+int getGCD(int a, int b){
+    if(b == 0)  return a;
+    return getGCD(b, a % b);
+}
+
+void solve(pair<int, int>& n1, pair<int, int>& n2){
+    pair<int, int> result;
+
+    result.first = n1.first * n2.second + n2.first * n1.second;
+    result.second = n1.second * n2.second;
+
+    int gcd = getGCD(result.first, result.second);
+    cout << result.first/gcd << " " << result.second/gcd;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    pair<int, int> n1, n2; // first: 분자, second: 분모
+
+    input(n1, n2);
+    solve(n1, n2);
+
+    return 0;
+}
