@@ -1,0 +1,50 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_set>
+
+#define INF 987654321
+using namespace std;
+
+// 3036 - 링
+int n;
+vector<int> nums;
+
+
+void input(){
+    cin >> n;
+    nums.assign(n, 0);
+    for(int i = 0; i < n; i++){
+        cin >> nums[i];
+    }
+}
+
+int getGCD(int a, int b){
+    if(b == 0)  return a;
+    return getGCD(b, a % b);
+}
+
+void solve(){
+    int first = nums[0];
+    for(int i = 1; i < n; i++){
+        int gcd = getGCD(first, nums[i]);
+        cout << first/gcd << "/" << nums[i]/gcd << '\n';
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
