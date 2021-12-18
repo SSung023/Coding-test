@@ -8,6 +8,8 @@
 #define INF 100000000
 using namespace std;
 
+// 10451 - 순열 사이클
+
 int testcase, n, start = 0, cycle = 0;
 bool isVisited[MAX];
 vector<int> adjList[MAX];
@@ -74,7 +76,6 @@ int main(void) {
         }
         printf("%d\n", cycle);
     }
-
 
     return 0;
 }
