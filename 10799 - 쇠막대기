@@ -5,11 +5,9 @@
 #include <string>
 #include <algorithm>
 
-
 using namespace std;
 
-
-
+// 10799 - 쇠막대기
 int main() {
     //  cin,cout 속도향상
     ios_base::sync_with_stdio(false);
