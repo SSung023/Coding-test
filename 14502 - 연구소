@@ -7,7 +7,7 @@
 #define MAX 8 + 1
 using namespace std;
 
-
+// 14502 - 연구소
 int n, m, cnt = -10; // 세로, 가로, 안전지대의 수를 담을 변수
 int graph[MAX][MAX], tmp[MAX][MAX]; // 연구소의 지도
 int dy[4] = {0, -1, 0, 1}, dx[4] = {-1, 0, 1, 0};
