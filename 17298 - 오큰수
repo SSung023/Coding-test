@@ -6,6 +6,7 @@
 #define MAX 1000000 + 1
 using namespace std;
 
+// 17298 - 오큰수
 
 int n;
 int arr[MAX];
