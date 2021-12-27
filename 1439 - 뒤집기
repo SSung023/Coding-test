@@ -1,0 +1,47 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_set>
+
+using namespace std;
+
+// 1439 - 뒤집기
+string str;
+
+
+void input(){
+    cin >> str;
+}
+
+void solve(){
+    vector<int> freq(2);
+
+    int cur = str[0] - '0';
+    ++freq[cur];
+
+    for(int i = 1; i < str.length(); i++){
+        if(cur != (str[i] - '0')){
+            cur = str[i] - '0';
+            ++freq[cur];
+        }
+    }
+
+    cout << min(freq[0], freq[1]);
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
