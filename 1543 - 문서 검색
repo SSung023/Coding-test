@@ -1,0 +1,52 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_set>
+
+using namespace std;
+
+// 1543 - 문서 검색
+string document, target;
+
+void input(){
+    getline(cin, document);
+    getline(cin, target);
+}
+
+void solve(){
+    int cnt = 0;
+    for(int idx = 0; idx < document.length(); idx++){
+
+        if(document[idx] == target[0]){
+            bool flag = true;
+            for(int i = 1; i < target.length(); i++){
+                if(document[idx + i] != target[i]){
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag){
+                ++cnt;
+                idx += target.length() - 1;
+            }
+        }
+    }
+    cout << cnt;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
