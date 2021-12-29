@@ -1,0 +1,52 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_set>
+
+using namespace std;
+
+// 1074 - Z
+int n, r, c;
+int result = 0;
+
+void input(){
+    // 크기 n, r행 c열
+    cin >> n >> r >> c;
+}
+
+// 시작 좌표 y & x, 검사하는 한 변의 길이
+void traversal(int y, int x, int len){
+    if(y == r && x == c){
+        cout << result;
+        return;
+    }
+
+    // 만일 원하는 위치가 현재 검사하는 범위 내에 존재하는지 확인
+    if(y <= r && r < y + len && x <= c && c < x + len){
+        traversal(y, x, len / 2); // 1번째 검사 영역
+        traversal(y, x + len/2, len/2); // 2번째 검사 영역
+        traversal(y + len/2, x, len/2); // 3번째 검사 영역
+        traversal(y + len/2, x + len/2, len/2); // 4번째 검사 영역
+    }
+    else{
+        // 만약 찾는 위치가 검사 범위 내에 없다면 len*len개는 건너뛰므로
+        result += len * len;
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    traversal(0, 0, (1 << n));
+
+    return 0;
+}
