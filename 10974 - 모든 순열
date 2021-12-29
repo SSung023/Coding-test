@@ -1,0 +1,52 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+
+#define INF 1000000001
+using namespace std;
+
+// 10974 - 모든 순열
+int n;
+vector<int> nums, isVisited;
+
+void input(){
+    cin >> n;
+    nums.assign(n, 0);
+    isVisited.assign(n + 1, false);
+}
+
+void backTracking(int idx){
+    if(idx == n){
+        for(int i = 0; i < nums.size(); i++){
+            cout << nums[i] << " ";
+        }
+        cout << '\n';
+        return;
+    }
+
+    for(int i = 1; i <= n; ++i){
+        if(isVisited[i])    continue;
+
+        nums[idx] = i;
+        isVisited[i] = true;
+        backTracking(idx + 1);
+
+        nums[idx] = 0;
+        isVisited[i] = false;
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    backTracking(0);
+
+    return 0;
+}
