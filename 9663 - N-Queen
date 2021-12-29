@@ -1,0 +1,61 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <unordered_set>
+
+using namespace std;
+
+// 9663 - N-Queen
+int n, result = 0;
+vector<int> grid;
+
+
+void input(){
+    cin >> n;
+    grid.assign(n , 0);
+}
+
+bool isValid(int idx){
+    // 모든 행에 대해 검사
+    for(int i = 0; i < idx; ++i){
+        // 같은 열이거나, 대각선에 위치하는 곳에는 퀸을 놓을 수 없다.
+        if(grid[idx] == grid[i] || idx - i == abs(grid[idx] - grid[i])){
+            return false;
+        }
+    }
+    return true;
+}
+
+void backTracking(int idx){
+    if(idx == n){
+        ++result;
+        return;
+    }
+
+    for(int i = 0; i < n; ++i){
+        // idx행 i열에 퀸을 배치
+        grid[idx] = i;
+        if(isValid(idx)){ // 배치 이후에 가능한 위치인지 확인
+            backTracking(idx + 1); // 만일 가능한 위치라면 다음 열로 이동
+        }
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    backTracking(0);
+
+    cout << result;
+
+    return 0;
+}
