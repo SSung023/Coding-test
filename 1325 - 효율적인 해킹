@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <cstring>
+
+using namespace std;
+
+// 1325 - 효율적인 해킹
+int n, m, cnt = 0, maximum = 0;
+vector<int> isVisited, result;
+vector<vector<int>> graph;
+
+void input(){
+    cin >> n >> m;
+    isVisited.assign(n + 1, false);
+    result.assign(n + 1, 0);
+    graph.assign(n + 1, vector<int> (0, 0));
+
+    for (int i = 0; i < m; ++i) {
+        int s, e;
+        cin >> s >> e;
+        graph[e].emplace_back(s);
+    }
+}
+
+void DFS(int cur){
+    isVisited[cur] = true;
+
+    for(int i = 0; i < graph[cur].size(); ++i){
+        int next = graph[cur][i];
+        if(!isVisited[next]){
+            DFS(next);
+            ++cnt;
+        }
+    }
+}
+
+int main() {
+
+    input();
+
+    for(int i = 1; i <= n; ++i){
+        fill(isVisited.begin(), isVisited.end(), false);
+        cnt = 0;
+
+        DFS(i);
+        maximum = max(maximum, cnt);
+        result[i] = cnt;
+    }
+
+    for(int i = 1; i <= n; ++i){
+        if(result[i] == maximum){
+            cout << i << " ";
+        }
+    }
+
+    return 0;
+}
