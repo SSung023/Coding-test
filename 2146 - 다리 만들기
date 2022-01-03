@@ -1,0 +1,128 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000001
+using namespace std;
+
+// 2146 - 다리 만들기
+int n;
+int result = INF;
+int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
+// first: (0: 바다, 1: 육지), second: 몇 번째 대륙인지
+vector<vector<pair<int, int>>> graph;
+vector<vector<bool>> isVisited;
+queue<pair<pair<int, int>, int>> q;
+
+
+void input() {
+    cin >> n;
+
+    graph.assign(n, vector<pair<int, int>>(n, {0, 0}));
+    isVisited.assign(n, vector<bool> (n, false));
+
+    for(int i = 0; i < n; ++i){
+        for(int k = 0; k < n; ++k){
+            cin >> graph[i][k].first;
+        }
+    }
+}
+
+bool isInside(int y, int x){
+    return 0 <= y && y < n && 0 <= x && x < n;
+}
+
+void DFS(int y, int x, int num){
+    isVisited[y][x] = true;
+    graph[y][x].second = num;
+
+    for(int i = 0; i < 4; ++i){
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+        if(isInside(ny, nx) && graph[ny][nx].first == 1 && !isVisited[ny][nx]){
+            DFS(ny, nx, num);
+        }
+    }
+}
+
+void getShortestBridge(){
+    while(!q.empty()){
+        pair<int, int> cur_pos = q.front().first;
+        int cnt = q.front().second;
+        q.pop();
+
+        //isVisited[cur_pos.first][cur_pos.second] = true;
+
+        for(int i = 0; i < 4; ++i){
+            int ny = cur_pos.first + dy[i];
+            int nx = cur_pos.second + dx[i];
+            if(isInside(ny, nx) && !isVisited[ny][nx]){
+                if(graph[ny][nx].first == 0){ // 바다인 경우
+                    isVisited[ny][nx] = true;
+                    q.push({{ny, nx}, cnt + 1});
+                }
+                // 서로 다른 대륙에 속해있는 경우
+                else if(graph[cur_pos.first][cur_pos.second].second != graph[ny][nx].second){
+                    result = min(result, cnt);
+                    return;
+                }
+            }
+        }
+    }
+}
+
+void init(){
+    for(int i = 0; i < n; ++i){
+        for(int k = 0; k < n; ++k){
+            isVisited[i][k] = false;
+        }
+    }
+
+    while(!q.empty()){
+        q.pop();
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+
+    // 육지가 어느 대륙에 속해있는지 검사한다.
+    int num = 0;
+    for(int i = 0; i < n; ++i){
+        for(int k = 0; k < n; ++k){
+            if(!isVisited[i][k] && graph[i][k].first == 1){
+                DFS(i, k, ++num);
+            }
+        }
+    }
+
+    int cnt = 0;
+    while(true){
+        if(num == 0)    break;
+
+        init();
+        for(int i = 0; i < n; ++i){
+            for(int k = 0; k < n; ++k){
+                if(graph[i][k].second == num){
+                    q.push({{i, k}, 0});
+                    isVisited[i][k] = true;
+                }
+            }
+        }
+        getShortestBridge();
+        --num;
+    }
+
+    cout << result;
+
+    return 0;
+}
