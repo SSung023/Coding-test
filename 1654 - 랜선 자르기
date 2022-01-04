@@ -1,0 +1,69 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000001
+using namespace std;
+
+// 1654 - 랜선 자르기
+int k, n;
+vector<int> lan;
+
+
+void input() {
+    cin >> k >> n;
+    lan.assign(k, 0);
+
+    for(int i = 0; i < k; ++i){
+        cin >> lan[i];
+    }
+}
+
+bool isPossible(int len){
+    int cnt = 0;
+
+    for(int i = 0; i < k; ++i){
+        cnt += lan[i] / len;
+    }
+
+    if(cnt >= n)    return true;
+    else    return false;
+}
+
+void solve(){
+    sort(lan.begin(), lan.end());
+
+    //unsinged int로 선언한 이유 : mid를 구하다가 오버플로우가 일어날 수 있기 때문
+    unsigned int left = 1, right = lan[lan.size() - 1];
+    unsigned int result = 0;
+    while(left <= right){
+        unsigned int mid = (left + right) / 2;
+
+        // n개 이상 만들 수 있다면, 자르는 길이를 더 늘려도 된다. 즉, mid를 올려도 된다.
+        if(isPossible(mid)){
+            result = max(result, mid);
+            left = mid + 1;
+        }
+        // n개 이상 만들 수 없다면, 자르는 길이는 줄여야 한다. 즉, mid를 내려야 한다.
+        else{
+            right = mid - 1;
+        }
+    }
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
