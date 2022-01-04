@@ -1,0 +1,53 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000001
+using namespace std;
+
+// 10815 - 숫자 카드
+int n, m; // 가지고 있는 카드의 개수, 가지고 있는지 알고싶은 카드의 개수
+vector<int> cards;
+
+
+void input() {
+    cin >> n;
+    cards.assign(n, 0);
+
+    for(int i = 0; i < n; ++i){
+        cin >> cards[i];
+    }
+}
+
+void isCardExist(){
+    cin >> m;
+    sort(cards.begin(), cards.end());
+
+    while(m--){
+        int target;
+        cin >> target;
+
+        if(binary_search(cards.begin(), cards.end(), target)){
+            cout << "1 ";
+        }
+        else{
+            cout << "0 ";
+        }
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    isCardExist();
+
+    return 0;
+}
