@@ -1,0 +1,69 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000001
+using namespace std;
+
+// 1072 - 게임
+long long x, y; // 게임 횟수, 이긴 게임
+int cur_percent;
+
+void input() {
+    cin >> x >> y;
+}
+
+bool isPossible(long long game_cnt, long long win_cnt){
+    int n_percent = (100 * win_cnt / game_cnt);
+
+    if(cur_percent != n_percent)    return true;
+    else    return false;
+}
+
+void solve(){
+    long long result = INF;
+    cur_percent = (100 * y / x);
+
+    if(cur_percent == 100 || cur_percent == 99){
+        cout << "-1";
+        return;
+    }
+
+    long long left = 0, right = x;
+    while(left <= right){
+        long long mid = (left + right) / 2;
+
+        // 가능하다는 것은 게임을 덜해도 된다는 뜻. mid를 줄여도 된다
+        if(isPossible(x + mid, y + mid)){
+            result = min(result, mid);
+            right = mid - 1;
+        }
+        // 가능하지 않다는 것은 게임을 더 해야 한다는 뜻. mid를 늘려야 한다.
+        else{
+            left = mid + 1;
+        }
+    }
+
+    if(result == INF) {
+        cout << "-1";
+    }
+    else{
+        cout << result;
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
