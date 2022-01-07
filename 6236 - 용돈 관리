@@ -1,0 +1,76 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000001
+using namespace std;
+
+// 6236 - 용돈 관리
+int n, m; // n일 동안 사용, m번 인출 가능
+int high = 0;
+vector<int> pay;
+
+
+void input() {
+    cin >> n >> m;
+    pay.assign(n, 0);
+
+    for(int i = 0; i < n; ++i){
+        cin >> pay[i];
+        high += pay[i];
+    }
+}
+
+bool isPossible(int cost){
+    int cnt = 1, remain = cost;
+
+    for(int i = 0; i < n; ++i){
+        if(cnt > m || cost < pay[i]) return false;
+
+        // 오늘 쓸 돈보다 적게 가지고 있다면
+        if(remain - pay[i] < 0){
+            ++cnt;
+            remain = cost;
+        }
+        remain -= pay[i];
+    }
+
+    if(cnt <= m)    return true;
+    else    return false;
+}
+
+void getMinCost(){
+    int left = 1, right = high;
+    int result = 0;
+
+    while(left <= right){
+        int mid = (left + right) / 2;
+
+        // m번 이하로 인출이 가능하다는 이야기는 한번에 인출하는 금액을 줄여봐도 된다는 뜻.
+        if (isPossible(mid)){
+            result = mid;
+            right = mid - 1;
+        }
+        else{
+            left = mid + 1;
+        }
+    }
+
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    getMinCost();
+
+    return 0;
+}
