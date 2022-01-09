@@ -1,0 +1,69 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000001
+using namespace std;
+
+// 16401 - 과자 나눠주기
+int m, n; // 조카의 수, 과자의 수
+long long high = 0, result = 0;
+vector<long long> snack; // 과자의 길이
+
+
+void input() {
+    cin >> m >> n;
+    snack.assign(n, 0);
+
+    for(int i = 0; i < n; ++i){
+        cin >> snack[i];
+        high = max(high, snack[i]);
+    }
+}
+
+bool isPossible(long long len){
+    int cnt = 0;
+
+    for(int i = 0; i < n; ++i){
+        cnt += snack[i] / len;
+    }
+
+    if(cnt >= m)    return true;
+    else    return false;
+}
+
+void solve(){
+    long long left = 1, right = high;
+
+    while(left <= right){
+        long long mid = (left + right) / 2;
+
+        // n개의 과자를 줄 수 있으므로 길이를 더 늘려봐도 된다.
+        if(isPossible(mid)){
+            result = max(result, mid);
+            left = mid + 1;
+        }
+        // n개의 과자를 줄 수 없으므로 길이를 줄여야 한다.
+        else{
+            right = mid - 1;
+        }
+    }
+
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
