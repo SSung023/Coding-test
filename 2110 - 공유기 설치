@@ -1,0 +1,79 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000001
+using namespace std;
+
+// 2110 - 공유기 설치
+int n, c; // 집의 개수, 공유기의 개수
+long long low, high;
+vector<long long> pos;
+
+
+void input() {
+    cin >> n >> c;
+    pos.assign(n, 0);
+
+    for(int i = 0; i < n; ++i){
+        cin >> pos[i];
+
+        low = min(low, pos[i]);
+        high = max(high, pos[i]);
+    }
+}
+
+bool isPossible(int mid){
+    int cnt = 1;
+    long long cur = pos[0];
+
+    for(int i = 1; i < n; ++i){
+        if(pos[i] - cur >= mid){
+            ++cnt;
+            cur = pos[i];
+        }
+    }
+
+    if(cnt >= c)
+        return true;
+    else
+        return false;
+}
+
+void solve(){
+    sort(pos.begin(), pos.end());
+
+    long long left = 0, right = pos.back();
+    long long result = 0;
+
+    while(left <= right){
+        long long mid = (left + right) / 2;
+
+        // 공유기를 c개 이상 놓을 수 있다면 간격을 넓혀봐도 된다.
+        if(isPossible(mid)){
+            result = max(result, mid);
+            left = mid + 1;
+        }
+        // 공유기를 c개 놓지 못한다면 간격을 줄여봐야 한다.
+        else{
+            right = mid - 1;
+        }
+    }
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
