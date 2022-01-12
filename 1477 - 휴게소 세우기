@@ -1,0 +1,79 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000001
+using namespace std;
+
+// 1477 - 휴게소 세우기
+int n, m, l; // 현재 휴게소의 개수, 더 지으려고 하는 휴게소의 개수, 고속도로의 길이
+int result = INF;
+vector<int> restArea;
+
+
+void input() {
+    cin >> n >> m >> l;
+
+    restArea.emplace_back(0);
+    restArea.emplace_back(l); // l - 1이 아니라 l을 넣어야 한다.
+    for(int i = 0; i < n; ++i){
+        int pos;
+        cin >> pos;
+        restArea.emplace_back(pos);
+    }
+}
+
+bool isPossible(int mid){
+    int cnt = 0; // 새로 짓는 휴게소의 개수
+
+    for(int i = 0; i < restArea.size() - 1; ++i){
+        int diff = restArea[i + 1] - restArea[i];
+        cnt += diff / mid;
+
+        if(diff % mid == 0)
+            --cnt;
+    }
+
+    if(cnt <= m){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+void solve(){
+    sort(restArea.begin(), restArea.end());
+    int left = 1, right = l - 1;
+
+    while(left <= right){
+        int mid = (left + right) / 2;
+
+        // 간격을 줄여봐야 한다.
+        if(isPossible(mid)){
+            result = min(result, mid);
+            right = mid - 1;
+        }
+            // 간격을 늘려봐야 한다.
+        else{
+            left = mid + 1;
+        }
+    }
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
