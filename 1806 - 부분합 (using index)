@@ -1,0 +1,60 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000001
+using namespace std;
+
+// 1806 - 부분합
+int n, s, result = INF;
+vector<int> nums;
+
+
+void input() {
+    cin >> n >> s;
+    nums.assign(n + 1, 0);
+    for(int i = 0; i < n; ++i){
+        cin >> nums[i];
+    }
+}
+
+void solve(){
+    int low = 0, high = 0;
+    int sum = nums[0];
+
+    while(low <= high && high < n){
+        // 원하는 조건을 찾은 경우 값을 갱신한다.
+        if(sum >= s){
+            result = min(result, high - low + 1);
+        }
+
+        // 값이 s 이상이라면 값을 더 줄여봐도 된다.
+        if(sum >= s){
+            sum -= nums[low++];
+        }
+        // 값이 s보다 작다면 값을 더 늘려봐야 한다.
+        else{
+            sum += nums[++high];
+        }
+    }
+
+    if(result != INF)    cout << result;
+    else    cout << "0";
+
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
