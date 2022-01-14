@@ -1,0 +1,60 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000001
+using namespace std;
+
+// 2467 - 용액
+int n;
+vector<long long> solution, result(2, 0);
+
+
+void input() {
+    cin >> n;
+    solution.assign(n, 0);
+    for(int i = 0; i < n; ++i){
+        cin >> solution[i];
+    }
+}
+
+void solve(){
+    int low = 0, high = n - 1;
+    long long sum = 10000000000;
+
+    while(low < high){
+        long long cur = solution[low] + solution[high];
+        if(abs(cur) < abs(sum)){
+            sum = cur;
+            result[0] = solution[low];
+            result[1] = solution[high];
+        }
+
+        // 음수이므로 음수를 줄여야 한다 = 양수를 늘려야 한다
+        if(cur < 0){
+            ++low;
+        }
+        // 양수이므로 양수를 줄여야 한다 = 음수를 늘려야 한다
+        else{
+            --high;
+        }
+    }
+    cout << result[0] << ' ' << result[1];
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+
+    return 0;
+}
