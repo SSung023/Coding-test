@@ -8,6 +8,7 @@
 #define INF 100000000
 using namespace std;
 
+// 1068 - 트리
 int n, root, deleteNode; // 노드의 갯수, 루트노드의 번호
 int result = 0;
 int parentInfo[MAX]; // i번째 노드의 부모노드 번호
