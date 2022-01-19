@@ -1,0 +1,70 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <set>
+
+#define INF 1000000001
+using namespace std;
+
+// 17609 - 회문
+int t;
+vector<string> str;
+
+
+bool isPalindrome(string s, int low, int high){
+    while(low < high){
+        if(s[low] == s[high]){
+            ++low;
+            --high;
+        }
+        else{
+            return false;
+        }
+    }
+    return true;
+}
+
+void solve(string s){
+    int low = 0, high = s.length() - 1;
+
+    while(low < high){
+        if(s[low] != s[high]){
+            if(isPalindrome(s, low + 1, high)){
+                cout << "1\n";
+            }
+            else if(isPalindrome(s, low, high - 1)){
+                cout << "1\n";
+            }
+            else{
+                cout << "2\n";
+            }
+            return;
+        }
+        else{
+            ++low;
+            --high;
+        }
+    }
+    cout << "0\n";
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    cin >> t;
+    str.assign(t, "");
+
+    for(int i = 0; i < t; ++i){
+        cin >> str[i];
+        solve(str[i]);
+    }
+
+
+    return 0;
+}
