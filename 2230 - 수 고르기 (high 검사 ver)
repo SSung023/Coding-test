@@ -1,0 +1,62 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <set>
+
+#define INF 10000000000000
+using namespace std;
+
+// 2230 - 수 고르기
+int n, m;
+vector<int> nums;
+
+
+void input(){
+    cin >> n >> m;
+    nums.assign(n, 0);
+
+    for(int i = 0; i < n; ++i){
+        cin >> nums[i];
+    }
+}
+
+void solve(){
+    sort(nums.begin(), nums.end());
+    int low = 0, high = 1;
+    long long result = INF;
+
+    while(low < n && high < n){
+        long long cur = abs(nums[high] - nums[low]);
+        if(cur >= m){
+            result = min(result, cur);
+            ++low;
+        }
+        else{
+            if(high + 1 == n){
+                for(int i = low; i < n; ++i){
+                    long long diff = nums[high] - nums[i];
+                    if(diff >= m)   result = min(result, diff);
+                }
+                break;
+            }
+            ++high;
+        }
+    }
+
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+    
+    return 0;
+}
