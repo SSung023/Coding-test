@@ -1,0 +1,64 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <set>
+
+#define INF 10000000000000
+using namespace std;
+
+// 15961 - 회전 초밥
+int n, d, k, c; // 접시의 수, 가짓수, 연속해서 먹는 접시의 수, 쿠폰 번호
+vector<int> onBelt, sushiType; // 현재 벨트에 올라가 있는 초밥, 사용된 초밥 가짓수
+
+
+void input(){
+    cin >> n >> d >> k >> c;
+    onBelt.assign(n, 0);
+    sushiType.assign(d + 1, 0);
+
+    for(int i = 0; i < n; ++i){
+        cin >> onBelt[i];
+    }
+}
+
+void solve(){
+    int result = 0, cnt = 1;
+    int low = 0, high = k - 1;
+
+    ++sushiType[c]; // 쿠폰으로 먹는 초밥
+    for(int i = 0; i < k; ++i){
+        ++sushiType[onBelt[i]];
+        if(sushiType[onBelt[i]] == 1){
+            ++cnt;
+        }
+    }
+
+    while(low < n){
+        if(--sushiType[onBelt[low]] == 0){
+            --cnt;
+        }
+        ++low;
+
+        high = (high + 1) % n; // 회전 초밥이므로
+        if(++sushiType[onBelt[high]] == 1){
+            ++cnt;
+        }
+        result = max(result, cnt);
+    }
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+    
+    return 0;
+}
