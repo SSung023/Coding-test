@@ -9,6 +9,7 @@
 #define INF 100000000
 using namespace std;
 
+// 1197 - 최소 스패닝 트리
 class Edge{
 public:
     int node[2];
