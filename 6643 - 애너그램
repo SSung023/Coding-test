@@ -1,0 +1,52 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <set>
+
+#define INF 10000000000000
+using namespace std;
+
+// 6643 - 애너그램
+
+int n;
+
+
+void backTracking(string s, int len, int idx){
+    if(len - 1 == idx){
+        cout << s << '\n';
+        return;
+    }
+
+    for(int i = idx; i < len; ++i){
+        // 매개 변수로 idx + 1을 넘겨주기 때문에, 바로 다음 소문자가 같다면 중복이 일어날 것이다.
+        if(i != idx && s[i] == s[idx]){
+            continue;
+        }
+        if(s[i] != s[idx]){
+            swap(s[i], s[idx]);
+        }
+        backTracking(s, len, idx + 1);
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    cin >> n;
+    while(n--){
+        string str;
+        cin >> str;
+        sort(str.begin(), str.end());
+
+        backTracking(str, str.length(), 0);
+    }
+
+
+    return 0;
+}
