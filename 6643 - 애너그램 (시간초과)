@@ -1,0 +1,79 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <set>
+
+#define INF 10000000000000
+using namespace std;
+
+// 6643 - 애너그램 (시간초과)
+struct compare{
+    bool operator() (const string& left, const string& right) const{
+        if(left.length() == right.length()){
+            return left < right;
+        }
+        else{
+            return left.length() < right.length();
+        }
+    }
+};
+int n;
+vector<char> tmp;
+vector<string> str;
+set<string, compare> overlap;
+
+
+void input(){
+    cin >> n;
+    str.assign(n, "");
+    for(int i = 0; i < n; ++i){
+        cin >> str[i];
+    }
+}
+
+void backTracking(string s, vector<int>& isVisited, int idx){
+    if(idx == s.length()){
+        string str1;
+        for(int i = 0; i < tmp.size(); ++i){
+            str1 += tmp[i];
+        }
+        overlap.insert(str1);
+        return;
+    }
+
+    for(int i = 0; i < s.length(); ++i){
+        if(!isVisited[i]){
+            isVisited[i] = true;
+            tmp.emplace_back(s[i]);
+            backTracking(s, isVisited, idx + 1);
+            isVisited[i] = false;
+            tmp.pop_back();
+        }
+    }
+}
+
+void solve(){
+    for(int i = 0; i < n; ++i){
+        vector<int> isVisited(str[i].length(), false);
+        backTracking(str[i], isVisited, 0);
+    }
+
+    for(auto iter = overlap.begin(); iter != overlap.end(); ++iter){
+        cout << *iter << '\n';
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+    
+    return 0;
+}
