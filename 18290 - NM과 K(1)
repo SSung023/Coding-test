@@ -1,0 +1,75 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 10000000000000
+using namespace std;
+
+// 18290 - NM과 K(1)
+int n, m, k, result = -INF;
+int dx[4] = {-1,0,1,0}, dy[4] = {0,-1,0,1};
+vector<vector<int>> map, isVisited;
+
+
+void input(){
+    cin >> n >> m >> k;
+    map.assign(n, vector<int> (m, 0));
+    isVisited.assign(n, vector<int> (m, false));
+
+    for(int i = 0; i < n; ++i){
+        for(int k = 0; k < m; ++k){
+            cin >> map[i][k];
+        }
+    }
+}
+
+bool isInside(int y, int x){
+    return x >= 0 && x < m && y >= 0 && y < n;
+}
+
+bool canAccess(int y, int x){
+    for(int i = 0; i < 4; ++i){
+        int ny = y + dy[i];
+        int nx = x + dx[i];
+        if(isInside(ny, nx) && isVisited[ny][nx]){
+            return false;
+        }
+    }
+    return true;
+}
+
+void backTracking(int cnt, int sum){
+    if(cnt == k){
+        result = max(result, sum);
+        return;
+    }
+
+    for(int i = 0; i < n; ++i){
+        for(int k = 0; k < m; ++k){
+            // 방문하지 않았고, 근처에 인접한 선택된 칸이 없을 때
+            if(!isVisited[i][k] && canAccess(i, k)){
+                isVisited[i][k] = true;
+                backTracking(cnt + 1, sum + map[i][k]);
+                isVisited[i][k] = false;
+            }
+        }
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+
+    backTracking(0, 0);
+    cout << result;
+
+    return 0;
+}
