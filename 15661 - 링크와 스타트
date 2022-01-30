@@ -1,0 +1,79 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 10000000000000
+using namespace std;
+
+// 15661 - 링크와 스타트
+int n, result = INF;
+vector<int> isSelected;
+vector<vector<int>> value;
+
+
+void input(){
+    cin >> n;
+    isSelected.assign(n + 1, false);
+    value.assign(n, vector<int> (n, 0));
+
+    for(int i = 0; i < n; ++i){
+        for(int k = 0; k < n; ++k){
+            cin >> value[i][k];
+        }
+    }
+}
+
+int getValue(vector<int>& v){
+    int sum = 0;
+    for(int i = 0; i < v.size(); ++i){
+        for(int k = 0; k < v.size(); ++k){
+            sum += value[v[i]][v[k]];
+        }
+    }
+    return sum;
+}
+
+// link 팀으로 뽑을 인원 수, 현재 뽑힌 인원 수, 현재까지 선택한 선수 번호
+void backTracking(int total, int cnt, int idx){
+
+    if(cnt == total){
+        vector<int> link, start;
+        // 선택된 사람들은 link 팀에, 선택되지 않은 사람들은 start 팀에.
+        for(int i = 0; i < n; ++i){
+            if(isSelected[i])   link.emplace_back(i);
+            else    start.emplace_back(i);
+        }
+        int link_value = getValue(link);
+        int start_value = getValue(start);
+        int diff = abs(link_value - start_value);
+        result = min(result, diff);
+        return;
+    }
+
+    for(int i = idx; i < n; ++i){
+        if(!isSelected[i]){
+            isSelected[i] = true;
+            backTracking(total, cnt + 1, i + 1);
+            isSelected[i] = false;
+        }
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    for(int i = 1; i < n/2 + 1; ++i){
+        backTracking(i, 0, 0);
+    }
+    cout << result;
+
+    return 0;
+}
