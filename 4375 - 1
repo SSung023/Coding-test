@@ -1,0 +1,43 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 10000000000000
+using namespace std;
+
+// 4375 - 1
+
+
+void solve(int& n){
+    long long cur = 1;
+    int digit = 1;
+
+    while(true){
+        if(cur % n == 0){
+            cout << digit << '\n';
+            break;
+        }
+        cur = cur * 10 + 1;
+        cur %= n;
+        ++digit;
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    int n;
+    while(cin >> n){
+        solve(n);
+    }
+
+
+    return 0;
+}
