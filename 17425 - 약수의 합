@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 10000000000000
+using namespace std;
+
+// 17425 - 약수의 합
+vector<long long> divisorSum(1000001, 0);
+
+
+void solve(){
+    // 1부터 1000000까지 돌면서, 각 수의 배수인 수에 자신을 더해준다.
+    // 어떤 수의 배수라는 뜻은 거꾸로 어떤 수가 그 수의 약수라는 뜻이다.
+    for(int i = 1; i <= 1000000; ++i){
+        for(int j = i; j <= 1000000; j+=i){
+            divisorSum[j] += i;
+        }
+    }
+
+    // 구하고자 하는 것은 자신보다 작은 수의 f(n)의 합이기 때문에
+    for(int i = 1; i <= 1000000; ++i){
+        divisorSum[i] += divisorSum[i - 1];
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    int testcase;
+    cin >> testcase;
+    solve();
+
+    while(testcase--){
+        int n;
+        cin >> n;
+        cout << divisorSum[n] << '\n';
+    }
+
+    return 0;
+}
