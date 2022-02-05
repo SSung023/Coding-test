@@ -10,6 +10,7 @@
 
 using namespace std;
 
+// 2468 - 안전 영역
 int n, maxValue, cnt = 0, result = 0;
 int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, -1, 0, 1};
 int graph[MAX][MAX];
