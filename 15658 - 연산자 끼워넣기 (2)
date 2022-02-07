@@ -1,0 +1,74 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000000000
+using namespace std;
+
+// 15658 - 연산자 끼워넣기 (2)
+long long minVal = INF, maxVal = -INF;
+int n;
+vector<int> operate(4, 0), num;
+
+void input(){
+    cin >> n;
+    num.assign(n, 0);
+
+    for(int i = 0; i < n; ++i){
+        cin >> num[i];
+    }
+    for(int i = 0; i < 4; ++i){
+        cin >> operate[i];
+    }
+}
+
+void DFS(int idx, long long cur){
+    if(idx == n){
+        minVal = min(minVal, cur);
+        maxVal = max(maxVal, cur);
+        return;
+    }
+
+    // +
+    if(operate[0] > 0){
+        --operate[0];
+        DFS(idx + 1, cur + num[idx]);
+        ++operate[0];
+    }
+    // -
+    if(operate[1] > 0){
+        --operate[1];
+        DFS(idx + 1, cur - num[idx]);
+        ++operate[1];
+    }
+    // *
+    if(operate[2] > 0){
+        --operate[2];
+        DFS(idx + 1, cur * num[idx]);
+        ++operate[2];
+    }
+    // /
+    if(operate[3] > 0){
+        --operate[3];
+        DFS(idx + 1, cur / num[idx]);
+        ++operate[3];
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    DFS(1, num[0]);
+
+    cout << maxVal << '\n' << minVal;
+
+    return 0;
+}
