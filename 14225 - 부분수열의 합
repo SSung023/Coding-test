@@ -1,0 +1,61 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 10000000000000
+using namespace std;
+
+// 14225 - 부분수열의 합
+int n, maxNum = 0;
+vector<int> num, isVisited;
+
+
+void input(){
+    cin >> n;
+    num.assign(n, 0);
+    for(int i = 0; i < n; ++i){
+        cin >> num[i];
+        maxNum = max(maxNum, num[i]);
+    }
+
+    // 방문 여부를 저장하는 배열 동적 할당
+   isVisited.assign(n * maxNum + 2, false);
+}
+
+void DFS(int idx, int cur){
+
+    // n개를 모두 고른 경우 돌아간다.
+    if(idx == n){
+        isVisited[cur] = true;
+        return;
+    }
+
+    DFS(idx + 1, cur); // idx번째 미포함
+    DFS(idx + 1, cur + num[idx]); // idx 번째 수 포함
+
+    /* idx번째 미포함에 대하여.
+     * 중복 허용 X하면서, 원수가 n개 이하인 부분 수열을 얻어야 한다.
+     * 이를 구현하기 위해서 현재 값을 그대로 넘기고 idx(카운트)값만 올린다.*/
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    DFS(0, 0);
+
+    int result = 0;
+    while(isVisited[result]){
+        ++result;
+    }
+    cout << result;
+
+    return 0;
+}
