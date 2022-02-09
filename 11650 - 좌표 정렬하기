@@ -1,0 +1,50 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000000000
+using namespace std;
+
+// 11650 - 좌표 정렬하기
+int n;
+vector<pair<int, int>> pos;
+
+
+void input(){
+    cin >> n;
+    pos.assign(n, {0, 0});
+    for(int i = 0; i < n; ++i){
+        int x, y;
+        cin >> x >> y;
+        pos[i] = {x, y};
+    }
+}
+
+bool comp(pair<int, int> p1, pair<int, int> p2){
+    if(p1.first != p2.first)
+        return p1.first < p2.first;
+    return p1.second < p2.second;
+}
+
+void solve(){
+    sort(pos.begin(), pos.end(), comp);
+    for(int i = 0; i < n; ++i){
+        cout << pos[i].first << " " << pos[i].second <<'\n';
+    }
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
