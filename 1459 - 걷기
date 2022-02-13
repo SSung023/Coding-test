@@ -1,0 +1,61 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000000000
+using namespace std;
+
+// 1459 - 걷기
+long long x, y, w, s;
+
+
+void input(){
+    cin >> x >> y >> w >> s;
+}
+
+void solve(){
+    long long result = 0;
+
+    // 가로 + 세로가 더 빠를 때
+    if(2 * w < s){
+        result = (x + y) * w;
+    }
+    // 대각선이 더 빠를 때
+    else if(2 * w > 2 * s){
+        if((x + y) % 2 == 0){
+            result = max(x, y) * s;
+        }
+        else{
+            result = (max(x, y) - 1) * s;
+            result += w;
+        }
+    }
+    else{
+        // 정사각형 모양이라면 대각선으로만 갈 수 있다.
+        if(x == y){
+            result = s * x;
+        }
+        else{
+            result = min(x * s, y * s);
+            result += abs(x - y) * w;
+        }
+    }
+
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
