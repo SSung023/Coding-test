@@ -1,0 +1,71 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000
+using namespace std;
+
+// 2891 - 카약과 강풍
+int n, s, r; // 팀의 수, 손상된 팀의 수, 여분 있는 팀의 수
+vector<int> kayak;
+
+
+void input(){
+    cin >> n >> s >> r;
+    kayak.assign(n + 2, 1);
+
+    for(int i = 0; i < s; ++i){
+        int num;
+        cin >> num;
+        --kayak[num];
+    }
+    for(int i = 0; i < r; ++i){
+        int num;
+        cin >> num;
+        ++kayak[num];
+    }
+}
+
+void solve(){
+    /* 본인의 카약이 손상됐는지 확인한다.
+     * 만일 손상이 되었다면 먼저 왼쪽 팀에게서 카약을 받아본다.
+     * 왼쪽 팀의 카약이 1개 이하라면 빌려주지 못하므로 오른쪽 팀의 카약 개수를 확인해본다.
+     * 오른쪽 팀의 카약이 2개 이상이라면 카약을 하나 받아온다.*/
+    for(int i = 1; i <= n; ++i){
+        if(kayak[i] != 0){
+            continue;
+        }
+        // 카약을 빌려야 하는 상황일 때
+        if(kayak[i - 1] > 1){ // 왼쪽 팀을 살펴본다.
+            ++kayak[i];
+            --kayak[i - 1];
+        }
+        else if(kayak[i + 1] > 1){ // 오른쪽 팀을 살펴본다.
+            ++kayak[i];
+            --kayak[i + 1];
+        }
+    }
+
+    int result = 0;
+    for(int i = 1; i <= n; ++i){
+        if(kayak[i] == 0)
+            ++result;
+    }
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
