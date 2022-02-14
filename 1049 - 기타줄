@@ -1,0 +1,62 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000
+using namespace std;
+
+// 1049 - 기타줄
+int n, m; // 사야하는 기타줄 개수, 브랜드 수
+int packageMin = INF, pieceMin = INF;
+vector<int> package, piece;
+
+
+void input(){
+    cin >> n >> m;
+    package.assign(m, 0);
+    piece.assign(m, 0);
+
+    for(int i = 0; i < m; ++i){
+        cin >> package[i] >> piece[i];
+        packageMin = min(packageMin, package[i]);
+        pieceMin = min(pieceMin, piece[i]);
+    }
+}
+
+void solve(){
+    int result = 0;
+    // 낱개로 사는 경우가 더 싼 경우
+    if(pieceMin * 6 < packageMin){
+        result += n * pieceMin;
+    }
+    // 패키지로 사는 경우가 더 싼 경우
+    else{
+        result += (n / 6) * packageMin;
+        int remain = n % 6;
+        // 남은 개수를 낱개로 사는게 더 싼 경우
+        if(pieceMin * remain < packageMin){
+            result += pieceMin * remain;
+        }
+        // 남은 개수를 패키지로 사는게 더 싼 경우
+        else{
+            result += packageMin;
+        }
+    }
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
