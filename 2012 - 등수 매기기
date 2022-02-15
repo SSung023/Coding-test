@@ -1,0 +1,47 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000
+using namespace std;
+
+// 2012 - 등수 매기기
+int n;
+vector<int> predict;
+
+
+void input(){
+    cin >> n;
+    predict.assign(n, 0);
+    for(int i = 0; i < n; ++i){
+        cin >> predict[i];
+    }
+}
+
+void solve(){
+    sort(predict.begin(), predict.end());
+
+    long long result = 0;
+    int rank = 1;
+    for(int i = 0; i < n; ++i){
+        result += abs(rank - predict[i]);
+        ++rank;
+    }
+    cout << result;
+}
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    input();
+    solve();
+
+    return 0;
+}
