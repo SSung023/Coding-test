@@ -1,0 +1,79 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <vector>
+#include <queue>
+
+#define INF 1000000000
+using namespace std;
+
+// 2138 - 전구와 스위치
+int n, result = INF;
+vector<int> cur, target;
+
+
+void input(){
+    scanf("%d", &n);
+    cur.assign(n, 0);
+    target.assign(n, 0);
+
+    for(int i = 0; i < n; ++i){
+        scanf("%1d", &cur[i]);
+    }
+    for(int i = 0; i < n; ++i){
+        scanf("%1d", &target[i]);
+    }
+}
+
+void toggleLight(vector<int>& tmp, int idx){
+    // 현재 위치와 인접한 전구를 toggle 한다.
+    if(idx - 1 >= 0){
+        tmp[idx - 1] = (tmp[idx - 1] == 0) ? 1 : 0;
+    }
+    tmp[idx] = (tmp[idx] == 0) ? 1 : 0;
+    if(idx < n - 1){
+        tmp[idx + 1] = (tmp[idx + 1] == 0) ? 1 : 0;
+    }
+}
+
+void solve(vector<int>& tmp, bool isToggle){
+    int cnt = 0;
+    if(isToggle){ // 만일 첫번째 전구를 킨다면
+        tmp[0] = (tmp[0] == 0) ? 1 : 0;
+        tmp[1] = (tmp[1] == 0) ? 1 : 0;
+        ++cnt;
+    }
+
+    for(int i = 1; i < n; ++i){
+        // 현재 위치 이전의 스위치가 맞지 않다면, 현재 전구를 누른다.
+        if(tmp[i - 1] != target[i - 1]){
+            toggleLight(tmp, i);
+            ++cnt;
+        }
+    }
+
+    if(tmp == target){
+        result = min(result, cnt);
+    }
+}
+
+int main(){
+
+    input();
+
+    vector<int> tmp = cur;
+    solve(tmp, true);
+    tmp = cur;
+    solve(tmp, false);
+
+    if(result != INF){
+        cout << result;
+    }
+    else{
+        cout << -1;
+    }
+
+    return 0;
+}
