@@ -5,6 +5,7 @@
 
 using namespace std;
 
+//1476 - 날짜 계산
 int E = 1, S = 1, M = 1;
 
 void checkRange(){
