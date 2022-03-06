@@ -8,6 +8,7 @@
 
 using namespace std;
 
+// 11724 - 연결 요소의 개수
 bool isVisited[1001];
 vector<int> adjList[1001];
 int n, m;
