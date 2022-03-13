@@ -6,6 +6,7 @@
 
 using namespace std;
 
+//1021 - 회전하는 큐
 int main() {
 
     int N, M, cnt = 0;
