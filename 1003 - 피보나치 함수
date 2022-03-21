@@ -8,6 +8,7 @@
 #define INF 100000000
 using namespace std;
 
+// 1003 - 피보나치 함수
 int t, dp[MAX];
 
 void input(){
@@ -52,8 +53,6 @@ int main(void) {
             printf("%d %d\n", dp[t - 1], dp[t]);
         }
     }
-
-
 
     return 0;
 }
