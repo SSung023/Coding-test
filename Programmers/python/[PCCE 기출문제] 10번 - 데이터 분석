@@ -1,0 +1,23 @@
+def get_idx(ext):
+    if ext == "code": 
+        return 0
+    if ext == "date":
+        return 1
+    if ext == "maximum":
+        return 2
+    if ext == "remain":
+        return 3
+
+# data에서 ext값이 val_ext보다 작은 데이터들만 뽑은 후, sort_by에 해당하는 값을 기준으로 오름차수으로 정렬 후 반환
+def solution(data, ext, val_ext, sort_by):
+    answer = []
+    filter_idx = get_idx(ext);
+    sort_idx = get_idx(sort_by)
+    
+    for target in data:
+        value = target[filter_idx]
+        if value <= val_ext:
+            answer.append(target)
+            
+    answer.sort(key = lambda x: x[sort_idx])
+    return answer
